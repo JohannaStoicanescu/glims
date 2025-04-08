@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
+import { R2StorageService } from './storage/R2StorageService';
 
 @Injectable()
 export class MediasService {
+  constructor(private mediaStorage: R2StorageService) { }
+
   create(createMediaDto: CreateMediaDto) {
+    this.mediaStorage.upload(createMediaDto.file);
     return 'This action adds a new media';
   }
 
