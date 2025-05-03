@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { NavBar } from '@/components/ui';
 
 export const metadata: Metadata = {
   title: 'Glims',
@@ -13,7 +14,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <link
+        rel="icon"
+        href="/favicon.ico"
+        sizes="any"
+      />
+      <body>
+        <NavBar />
+        {children}
+      </body>
     </html>
   );
 }
