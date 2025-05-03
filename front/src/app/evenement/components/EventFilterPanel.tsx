@@ -8,59 +8,57 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { useState } from 'react';
 
 interface EventFilterPanelProps {
-  initialImageList: {
-    src: string;
-    author: string;
-    liked: boolean;
-    vue: number;
-    glims: number;
-  }[];
-  imageList: [];
-  setImageList: (
-    imageList: {
-      src: string;
-      author: string;
-      liked: boolean;
-      vue: number;
-      glims: number;
-    }[]
-  ) => void;
-  isFilterPanelOpen: boolean;
-  setIsFilterPanelOpen: (isOpen: boolean) => void;
+  activeFilters: {
+    sort: string;
+    type: string;
+    date: string;
+  };
+  onApplyFilters: (filters: {
+    sort: string;
+    type: string;
+    date: string;
+  }) => void;
+  onClose?: () => void;
 }
 
 export default function EventFilterPanel({
-  initialImageList,
-  imageList,
-  setImageList,
-  isFilterPanelOpen,
-  setIsFilterPanelOpen,
+  activeFilters,
+  onApplyFilters,
+  onClose,
 }: EventFilterPanelProps) {
-  const [isLastPhoto, setIsLastPhoto] = useState(true);
-  const [isMostViewed, setIsMostViewed] = useState(false);
-  const [isMostGlimsed, setIsMostGlimsed] = useState(false);
+  const [sortOption, setSortOption] = useState(activeFilters.sort);
+  const [fileType, setFileType] = useState(activeFilters.type);
+  const [dateOption, setDateOption] = useState(activeFilters.date);
 
-  const [isAll, setIsAll] = useState(true);
-  const [isPhoto, setIsPhoto] = useState(false);
-  const [isVideo, setIsVideo] = useState(false);
+  const handleApplyFilters = () => {
+    onApplyFilters({
+      sort: sortOption,
+      type: fileType,
+      date: dateOption,
+    });
+    if (onClose) onClose();
+  };
 
-  const [isAllDate, setIsAllDate] = useState(true);
-  const [isLast24h, setIsLast24h] = useState(false);
-
-  const handleFilterSelection = () => {};
+  const handleReset = () => {
+    setSortOption('none');
+    setFileType('none');
+    setDateOption('none');
+  };
 
   return (
     <div className="font-medium w-full py-2">
       <div className="flex justify-between items-center">
         <p className="text-xl text-gray-700">Filtres</p>
         <div className="flex items-center">
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg">
+          <button
+            className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg"
+            onClick={handleReset}>
             Réinitialiser
           </button>
           <RxCross2
             size={22}
             className="m-4"
-            onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
+            onClick={onClose}
           />
         </div>
       </div>
@@ -71,13 +69,19 @@ export default function EventFilterPanel({
           <p className="text-lg">Trier par</p>
         </div>
         <div>
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2">
+          <button
+            className={`border-1 ${sortOption === 'latest' ? 'border-gray-400 bg-gray-200' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2`}
+            onClick={() => setSortOption('latest')}>
             Dernière publications
           </button>
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2">
+          <button
+            className={`border-1 ${sortOption === 'most_viewed' ? 'border-gray-40 bg-gray-200' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2`}
+            onClick={() => setSortOption('most_viewed')}>
             Les plus vues
           </button>
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2">
+          <button
+            className={`border-1 ${sortOption === 'most_popular' ? 'border-gray-40 bg-gray-200' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2`}
+            onClick={() => setSortOption('most_popular')}>
             Les plus populaires
           </button>
         </div>
@@ -88,13 +92,19 @@ export default function EventFilterPanel({
           <p className="text-gray-700 text-lg">Type de fichier</p>
         </div>
         <div>
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2">
+          <button
+            className={`border-1 ${fileType === 'all' ? 'border-gray-40 bg-gray-200' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2`}
+            onClick={() => setFileType('all')}>
             Tout
           </button>
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2">
+          <button
+            className={`border-1 ${fileType === 'photos' ? 'border-gray-40 bg-gray-200' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2`}
+            onClick={() => setFileType('photos')}>
             Photos
           </button>
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2">
+          <button
+            className={`border-1 ${fileType === 'videos' ? 'border-gray-40 bg-gray-200' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2`}
+            onClick={() => setFileType('videos')}>
             Vidéos
           </button>
         </div>
@@ -105,17 +115,21 @@ export default function EventFilterPanel({
           <p className="text-lg">Date de chargement</p>
         </div>
         <div>
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2">
+          <button
+            className={`border-1 ${dateOption === 'all' ? 'border-gray-40 bg-gray-200' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2`}
+            onClick={() => setDateOption('all')}>
             Tout les photos
           </button>
-          <button className="border-1 border-gray-200 rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2">
+          <button
+            className={`border-1 ${dateOption === 'last24h' ? 'border-gray-40 bg-gray-200' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2`}
+            onClick={() => setDateOption('last24h')}>
             Dernières 24h
           </button>
         </div>
       </div>
       <button
-        onClick={() => handleFilterSelection()}
-        className="flex justify-center items-center w-full bg-gray-800 text-white py-3 my-4 rounded-xl">
+        className="flex justify-center items-center w-full bg-gray-800 text-white py-3 my-4 rounded-xl"
+        onClick={handleApplyFilters}>
         <p className="mr-3">Continuer</p>
         <IoIosArrowForward />
       </button>

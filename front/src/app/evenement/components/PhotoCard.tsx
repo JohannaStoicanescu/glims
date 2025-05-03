@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import { MdOutlineStarBorder } from 'react-icons/md';
 import { MdOutlineStar } from 'react-icons/md';
-import { MdCheckBoxOutlineBlank } from 'react-icons/md';
-import { MdOutlineCheckBox } from 'react-icons/md';
+import { RiCheckboxFill } from 'react-icons/ri';
+import { RiCheckboxBlankLine } from 'react-icons/ri';
 import { useState } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
 
@@ -26,12 +26,10 @@ export default function PhotoCard({
   const [totalGlims, setTotalGlims] = useState(glims);
 
   const toggleLikeValue = () => {
-    if (isLiked) {
-      setTotalGlims(totalGlims - 1);
-    }
-    if (!isLiked) {
-      setTotalGlims(totalGlims + 1);
-    }
+    if (isLiked) setTotalGlims(totalGlims - 1);
+
+    if (!isLiked) setTotalGlims(totalGlims + 1);
+
     setIsLiked((prev) => !prev);
     console.log(`Photo by ${author} is now ${!isLiked ? 'liked' : 'unliked'}`);
   };
@@ -45,7 +43,7 @@ export default function PhotoCard({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-xl shadow">
+    <div className="relative overflow-hidden rounded-xl shadow transition-all duration-300">
       <Image
         src={imageUrl}
         alt={`Photo publiée ${author}`}
@@ -54,16 +52,16 @@ export default function PhotoCard({
         className="w-full h-auto object-cover"
       />
       <div className="absolute top-0 right-0 pt-2 pr-2">
-        <HiDotsVertical className="text-white" />
+        <HiDotsVertical className="text-white w-5 h-5" />
       </div>
       <div className="absolute top-0 left-0 pt-2 pl-2">
         <button
-          className="text-yellow-300"
+          className="text-blue-600"
           onClick={handleCheckboxClick}>
           {isChecked ? (
-            <MdOutlineCheckBox className="w-7 h-7" />
+            <RiCheckboxFill className="w-7 h-7" />
           ) : (
-            <MdCheckBoxOutlineBlank className="w-7 h-7" />
+            <RiCheckboxBlankLine className="w-7 h-7" />
           )}
         </button>
       </div>
@@ -75,9 +73,9 @@ export default function PhotoCard({
           className="text-white"
           onClick={toggleLikeValue}>
           {isLiked ? (
-            <MdOutlineStar className="w-7 h-7" />
+            <MdOutlineStar className="w-7 h-7 delay-300 transition-all duration-300" />
           ) : (
-            <MdOutlineStarBorder className="w-7 h-7" />
+            <MdOutlineStarBorder className="w-7 h-7 delay-300 transition-all duration-300" />
           )}
         </button>
         {totalGlims > 0 && <p className="text-white ml-1">{totalGlims}</p>}
