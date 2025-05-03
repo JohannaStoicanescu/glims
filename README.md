@@ -30,3 +30,9 @@ npm install
 #3. Build containers and run dev environment project
 make docker-dev
 ```
+
+## Notes for developers
+
+The current version of this project is a prototype meant to show to investors.
+It therefore doesn't use a backend, but will in the future.
+Once a backend is ready, please remove the following library: `jszip`.
