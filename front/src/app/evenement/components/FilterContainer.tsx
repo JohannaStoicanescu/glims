@@ -25,7 +25,7 @@ export default function FilterContainer({
     if (activeFilter === 'latest') return 'Dernière publications';
     if (activeFilter === 'most_viewed') return 'Les plus vues';
     if (activeFilter === 'most_popular') return 'Les plus populaires';
-    if (activeFilter === 'photos') return 'Images';
+    if (activeFilter === 'photos') return 'Photos';
     if (activeFilter === 'videos') return 'Vidéos';
     if (activeFilter === 'last24h') return 'Dernières 24h';
   };

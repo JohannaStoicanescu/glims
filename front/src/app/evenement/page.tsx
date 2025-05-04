@@ -79,7 +79,11 @@ export default function AlbumPage() {
   const [displayedMedia, setDisplayedMedia] = useState<Media | null>(null);
   const [contextMenuMedia, setContextMenuMedia] = useState<Media | null>(null);
 
-  const applyFilters = (filters: { sort: string; type: string; date: string; }) => {
+  const applyFilters = (filters: {
+    sort: string;
+    type: string;
+    date: string;
+  }) => {
     setActiveFilters(filters);
 
     let result = [...allMedia];
@@ -226,7 +230,7 @@ export default function AlbumPage() {
               setIsMultiselectionMenuDisplayed(!isMultiselectionMenuDisplayed)
             }
             className={`w-full flex justify-between items-center py-3 px-4 font-bold text-gray-700 active:bg-gray-100`}>
-            <p>{selectedMedias.length} photos sélectionnées </p>
+            <p>{`${selectedMedias.length} photo${selectedMedias.length > 1 ? 's' : ''} sélectionnée${selectedMedias.length > 1 ? 's' : ''} `}</p>
             <MdKeyboardArrowDown
               size={23}
               className={`${!isMultiselectionMenuDisplayed && 'rotate-180'}`}

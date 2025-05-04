@@ -18,7 +18,7 @@ export default function MediaDisplayMenu({
   contextMenuMedia,
   setContextMenuMedia,
 }: MediaDisplayMenuProps) {
-  const { src: imageUrl, author, } = contextMenuMedia;
+  const { src: imageUrl, author } = contextMenuMedia;
 
   return (
     <div className="fixed bottom-0 w-full h-full">
@@ -27,17 +27,16 @@ export default function MediaDisplayMenu({
         onClick={() => setContextMenuMedia(null)}></div>
       <div className="w-full h-[42vh] bg-white rounded-t-2xl">
         <div className="flex justify-between w-full">
-          <button className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100">
+          <button className="w-full flex justify-center items-center text-gray-700 active:bg-gray-100">
             <IoIosStarOutline className="mr-2" />
             <p>Enregistrer</p>
           </button>
           <hr className="h-18 border-l-1 border-gray-200 w-0.5" />
           <button
-            className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100"
+            className="w-full flex justify-center items-center text-gray-700 active:bg-gray-100"
             onClick={() => {
               downloadSingleImage(imageUrl);
-            }}
-          >
+            }}>
             <BsDownload className="mr-2" />
             <p>Télécharger</p>
           </button>
