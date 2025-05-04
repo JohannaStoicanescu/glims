@@ -7,11 +7,11 @@ export default function EventHeader() {
       <div className="flex items-center space-x-2">
         <div className="flex -space-x-2">
           <AvatarRounded
-            src="https://picsum.photos/200/200?random=1"
+            src="/jeff.jpg"
             alt="1"
           />
           <AvatarRounded
-            src="https://picsum.photos/200/200?random=2"
+            src="/diana.jpg"
             alt="2"
           />
           <div className="flex items-center">

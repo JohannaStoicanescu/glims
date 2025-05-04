@@ -7,23 +7,24 @@ import { LuTrash2 } from 'react-icons/lu';
 import { SlCamera } from 'react-icons/sl';
 import { TbFileAlert } from 'react-icons/tb';
 import { PiMagicWand } from 'react-icons/pi';
+import { downloadSingleImage } from '@/utils';
 
 interface MediaDisplayMenuProps {
-  setIsMediaMenuDisplayed: (value: boolean) => void;
-  selectedMedia: Media;
+  contextMenuMedia: Media;
+  setContextMenuMedia: (value: Media | null) => void;
 }
 
 export default function MediaDisplayMenu({
-  setIsMediaMenuDisplayed,
-  selectedMedia,
+  contextMenuMedia,
+  setContextMenuMedia,
 }: MediaDisplayMenuProps) {
-  const { src: imageUrl, author, liked, glims } = selectedMedia;
+  const { src: imageUrl, author, } = contextMenuMedia;
 
   return (
     <div className="fixed bottom-0 w-full h-full">
       <div
         className="w-full h-[58vh]"
-        onClick={() => setIsMediaMenuDisplayed(false)}></div>
+        onClick={() => setContextMenuMedia(null)}></div>
       <div className="w-full h-[42vh] bg-white rounded-t-2xl">
         <div className="flex justify-between w-full">
           <button className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100">
@@ -31,7 +32,12 @@ export default function MediaDisplayMenu({
             <p>Enregistrer</p>
           </button>
           <hr className="h-18 border-l-1 border-gray-200 w-0.5" />
-          <button className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100">
+          <button
+            className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100"
+            onClick={() => {
+              downloadSingleImage(imageUrl);
+            }}
+          >
             <BsDownload className="mr-2" />
             <p>Télécharger</p>
           </button>

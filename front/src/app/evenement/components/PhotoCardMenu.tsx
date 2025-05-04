@@ -6,15 +6,25 @@ import { FiUsers } from 'react-icons/fi';
 import { SlCamera } from 'react-icons/sl';
 import { LuTrash2 } from 'react-icons/lu';
 import { TbFileAlert } from 'react-icons/tb';
+import { downloadSingleImage } from '@/utils';
+import { Media } from '@/types/media';
 
 interface PhotoCardMenuProps {
-  author: string;
+  media: Media;
+  setContextMenuMedia: (value: Media | null) => void;
+  setDisplayedMedia: (value: Media | null) => void;
 }
 
-export default function PhotoCardMenu({ author }: PhotoCardMenuProps) {
+export default function PhotoCardMenu({ media, setDisplayedMedia, setContextMenuMedia }: PhotoCardMenuProps) {
   return (
     <div className="flex flex-col items-start w-full">
-      <button className="flex items-center px-4 py-3 text-gray-700 active:bg-gray-100 w-full rounded-t-3xl">
+      <button
+        className="flex items-center px-4 py-3 text-gray-700 active:bg-gray-100 w-full rounded-t-3xl"
+        onClick={() => {
+          setDisplayedMedia(media);
+          setContextMenuMedia(null);
+        }}
+      >
         <IoEyeOutline className="mr-2" />
         <p>Voir la photo</p>
       </button>
@@ -24,7 +34,12 @@ export default function PhotoCardMenu({ author }: PhotoCardMenuProps) {
         <p>Favori</p>
       </button>
       <hr className="h-0.5 border-t-1 border-gray-200 w-full" />
-      <button className="flex items-center px-4 py-3 text-gray-700 active:bg-gray-100 w-full">
+      <button
+        className="flex items-center px-4 py-3 text-gray-700 active:bg-gray-100 w-full"
+        onClick={() => {
+          downloadSingleImage(media.src);
+        }}
+      >
         <BsDownload className="mr-2" />
         <p>Télécharger</p>
       </button>
@@ -41,7 +56,7 @@ export default function PhotoCardMenu({ author }: PhotoCardMenuProps) {
       <hr className="h-0.5 border-t-1 border-gray-200 w-full" />
       <button className="flex items-center px-4 py-3 text-gray-700 active:bg-gray-100 w-full">
         <SlCamera className="mr-2" />
-        <p>Toutes les photos de {author}</p>
+        <p>Toutes les photos de {media.author}</p>
       </button>
       <hr className="h-0.5 border-t-1 border-gray-200 w-full" />
       <button className="flex items-center px-4 py-3 text-red-500 active:bg-gray-100 w-full">
