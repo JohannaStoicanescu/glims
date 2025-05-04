@@ -7,20 +7,24 @@ import { RiCheckboxFill } from 'react-icons/ri';
 import { RiCheckboxBlankLine } from 'react-icons/ri';
 import { useState } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
+import { Media } from '@/types/media';
 
 interface PhotoCardProps {
-  imageUrl: string;
-  author: string;
-  liked?: boolean;
-  glims: number;
+  image: Media;
+  setIsMenuDisplayed: (value: boolean) => void;
+  setAuthor: (value: string) => void;
+  selectedMedia: Media[];
+  setSelectedMedia: (value: Media[]) => void;
 }
 
 export default function PhotoCard({
-  imageUrl,
-  author,
-  liked = false,
-  glims,
+  image,
+  setIsMenuDisplayed,
+  setAuthor,
+  selectedMedia,
+  setSelectedMedia,
 }: PhotoCardProps) {
+  const { src: imageUrl, author, liked, glims } = image;
   const [isLiked, setIsLiked] = useState(liked);
   const [isChecked, setIsChecked] = useState(false);
   const [totalGlims, setTotalGlims] = useState(glims);
@@ -35,6 +39,9 @@ export default function PhotoCard({
   };
 
   const handleCheckboxClick = () => {
+    if (isChecked)
+      setSelectedMedia(selectedMedia.filter((media) => media !== image));
+    if (!isChecked) setSelectedMedia([...selectedMedia, image]);
     setIsChecked((prev) => !prev);
     // add logic to update the checkbox status in the backend
     console.log(
@@ -52,7 +59,12 @@ export default function PhotoCard({
         className="w-full h-auto object-cover"
       />
       <div className="absolute top-0 right-0 pt-2 pr-2">
-        <HiDotsVertical className="text-white w-5 h-5" />
+        <HiDotsVertical
+          className="text-white w-5 h-5"
+          onClick={() => {
+            setIsMenuDisplayed(true), setAuthor(author);
+          }}
+        />
       </div>
       <div className="absolute top-0 left-0 pt-2 pl-2">
         <button

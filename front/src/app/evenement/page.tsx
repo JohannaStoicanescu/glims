@@ -6,13 +6,17 @@ import PhotoCard from './components/PhotoCard';
 import EventFilterPanel from './components/EventFilterPanel';
 import { useEffect, useState } from 'react';
 import { Media } from '@/types/media';
+import Image from 'next/image';
+import PhotoCardMenu from './components/PhotoCardMenu';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import MultiSelectionMenu from './components/MultiSelectionMenu';
 
 export default function AlbumPage() {
   // TODO: fetch media from API
   const allMedia: Media[] = [
     {
-      src: 'https://picsum.photos/720/480?random=1',
-      author: 'Jack',
+      src: '/media1.jpeg',
+      author: 'Samih',
       liked: true,
       views: 5,
       glims: 2,
@@ -20,35 +24,35 @@ export default function AlbumPage() {
       type: 'photo',
     },
     {
-      src: 'https://picsum.photos/720/480?random=1',
-      author: 'Célia',
+      src: '/media2.jpeg',
+      author: 'Caroline',
       liked: false,
       views: 2,
-      glims: 0,
+      glims: 2,
       date: '2025-01-02T12:00:00Z',
       type: 'photo',
     },
     {
-      src: 'https://picsum.photos/720/480?random=1',
-      author: 'Morgane',
+      src: '/media3.jpeg',
+      author: 'Idriss',
       liked: false,
-      views: 10,
+      views: 7,
       glims: 6,
       date: '2025-01-03T12:00:00Z',
       type: 'photo',
     },
     {
-      src: 'https://picsum.photos/720/480?random=1',
+      src: '/media4.jpeg',
       author: 'Samih',
       liked: true,
-      views: 11,
+      views: 8,
       glims: 4,
       date: new Date().toISOString(),
       type: 'photo',
     },
     {
-      src: 'https://picsum.photos/720/480?random=1',
-      author: 'Yasmine',
+      src: '/media5.jpeg',
+      author: 'Caroline',
       liked: true,
       views: 7,
       glims: 2,
@@ -57,6 +61,10 @@ export default function AlbumPage() {
     },
   ];
 
+  const [isMenuDiplayed, setIsMenuDisplayed] = useState(false);
+  const [isMultiselectionMenuDisplayed, setIsMultiselectionMenuDisplayed] =
+    useState(false);
+  const [author, setAuthor] = useState('');
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [filteredMedia, setFilteredMedia] = useState(allMedia);
   const [activeFilters, setActiveFilters] = useState({
@@ -64,6 +72,7 @@ export default function AlbumPage() {
     type: 'none',
     date: 'none',
   });
+  const [selectedMedia, setSelectedMedia] = useState<Media[]>([]);
 
   const applyFilters = (filters: any) => {
     setActiveFilters(filters);
@@ -105,8 +114,8 @@ export default function AlbumPage() {
   }, []);
 
   return (
-    <>
-      <div className="px-4 pt-4 pb-2">
+    <div className="pt-4 pb-8">
+      <div className="px-4 pb-2">
         <EventHeader />
         <SearchBar
           isFilterPanelOpen={isFilterPanelOpen}
@@ -123,13 +132,16 @@ export default function AlbumPage() {
       </div>
       <div className="grid grid-cols-1 gap-4 pt-3 px-4 bg-gray-100 w-full">
         {filteredMedia.map((image, index) => (
-          <PhotoCard
-            key={index + image.author}
-            author={image.author}
-            imageUrl={image.src}
-            liked={image.liked}
-            glims={image.glims}
-          />
+          <div key={index + image.author}>
+            <PhotoCard
+              key={index + image.author + 'card'}
+              image={image}
+              setIsMenuDisplayed={setIsMenuDisplayed}
+              setAuthor={setAuthor}
+              selectedMedia={selectedMedia}
+              setSelectedMedia={setSelectedMedia}
+            />
+          </div>
         ))}
         {filteredMedia.length === 0 && (
           <div className="text-center py-10 text-gray-500">
@@ -137,6 +149,42 @@ export default function AlbumPage() {
           </div>
         )}
       </div>
-    </>
+      <div className="flex justify-center items-center pt-8">
+        <Image
+          src={'/favicon.ico'}
+          alt={'logo glims'}
+          width={50}
+          height={50}
+        />
+      </div>
+      {isMenuDiplayed && (
+        <div className="fixed top-0 h-full w-full">
+          <div
+            className="w-full h-2/4"
+            onClick={() => setIsMenuDisplayed(false)}></div>
+          <div className="w-full h-2/4 bg-white rounded-t-2xl">
+            <PhotoCardMenu author={author} />
+          </div>
+        </div>
+      )}
+      {selectedMedia.length > 0 && (
+        <div className="fixed bottom-0 w-full bg-white rounded-t-2xl">
+          <button
+            onClick={() =>
+              setIsMultiselectionMenuDisplayed(!isMultiselectionMenuDisplayed)
+            }
+            className={`w-full flex justify-between items-center py-3 px-4 font-bold text-gray-700 active:bg-gray-100`}>
+            <p>{selectedMedia.length} photos sélectionnées </p>
+            <MdKeyboardArrowDown
+              size={23}
+              className={`${!isMultiselectionMenuDisplayed && 'rotate-180'}`}
+            />
+          </button>
+          {isMultiselectionMenuDisplayed && (
+            <MultiSelectionMenu selectedMedia={selectedMedia} />
+          )}
+        </div>
+      )}
+    </div>
   );
 }

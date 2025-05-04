@@ -21,7 +21,7 @@ export default function SearchBar({
       </div>
       <button
         onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-        className={` ml-4 p-4 rounded-xl hover:bg-gray-100`}>
+        className={` ml-4 p-4 rounded-xl hover:bg-gray-100 active:bg-gray-100`}>
         <LuSettings2
           onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
           size={22}
