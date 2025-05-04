@@ -6,11 +6,11 @@ import { BsDownload } from 'react-icons/bs';
 import { IoIosStarOutline } from 'react-icons/io';
 
 interface MultiSelectionMenuProps {
-  selectedMedia: Media[];
+  selectedMedias: Media[];
 }
 
 export default function MultiSelectionMenu({
-  selectedMedia,
+  selectedMedias,
 }: MultiSelectionMenuProps) {
   return (
     <div className="flex flex-col items-start w-full pb-6">
