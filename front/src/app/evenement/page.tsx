@@ -10,6 +10,8 @@ import Image from 'next/image';
 import PhotoCardMenu from './components/PhotoCardMenu';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import MultiSelectionMenu from './components/MultiSelectionMenu';
+import MediaDisplay from './components/MediaDisplay';
+import MediaDisplayMenu from './components/MediaDisplayMenu';
 
 export default function AlbumPage() {
   // TODO: fetch media from API
@@ -61,9 +63,6 @@ export default function AlbumPage() {
     },
   ];
 
-  const [isMenuDiplayed, setIsMenuDisplayed] = useState(false);
-  const [isMultiselectionMenuDisplayed, setIsMultiselectionMenuDisplayed] =
-    useState(false);
   const [author, setAuthor] = useState('');
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [filteredMedia, setFilteredMedia] = useState(allMedia);
@@ -72,7 +71,15 @@ export default function AlbumPage() {
     type: 'none',
     date: 'none',
   });
-  const [selectedMedia, setSelectedMedia] = useState<Media[]>([]);
+  const [isMenuDiplayed, setIsMenuDisplayed] = useState(false);
+  const [isMediaDisplayed, setIsMediaDisplayed] = useState(false);
+
+  const [selectedMedias, setSelectedMedias] = useState<Media[]>([]);
+  const [isMultiselectionMenuDisplayed, setIsMultiselectionMenuDisplayed] =
+    useState(false);
+
+  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
+  const [isMediaMenuDisplayed, setIsMediaMenuDisplayed] = useState(false);
 
   const applyFilters = (filters: any) => {
     setActiveFilters(filters);
@@ -130,15 +137,17 @@ export default function AlbumPage() {
           />
         )}
       </div>
-      <div className="grid grid-cols-1 gap-4 pt-3 px-4 bg-gray-100 w-full">
+      <div className="grid grid-cols-1 gap-4 pt-3 px-2 bg-gray-100 w-full">
         {filteredMedia.map((image, index) => (
           <div key={index + image.author}>
             <PhotoCard
               key={index + image.author + 'card'}
               image={image}
               setIsMenuDisplayed={setIsMenuDisplayed}
+              setIsMediaDisplayed={setIsMediaDisplayed}
               setAuthor={setAuthor}
-              selectedMedia={selectedMedia}
+              selectedMedias={selectedMedias}
+              setSelectedMedias={setSelectedMedias}
               setSelectedMedia={setSelectedMedia}
             />
           </div>
@@ -167,21 +176,40 @@ export default function AlbumPage() {
           </div>
         </div>
       )}
-      {selectedMedia.length > 0 && (
+      {isMediaDisplayed && selectedMedia && (
+        <div className="fixed top-0 w-screen h-screen">
+          <div
+            onClick={() => setIsMediaDisplayed(false)}
+            className="fixed w-full h-full inset-0 bg-[linear-gradient(black,rgba(0,0,0,1)78%,rgba(234,88,12,1)100%)] opacity-50 z-10"></div>
+          <MediaDisplay
+            selectedMedia={selectedMedia}
+            setIsMediaDisplayed={setIsMediaDisplayed}
+            setIsMediaMenuDisplayed={setIsMediaMenuDisplayed}
+            filteredMedia={filteredMedia}
+          />
+        </div>
+      )}
+      {selectedMedia && isMediaMenuDisplayed && (
+        <MediaDisplayMenu
+          setIsMediaMenuDisplayed={setIsMediaMenuDisplayed}
+          selectedMedia={selectedMedia}
+        />
+      )}
+      {selectedMedias.length > 0 && (
         <div className="fixed bottom-0 w-full bg-white rounded-t-2xl">
           <button
             onClick={() =>
               setIsMultiselectionMenuDisplayed(!isMultiselectionMenuDisplayed)
             }
             className={`w-full flex justify-between items-center py-3 px-4 font-bold text-gray-700 active:bg-gray-100`}>
-            <p>{selectedMedia.length} photos sélectionnées </p>
+            <p>{selectedMedias.length} photos sélectionnées </p>
             <MdKeyboardArrowDown
               size={23}
               className={`${!isMultiselectionMenuDisplayed && 'rotate-180'}`}
             />
           </button>
           {isMultiselectionMenuDisplayed && (
-            <MultiSelectionMenu selectedMedia={selectedMedia} />
+            <MultiSelectionMenu selectedMedias={selectedMedias} />
           )}
         </div>
       )}

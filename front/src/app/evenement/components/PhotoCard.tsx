@@ -12,17 +12,21 @@ import { Media } from '@/types/media';
 interface PhotoCardProps {
   image: Media;
   setIsMenuDisplayed: (value: boolean) => void;
+  setIsMediaDisplayed: (value: boolean) => void;
   setAuthor: (value: string) => void;
-  selectedMedia: Media[];
-  setSelectedMedia: (value: Media[]) => void;
+  selectedMedias: Media[];
+  setSelectedMedias: (value: Media[]) => void;
+  setSelectedMedia: (value: Media) => void;
 }
 
 export default function PhotoCard({
   image,
   setIsMenuDisplayed,
   setAuthor,
-  selectedMedia,
+  selectedMedias,
+  setSelectedMedias,
   setSelectedMedia,
+  setIsMediaDisplayed,
 }: PhotoCardProps) {
   const { src: imageUrl, author, liked, glims } = image;
   const [isLiked, setIsLiked] = useState(liked);
@@ -40,13 +44,18 @@ export default function PhotoCard({
 
   const handleCheckboxClick = () => {
     if (isChecked)
-      setSelectedMedia(selectedMedia.filter((media) => media !== image));
-    if (!isChecked) setSelectedMedia([...selectedMedia, image]);
+      setSelectedMedias(selectedMedias.filter((media) => media !== image));
+    if (!isChecked) setSelectedMedias([...selectedMedias, image]);
     setIsChecked((prev) => !prev);
     // add logic to update the checkbox status in the backend
     console.log(
       `Photo by ${author} is now ${!isChecked ? 'checked' : 'unchecked'}`
     );
+  };
+
+  const handleMediaSelection = () => {
+    setIsMediaDisplayed(true);
+    setSelectedMedia(image);
   };
 
   return (
@@ -57,6 +66,7 @@ export default function PhotoCard({
         width={720}
         height={480}
         className="w-full h-auto object-cover"
+        onClick={handleMediaSelection}
       />
       <div className="absolute top-0 right-0 pt-2 pr-2">
         <HiDotsVertical
