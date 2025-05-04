@@ -41,8 +41,8 @@ export default function EventFilterPanel({
 
   const handleReset = () => {
     setSortOption('none');
-    setFileType('none');
-    setDateOption('none');
+    setFileType('all_type');
+    setDateOption('all');
   };
 
   return (
@@ -94,8 +94,8 @@ export default function EventFilterPanel({
         </div>
         <div>
           <button
-            className={`border-1 ${fileType === 'all' ? 'border-gray-600' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2 active:bg-gray-100`}
-            onClick={() => setFileType('all')}>
+            className={`border-1 ${fileType === 'all_type' ? 'border-gray-600' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2 active:bg-gray-100`}
+            onClick={() => setFileType('all_type')}>
             Tout
           </button>
           <button
@@ -119,7 +119,7 @@ export default function EventFilterPanel({
           <button
             className={`border-1 ${dateOption === 'all' ? 'border-gray-600' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2 active:bg-gray-100`}
             onClick={() => setDateOption('all')}>
-            Tout les photos
+            Tous les médias
           </button>
           <button
             className={`border-1 ${dateOption === 'last24h' ? 'border-gray-600' : 'border-gray-200'} rounded-lg py-1 px-3 text-gray-500 text-lg mr-2 mb-2 active:bg-gray-100`}

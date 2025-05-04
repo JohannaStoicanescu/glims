@@ -12,6 +12,7 @@ import { MdKeyboardArrowDown } from 'react-icons/md';
 import MultiSelectionMenu from './components/MultiSelectionMenu';
 import MediaDisplay from './components/MediaDisplay';
 import MediaDisplayMenu from './components/MediaDisplayMenu';
+import FilterContainer from './components/FilterContainer';
 
 export default function AlbumPage() {
   // TODO: fetch media from API
@@ -68,8 +69,8 @@ export default function AlbumPage() {
   const [filteredMedia, setFilteredMedia] = useState(allMedia);
   const [activeFilters, setActiveFilters] = useState({
     sort: 'none',
-    type: 'none',
-    date: 'none',
+    type: 'all_type',
+    date: 'all',
   });
   const [isMenuDiplayed, setIsMenuDisplayed] = useState(false);
   const [isMediaDisplayed, setIsMediaDisplayed] = useState(false);
@@ -86,7 +87,7 @@ export default function AlbumPage() {
 
     let result = [...allMedia];
 
-    if (filters.type !== 'all') {
+    if (filters.type !== 'all_type') {
       result = result.filter((item) => {
         if (filters.type === 'photos') return item.type === 'photo';
         if (filters.type === 'videos') return item.type === 'video';
@@ -118,7 +119,7 @@ export default function AlbumPage() {
 
   useEffect(() => {
     applyFilters(activeFilters);
-  }, []);
+  }, [activeFilters, setActiveFilters]);
 
   return (
     <div className="pt-4 pb-8">
@@ -128,14 +129,39 @@ export default function AlbumPage() {
           isFilterPanelOpen={isFilterPanelOpen}
           setIsFilterPanelOpen={setIsFilterPanelOpen}
         />
-
-        {isFilterPanelOpen && (
-          <EventFilterPanel
-            activeFilters={activeFilters}
-            onApplyFilters={applyFilters}
-            onClose={() => setIsFilterPanelOpen(false)}
-          />
-        )}
+        <div className="flex flex-wrap gap-2 mt-1">
+          {isFilterPanelOpen && (
+            <EventFilterPanel
+              activeFilters={activeFilters}
+              onApplyFilters={applyFilters}
+              onClose={() => setIsFilterPanelOpen(false)}
+            />
+          )}
+          {!isFilterPanelOpen && activeFilters.sort !== 'none' && (
+            <FilterContainer
+              applyFilters={() => applyFilters(activeFilters)}
+              activeFilters={activeFilters}
+              activeFilter={activeFilters.sort}
+              setActiveFilters={setActiveFilters}
+            />
+          )}
+          {!isFilterPanelOpen && activeFilters.type !== 'all_type' && (
+            <FilterContainer
+              applyFilters={() => applyFilters(activeFilters)}
+              activeFilters={activeFilters}
+              activeFilter={activeFilters.type}
+              setActiveFilters={setActiveFilters}
+            />
+          )}
+          {!isFilterPanelOpen && activeFilters.date !== 'all' && (
+            <FilterContainer
+              applyFilters={() => applyFilters(activeFilters)}
+              activeFilters={activeFilters}
+              activeFilter={activeFilters.date}
+              setActiveFilters={setActiveFilters}
+            />
+          )}
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4 pt-3 px-2 bg-gray-100 w-full">
         {filteredMedia.map((image, index) => (
