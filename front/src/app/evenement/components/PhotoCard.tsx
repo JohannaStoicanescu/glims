@@ -72,7 +72,7 @@ export default function PhotoCard({
         <HiDotsVertical
           className="text-white w-5 h-5"
           onClick={() => {
-            setIsMenuDisplayed(true), setAuthor(author);
+            setSelectedMedia(image);
           }}
         />
       </div>

@@ -192,13 +192,13 @@ export default function AlbumPage() {
           height={50}
         />
       </div>
-      {isMenuDiplayed && (
+      {selectedMedia !== null && (
         <div className="fixed top-0 h-full w-full">
           <div
             className="w-full h-2/4"
-            onClick={() => setIsMenuDisplayed(false)}></div>
+            onClick={() => setSelectedMedia(null)}></div>
           <div className="w-full h-2/4 bg-white rounded-t-2xl">
-            <PhotoCardMenu author={author} />
+            <PhotoCardMenu media={selectedMedia} />
           </div>
         </div>
       )}
