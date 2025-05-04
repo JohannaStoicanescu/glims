@@ -61,10 +61,8 @@ export default function AlbumPage() {
     },
   ];
 
-  const [isMenuDiplayed, setIsMenuDisplayed] = useState(false);
   const [isMultiselectionMenuDisplayed, setIsMultiselectionMenuDisplayed] =
     useState(false);
-  const [author, setAuthor] = useState('');
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [filteredMedia, setFilteredMedia] = useState(allMedia);
   const [activeFilters, setActiveFilters] = useState({
@@ -72,6 +70,7 @@ export default function AlbumPage() {
     type: 'none',
     date: 'none',
   });
+  const [singleSelectedMedia, setSingleSelectedMedia] = useState<Media | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<Media[]>([]);
 
   const applyFilters = (filters: any) => {
@@ -136,8 +135,7 @@ export default function AlbumPage() {
             <PhotoCard
               key={index + image.author + 'card'}
               image={image}
-              setIsMenuDisplayed={setIsMenuDisplayed}
-              setAuthor={setAuthor}
+              setSingleSelectedMedia={setSingleSelectedMedia}
               selectedMedia={selectedMedia}
               setSelectedMedia={setSelectedMedia}
             />
@@ -157,13 +155,13 @@ export default function AlbumPage() {
           height={50}
         />
       </div>
-      {isMenuDiplayed && (
+      {singleSelectedMedia !== null && (
         <div className="fixed top-0 h-full w-full">
           <div
             className="w-full h-2/4"
-            onClick={() => setIsMenuDisplayed(false)}></div>
+            onClick={() => setSingleSelectedMedia(null)}></div>
           <div className="w-full h-2/4 bg-white rounded-t-2xl">
-            <PhotoCardMenu author={author} />
+            <PhotoCardMenu media={singleSelectedMedia} />
           </div>
         </div>
       )}

@@ -11,16 +11,14 @@ import { Media } from '@/types/media';
 
 interface PhotoCardProps {
   image: Media;
-  setIsMenuDisplayed: (value: boolean) => void;
-  setAuthor: (value: string) => void;
+  setSingleSelectedMedia: (value: Media) => void;
   selectedMedia: Media[];
   setSelectedMedia: (value: Media[]) => void;
 }
 
 export default function PhotoCard({
   image,
-  setIsMenuDisplayed,
-  setAuthor,
+  setSingleSelectedMedia,
   selectedMedia,
   setSelectedMedia,
 }: PhotoCardProps) {
@@ -62,7 +60,7 @@ export default function PhotoCard({
         <HiDotsVertical
           className="text-white w-5 h-5"
           onClick={() => {
-            setIsMenuDisplayed(true), setAuthor(author);
+            setSingleSelectedMedia(image);
           }}
         />
       </div>
