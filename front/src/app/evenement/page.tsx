@@ -79,7 +79,7 @@ export default function AlbumPage() {
   const [displayedMedia, setDisplayedMedia] = useState<Media | null>(null);
   const [contextMenuMedia, setContextMenuMedia] = useState<Media | null>(null);
 
-  const applyFilters = (filters: any) => {
+  const applyFilters = (filters: { sort: string; type: string; date: string; }) => {
     setActiveFilters(filters);
 
     let result = [...allMedia];

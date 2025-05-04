@@ -18,7 +18,7 @@ export default function MediaDisplayMenu({
   contextMenuMedia,
   setContextMenuMedia,
 }: MediaDisplayMenuProps) {
-  const { src: imageUrl, author, liked, glims } = contextMenuMedia;
+  const { src: imageUrl, author, } = contextMenuMedia;
 
   return (
     <div className="fixed bottom-0 w-full h-full">

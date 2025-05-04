@@ -25,10 +25,10 @@ export default function MultiSelectionMenu({
         <button
           className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100"
           onClick={() => {
-            if (selectedMedia.length == 1) {
-              downloadSingleImage(selectedMedia[0].src);
+            if (selectedMedias.length == 1) {
+              downloadSingleImage(selectedMedias[0].src);
             } else {
-              downloadMultipleImages(selectedMedia.map((media) => media.src));
+              downloadMultipleImages(selectedMedias.map((media) => media.src));
             }
           }}
         >

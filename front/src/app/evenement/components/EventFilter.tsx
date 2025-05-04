@@ -30,11 +30,11 @@ export default function EventFilter({
     if (onClose) onClose();
   };
 
-  const handleReset = () => {
-    setSortOption('none');
-    setFileType('none');
-    setDateOption('none');
-  };
+  // const handleReset = () => {
+  //   setSortOption('none');
+  //   setFileType('none');
+  //   setDateOption('none');
+  // };
   return (
     <div className="max-w-lg mx-auto bg-white p-4 rounded-lg shadow-sm">
       <div className="flex justify-between items-center mb-6">
