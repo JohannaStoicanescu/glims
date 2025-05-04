@@ -11,12 +11,20 @@ import { Media } from '@/types/media';
 
 interface PhotoCardMenuProps {
   media: Media;
+  setContextMenuMedia: (value: Media | null) => void;
+  setDisplayedMedia: (value: Media | null) => void;
 }
 
-export default function PhotoCardMenu({ media }: PhotoCardMenuProps) {
+export default function PhotoCardMenu({ media, setDisplayedMedia, setContextMenuMedia }: PhotoCardMenuProps) {
   return (
     <div className="flex flex-col items-start w-full">
-      <button className="flex items-center px-4 py-3 text-gray-700 active:bg-gray-100 w-full rounded-t-3xl">
+      <button
+        className="flex items-center px-4 py-3 text-gray-700 active:bg-gray-100 w-full rounded-t-3xl"
+        onClick={() => {
+          setDisplayedMedia(media);
+          setContextMenuMedia(null);
+        }}
+      >
         <IoEyeOutline className="mr-2" />
         <p>Voir la photo</p>
       </button>

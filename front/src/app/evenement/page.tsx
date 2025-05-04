@@ -64,7 +64,6 @@ export default function AlbumPage() {
     },
   ];
 
-  const [author, setAuthor] = useState('');
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [filteredMedia, setFilteredMedia] = useState(allMedia);
   const [activeFilters, setActiveFilters] = useState({
@@ -72,15 +71,13 @@ export default function AlbumPage() {
     type: 'all_type',
     date: 'all',
   });
-  const [isMenuDiplayed, setIsMenuDisplayed] = useState(false);
-  const [isMediaDisplayed, setIsMediaDisplayed] = useState(false);
 
   const [selectedMedias, setSelectedMedias] = useState<Media[]>([]);
   const [isMultiselectionMenuDisplayed, setIsMultiselectionMenuDisplayed] =
     useState(false);
 
-  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
-  const [isMediaMenuDisplayed, setIsMediaMenuDisplayed] = useState(false);
+  const [displayedMedia, setDisplayedMedia] = useState<Media | null>(null);
+  const [contextMenuMedia, setContextMenuMedia] = useState<Media | null>(null);
 
   const applyFilters = (filters: any) => {
     setActiveFilters(filters);
@@ -169,12 +166,10 @@ export default function AlbumPage() {
             <PhotoCard
               key={index + image.author + 'card'}
               image={image}
-              setIsMenuDisplayed={setIsMenuDisplayed}
-              setIsMediaDisplayed={setIsMediaDisplayed}
-              setAuthor={setAuthor}
               selectedMedias={selectedMedias}
               setSelectedMedias={setSelectedMedias}
-              setSelectedMedia={setSelectedMedia}
+              setPreviewedMedia={setDisplayedMedia}
+              setContextMenuMedia={setContextMenuMedia}
             />
           </div>
         ))}
@@ -192,33 +187,36 @@ export default function AlbumPage() {
           height={50}
         />
       </div>
-      {selectedMedia !== null && (
-        <div className="fixed top-0 h-full w-full">
-          <div
-            className="w-full h-2/4"
-            onClick={() => setSelectedMedia(null)}></div>
-          <div className="w-full h-2/4 bg-white rounded-t-2xl">
-            <PhotoCardMenu media={selectedMedia} />
-          </div>
-        </div>
-      )}
-      {isMediaDisplayed && selectedMedia && (
+      {displayedMedia && (
         <div className="fixed top-0 w-screen h-screen">
           <div
-            onClick={() => setIsMediaDisplayed(false)}
+            onClick={() => setDisplayedMedia(null)}
             className="fixed w-full h-full inset-0 bg-[linear-gradient(black,rgba(0,0,0,1)78%,rgba(234,88,12,1)100%)] opacity-50 z-10"></div>
           <MediaDisplay
-            selectedMedia={selectedMedia}
-            setIsMediaDisplayed={setIsMediaDisplayed}
-            setIsMediaMenuDisplayed={setIsMediaMenuDisplayed}
-            filteredMedia={filteredMedia}
+            displayedMedia={displayedMedia}
+            setDisplayedMedia={setDisplayedMedia}
+            setContextMenuMedia={setContextMenuMedia}
           />
         </div>
       )}
-      {selectedMedia && isMediaMenuDisplayed && (
+      {contextMenuMedia && !displayedMedia && (
+        <div className="fixed top-0 h-full w-full">
+          <div
+            className="w-full h-2/4"
+            onClick={() => setContextMenuMedia(null)}></div>
+          <div className="w-full h-2/4 bg-white rounded-t-2xl">
+            <PhotoCardMenu
+              media={contextMenuMedia}
+              setDisplayedMedia={setDisplayedMedia}
+              setContextMenuMedia={setContextMenuMedia}
+            />
+          </div>
+        </div>
+      )}
+      {contextMenuMedia && displayedMedia && (
         <MediaDisplayMenu
-          setIsMediaMenuDisplayed={setIsMediaMenuDisplayed}
-          selectedMedia={selectedMedia}
+          contextMenuMedia={contextMenuMedia}
+          setContextMenuMedia={setContextMenuMedia}
         />
       )}
       {selectedMedias.length > 0 && (

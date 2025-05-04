@@ -11,22 +11,18 @@ import { Media } from '@/types/media';
 
 interface PhotoCardProps {
   image: Media;
-  setIsMenuDisplayed: (value: boolean) => void;
-  setIsMediaDisplayed: (value: boolean) => void;
-  setAuthor: (value: string) => void;
   selectedMedias: Media[];
   setSelectedMedias: (value: Media[]) => void;
-  setSelectedMedia: (value: Media) => void;
+  setPreviewedMedia: (value: Media) => void;
+  setContextMenuMedia: (value: Media) => void;
 }
 
 export default function PhotoCard({
   image,
-  setIsMenuDisplayed,
-  setAuthor,
   selectedMedias,
   setSelectedMedias,
-  setSelectedMedia,
-  setIsMediaDisplayed,
+  setPreviewedMedia,
+  setContextMenuMedia,
 }: PhotoCardProps) {
   const { src: imageUrl, author, liked, glims } = image;
   const [isLiked, setIsLiked] = useState(liked);
@@ -53,11 +49,6 @@ export default function PhotoCard({
     );
   };
 
-  const handleMediaSelection = () => {
-    setIsMediaDisplayed(true);
-    setSelectedMedia(image);
-  };
-
   return (
     <div className="relative overflow-hidden rounded-xl shadow transition-all duration-300">
       <Image
@@ -66,13 +57,13 @@ export default function PhotoCard({
         width={720}
         height={480}
         className="w-full h-auto object-cover"
-        onClick={handleMediaSelection}
+        onClick={() => { setPreviewedMedia(image); }}
       />
       <div className="absolute top-0 right-0 pt-2 pr-2">
         <HiDotsVertical
           className="text-white w-5 h-5"
           onClick={() => {
-            setSelectedMedia(image);
+            setContextMenuMedia(image);
           }}
         />
       </div>

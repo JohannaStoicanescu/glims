@@ -10,21 +10,20 @@ import { GoShareAndroid } from 'react-icons/go';
 
 import { Media } from '@/types/media';
 import { useState } from 'react';
+import { downloadSingleImage } from '@/utils';
 
 interface MediaDisplayProps {
-  selectedMedia: Media;
-  setIsMediaDisplayed: (value: boolean) => void;
-  setIsMediaMenuDisplayed: (value: boolean) => void;
-  filteredMedia: Media[];
+  displayedMedia: Media;
+  setContextMenuMedia: (value: Media | null) => void;
+  setDisplayedMedia: (value: Media | null) => void;
 }
 
 export default function MediaDisplay({
-  selectedMedia,
-  setIsMediaDisplayed,
-  setIsMediaMenuDisplayed,
-  filteredMedia,
+  displayedMedia,
+  setContextMenuMedia,
+  setDisplayedMedia,
 }: MediaDisplayProps) {
-  const { src: imageUrl, author, liked, glims } = selectedMedia;
+  const { src: imageUrl, author, liked, glims } = displayedMedia;
   const [isLiked, setIsLiked] = useState(liked);
   const [totalGlims, setTotalGlims] = useState(glims);
 
@@ -40,7 +39,10 @@ export default function MediaDisplay({
       <MdKeyboardArrowLeft
         size={26}
         className="text-white ml-4 mb-12 active:text-orange-200"
-        onClick={() => setIsMediaDisplayed(false)}
+        onClick={() => {
+          setDisplayedMedia(null);
+          setContextMenuMedia(null);
+        }}
       />
       <div className="flex justify-center">
         <div className="relative w-[92vw] h-[55vh] overflow-hidden rounded-lg text-white">
@@ -48,7 +50,7 @@ export default function MediaDisplay({
           <button className="absolute top-4 right-4 z-10 active:text-orange-200">
             <RxHamburgerMenu
               size={20}
-              onClick={() => setIsMediaMenuDisplayed(true)}
+              onClick={() => setContextMenuMedia(displayedMedia)}
             />
           </button>
 
@@ -61,7 +63,12 @@ export default function MediaDisplay({
           />
 
           <div className="absolute bottom-4 left-4 z-10 flex">
-            <button className="flex items-center active:text-orange-200">
+            <button
+              className="flex items-center active:text-orange-200"
+              onClick={() => {
+                downloadSingleImage(imageUrl);
+              }}
+            >
               <BsDownload
                 size={22}
                 className="mr-2"
