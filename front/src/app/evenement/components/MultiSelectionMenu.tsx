@@ -17,21 +17,20 @@ export default function MultiSelectionMenu({
     <div className="flex flex-col items-start w-full pb-6">
       <hr className="h-0.5 border-t-1 border-gray-200 w-full" />
       <div className="flex justify-between w-full">
-        <button className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100">
+        <button className="w-full flex justify-center items-center text-gray-700 active:bg-gray-100">
           <IoIosStarOutline className="mr-2" />
           <p>Enregistrer</p>
         </button>
         <hr className="h-18 border-l-1 border-gray-200 w-0.5" />
         <button
-          className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100"
+          className="w-full flex justify-center items-center text-gray-700 active:bg-gray-100"
           onClick={() => {
             if (selectedMedias.length == 1) {
               downloadSingleImage(selectedMedias[0].src);
             } else {
               downloadMultipleImages(selectedMedias.map((media) => media.src));
             }
-          }}
-        >
+          }}>
           <BsDownload className="mr-2" />
           <p>Télécharger</p>
         </button>
