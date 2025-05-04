@@ -4,6 +4,7 @@ import { LuTrash2 } from 'react-icons/lu';
 import { TbFileAlert } from 'react-icons/tb';
 import { BsDownload } from 'react-icons/bs';
 import { IoIosStarOutline } from 'react-icons/io';
+import { downloadMultipleImages, downloadSingleImage } from '@/utils';
 
 interface MultiSelectionMenuProps {
   selectedMedias: Media[];
@@ -21,7 +22,16 @@ export default function MultiSelectionMenu({
           <p>Enregistrer</p>
         </button>
         <hr className="h-18 border-l-1 border-gray-200 w-0.5" />
-        <button className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100">
+        <button
+          className="flex justify-center items-center py-6 px-14 text-gray-700 active:bg-gray-100"
+          onClick={() => {
+            if (selectedMedia.length == 1) {
+              downloadSingleImage(selectedMedia[0].src);
+            } else {
+              downloadMultipleImages(selectedMedia.map((media) => media.src));
+            }
+          }}
+        >
           <BsDownload className="mr-2" />
           <p>Télécharger</p>
         </button>
