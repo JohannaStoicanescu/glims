@@ -49,6 +49,20 @@ export default function PhotoCard({
     );
   };
 
+  const handleImageOnClick = () => {
+    if (selectedMedias.length > 0) {
+      if (isChecked)
+        setSelectedMedias(selectedMedias.filter((media) => media !== image));
+      if (!isChecked)
+        if (!isChecked) setSelectedMedias([...selectedMedias, image]);
+      setIsChecked((prev) => !prev);
+    }
+    if (selectedMedias.length === 0) {
+      setSelectedMedias([]);
+      setPreviewedMedia(image);
+    }
+  };
+
   return (
     <div className="relative overflow-hidden rounded-xl shadow transition-all duration-300">
       <Image
@@ -57,7 +71,7 @@ export default function PhotoCard({
         width={720}
         height={480}
         className="w-full h-auto object-cover"
-        onClick={() => { setPreviewedMedia(image); }}
+        onClick={handleImageOnClick}
       />
       <div className="absolute top-0 right-0 pt-2 pr-2">
         <HiDotsVertical
