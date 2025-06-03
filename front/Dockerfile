@@ -1,5 +1,8 @@
 FROM node:18 AS builder
 
+ARG PORT
+ENV PORT ${PORT}
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -18,6 +21,6 @@ COPY --from=builder /app/public public
 
 RUN npm install --omit=dev
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD ["npm", "run", "start"]
