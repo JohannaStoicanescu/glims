@@ -1,5 +1,8 @@
 FROM node:20-alpine AS base
 
+ARG PORT
+ENV PORT ${PORT}
+
 WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -23,6 +26,6 @@ COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/dist ./dist
 COPY package.json ./
 
-EXPOSE 3001
+EXPOSE ${PORT}
 
 CMD ["node", "dist/main"]
