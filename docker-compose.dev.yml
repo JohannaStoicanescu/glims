@@ -3,9 +3,13 @@ services:
     build:
       context: ./front
       dockerfile: Dockerfile.dev
+      args:
+        PORT: ${FRONTEND_PORT}
     container_name: front
+    environment:
+      - PORT=${FRONTEND_PORT}
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     volumes:
       - ./front:/app
       - /app/node_modules
@@ -20,9 +24,13 @@ services:
     build:
       context: ./back
       dockerfile: Dockerfile.dev
+      args:
+        PORT: ${BACKEND_PORT}
     container_name: back
+    environment:
+      - PORT=${BACKEND_PORT}
     ports:
-      - "3001:3001"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
       - ./back:/app
       - /app/node_modules

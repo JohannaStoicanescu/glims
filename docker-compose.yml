@@ -3,12 +3,20 @@ services:
     build:
       context: ./front
       dockerfile: Dockerfile
+      args:
+        PORT: ${BACKEND_PORT}
+    environment:
+      - PORT=${FRONTEND_PORT}
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
 
   back:
     build:
       context: ./back
       dockerfile: Dockerfile
+      args:
+        PORT: ${BACKEND_PORT}
+    environment:
+      - PORT=${BACKEND_PORT}
     ports:
-      - "3001:3001"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
