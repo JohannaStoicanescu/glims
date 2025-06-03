@@ -15,3 +15,20 @@ services:
         - action: sync
           path: ./front
           target: /app
+
+  back:
+    build:
+      context: ./back
+      dockerfile: Dockerfile.dev
+    container_name: back
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./back:/app
+      - /app/node_modules
+    restart: always
+    develop:
+      watch:
+        - action: sync
+          path: ./back
+          target: /app
