@@ -10,7 +10,7 @@ It allows users to upload, browse, react, and download photos and videos within 
 - **Frontend**: Next.js + TailwindCSS
 - **Backend**: Node.js / Nest.js + Prisma
 - **Database**: PostgreSQL / Firestore
-- **Storage**: Cloudflare R2 + Garage
+- **Storage**: Cloudflare R2, AWS S3 or Garage
 - **Infra**: Docker + Github (CI)
 - **Hosting**: School VPS
 
@@ -27,7 +27,11 @@ cd glims
 cd front
 npm install
 
-#3. Build containers and run dev environment project
+# 3. Install back dependencies
+cd back
+pnpm install
+
+# 4. Build containers and run dev environment project
 make docker-dev
 ```
 
