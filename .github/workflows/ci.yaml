@@ -1,0 +1,111 @@
+name: CI
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  lint_types_format_front:
+    name: Lint, Typecheck & Format Front (npm)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: front/package-lock.json
+      - name: Install deps
+        working-directory: front
+        run: npm ci
+      - name: Lint
+        working-directory: front
+        run: npm run lint
+      - name: Typecheck
+        working-directory: front
+        run: npm run typecheck
+      - name: Prettier check
+        working-directory: front
+        run: npm run prettier:check
+
+  lint_types_format_back:
+    name: Lint, Typecheck & Format Back (pnpm)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: back/pnpm-lock.yaml
+
+      - name: Install deps
+        working-directory: back
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        working-directory: back
+        run: pnpm run lint
+
+      - name: Typecheck
+        working-directory: back
+        run: pnpm run typecheck
+
+      - name: Prettier check
+        working-directory: back
+        run: pnpm run prettier:check
+
+  build_front:
+    name: Build Front (npm)
+    runs-on: ubuntu-latest
+    needs: lint_types_format_front
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: front/package-lock.json
+      - name: Install deps
+        working-directory: front
+        run: npm ci
+      - name: Build
+        working-directory: front
+        run: npm run build
+
+  test_build_back:
+    name: Test & Build Back (pnpm)
+    runs-on: ubuntu-latest
+    needs: lint_types_format_back
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: back/pnpm-lock.yaml
+
+      - name: Install deps
+        working-directory: back
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        working-directory: back
+        run: pnpm test
+
+      - name: Build
+        working-directory: back
+        run: pnpm run build
