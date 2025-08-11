@@ -1,5 +1,7 @@
 FROM node:20-alpine AS base
 
+USER nonroot
+
 ARG PORT
 ENV PORT ${PORT}
 
@@ -10,7 +12,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY pnpm-lock.yaml ./
 COPY package.json ./
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 COPY generated src .env nest-cli.json tsconfig.json ./
 

@@ -1,12 +1,14 @@
 FROM node:18 AS builder
 
+USER nonroot
+
 ARG PORT
 ENV PORT ${PORT}
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm install --ignore-scripts
 
 COPY next-env.d.ts next.config.ts postcss.config.mjs tsconfig.json src/ public/ ./
 
@@ -20,7 +22,7 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/.next .next
 COPY --from=builder /app/public public
 
-RUN npm install --omit=dev
+RUN npm install --omit=dev --ignore-scripts
 
 EXPOSE ${PORT}
 
