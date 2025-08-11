@@ -12,7 +12,7 @@ RUN npm add -g @nestjs/cli
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 
-COPY . .
+COPY generated src .env nest-cli.json tsconfig.json ./
 
 EXPOSE ${PORT}
 

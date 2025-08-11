@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./ 
 RUN npm install
 
-COPY . .
+COPY next-env.d.ts next.config.ts postcss.config.mjs tsconfig.json src/ public/ ./
 
 EXPOSE ${PORT}
 
