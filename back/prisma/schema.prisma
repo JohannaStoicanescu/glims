@@ -1,6 +1,10 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// NOTE: After modifying this file, run:
+//   - `pnpm prisma generate` to update the generated client.
+//   - `pnpm prisma migrate dev --name "name"` to apply migrations to your dev database.
+
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -11,9 +15,101 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Media {
+  id        String @id @default(uuid())
+  folder_id String
+  user_id   String
+  url       String @unique
+  type      String
+  metadata  Json?
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  folder       Folder         @relation(fields: [folder_id], references: [id])
+  user         User           @relation(fields: [user_id], references: [id])
+  ReactionType ReactionType[]
+}
+
 model User {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
-  name  String?
-  posts Post[]
+  id     String  @id @default(uuid())
+  email  String? @unique
+  pseudo String
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  media  Media[]
+  folder Folder[]
+}
+
+model Folder {
+  id           String  @id @default(uuid())
+  owner_id     String
+  upload_url   String  @unique
+  download_url String  @unique
+  password     String?
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  owner               User                  @relation(fields: [owner_id], references: [id])
+  media               Media[]
+  unauthenticatedUser UnauthenticatedUser[]
+}
+
+model UnauthenticatedUser {
+  id        String @id @default(uuid())
+  folder_id String
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  folder Folder @relation(fields: [folder_id], references: [id])
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+}
+
+model Reaction {
+  id String @id @default(uuid())
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  ReactionType ReactionType[]
+}
+
+model ReactionType {
+  id          String @id @default(uuid())
+  media_id    String
+  reaction_id String
+  name        String @unique
+  svg         String @unique
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  media    Media    @relation(fields: [media_id], references: [id])
+  reaction Reaction @relation(fields: [reaction_id], references: [id])
 }
