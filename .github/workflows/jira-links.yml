@@ -1,0 +1,112 @@
+name: Link Jira issues in PR
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  link-jira:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Jira links as PR comment
+        uses: actions/github-script@v7
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+        with:
+          script: |
+            const core = require('@actions/core');
+
+            const jiraBase = process.env.JIRA_BASE_URL;
+            if (!jiraBase) {
+              core.setFailed('Missing JIRA_BASE_URL secret (e.g. https://yourcompany.atlassian.net)');
+              return;
+            }
+
+            // Robust Jira key regex: ABC-123, ENG-42, ABC1-999 etc.
+            const keyRegex = /\b[A-Z][A-Z0-9]+-\d+\b/g;
+
+            const pr = context.payload.pull_request;
+
+            // Collect text sources
+            const texts = [
+              pr.title || '',
+              pr.body || '',
+              pr.head && pr.head.ref ? pr.head.ref : ''
+            ];
+
+            // Grab commit messages for this PR
+            const commits = await github.paginate(
+              github.rest.pulls.listCommits,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                per_page: 100
+              }
+            );
+
+            for (const c of commits) {
+              if (c.commit && c.commit.message) texts.push(c.commit.message);
+            }
+
+            // Extract unique Jira keys
+            const keys = new Set();
+            for (const t of texts) {
+              const matches = t.match(keyRegex);
+              if (matches) matches.forEach(k => keys.add(k));
+            }
+
+            if (keys.size === 0) {
+              console.log('No Jira keys found. Skipping comment.');
+              return;
+            }
+
+            // Build comment body
+            const sorted = Array.from(keys).sort((a,b)=>a.localeCompare(b));
+            const links = sorted.map(k => `- [${k}](${jiraBase.replace(/\/+$/,'')}/browse/${k})`).join('\n');
+
+            const header = '<!-- jira-links-sticky-comment -->';
+            const body = `${header}
+**Linked Jira issue${sorted.length>1?'s':''}**
+${links}
+
+> _Auto-generated. Update PR title/body/commits/branch to change links._`;
+
+            // Find existing bot comment to update (keeps it "sticky")
+            const allComments = await github.paginate(
+              github.rest.issues.listComments,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                per_page: 100
+              }
+            );
+
+            const existing = allComments.find(c =>
+              c.user.type === 'Bot' &&
+              c.body &&
+              c.body.includes('<!-- jira-links-sticky-comment -->')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+              console.log('Updated existing Jira links comment.');
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body
+              });
+              console.log('Created Jira links comment.');
+            }
