@@ -16,6 +16,8 @@ RUN npm run build
 
 FROM node:18-slim
 
+USER nonroot
+
 WORKDIR /app
 
 COPY --from=builder /app/package*.json ./
