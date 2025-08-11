@@ -1,7 +1,5 @@
 FROM node:22-alpine
 
-USER nonroot
-
 ARG PORT
 ENV PORT ${PORT}
 
