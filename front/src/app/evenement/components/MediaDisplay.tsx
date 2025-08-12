@@ -67,8 +67,7 @@ export default function MediaDisplay({
               className="flex items-center active:text-orange-200"
               onClick={() => {
                 downloadSingleImage(imageUrl);
-              }}
-            >
+              }}>
               <BsDownload
                 size={22}
                 className="mr-2"
