@@ -3,13 +3,13 @@
  * @param {string} url - The URL of the image to download.
  */
 export default async function downloadSingleImage(url: string) {
-	// Allows using a protected URL
-	const response = await fetch(url);
-	const blob = await response.blob();
+  // Allows using a protected URL
+  const response = await fetch(url);
+  const blob = await response.blob();
 
-	const a = document.createElement('a');
-	a.href = URL.createObjectURL(blob);
-	const fileName = `image.${blob.type.split("/")[1] || "jpg"}`;
-	a.download = fileName;
-	a.click();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const fileName = `image.${blob.type.split('/')[1] || 'jpg'}`;
+  a.download = fileName;
+  a.click();
 }
