@@ -1,26 +1,16 @@
-FROM node:18 AS builder
+FROM node:18-alpine
 
 ARG PORT
 ENV PORT ${PORT}
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+COPY package*.json ./ 
+RUN npm install --ignore-scripts
 
-COPY . .
-RUN npm run build
-
-FROM node:18-slim
-
-WORKDIR /app
-
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/.next .next
-COPY --from=builder /app/public public
-
-RUN npm install --omit=dev
+COPY next-env.d.ts next.config.ts postcss.config.mjs tsconfig.json src/ public/ ./
 
 EXPOSE ${PORT}
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
+

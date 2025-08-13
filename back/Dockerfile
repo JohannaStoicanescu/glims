@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine
 
 ARG PORT
 ENV PORT ${PORT}
@@ -7,25 +7,13 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-COPY pnpm-lock.yaml ./
-COPY package.json ./
+RUN npm add --ignore-scripts -g @nestjs/cli
 
-RUN pnpm install --frozen-lockfile
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --ignore-scripts
 
-COPY . .
-
-RUN pnpm build
-
-FROM node:20-alpine AS production
-
-# RUN corepack enable && corepack prepare pnpm@latest --activate
-
-WORKDIR /app
-
-COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/dist ./dist
-COPY package.json ./
+COPY generated src .env nest-cli.json tsconfig.json ./
 
 EXPOSE ${PORT}
 
-CMD ["node", "dist/main"]
+CMD ["pnpm", "start:dev"]
