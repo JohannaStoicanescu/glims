@@ -7,7 +7,7 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-RUN npm add -g @nestjs/cli
+RUN npm add --ignore-scripts -g @nestjs/cli
 
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --ignore-scripts
