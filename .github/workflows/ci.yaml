@@ -99,6 +99,10 @@ jobs:
         working-directory: back
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma types
+        working-directory: back
+        run: pnpm prisma generate
+
       - name: Lint
         working-directory: back
         run: pnpm run lint
@@ -131,6 +135,10 @@ jobs:
       - name: Install deps
         working-directory: back
         run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma types
+        working-directory: back
+        run: pnpm prisma generate
 
       # TODO:Uncomment the following lines when tests will be implemented
       # - name: Run tests
