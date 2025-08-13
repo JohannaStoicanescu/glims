@@ -2,44 +2,24 @@ services:
   front:
     build:
       context: ./front
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
       args:
-        PORT: ${FRONTEND_PORT}
-    container_name: front
+        PORT: ${BACKEND_PORT}
     environment:
       - PORT=${FRONTEND_PORT}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
-    volumes:
-      - ./front:/app
-      - /app/node_modules
-    restart: always
-    develop:
-      watch:
-        - action: sync
-          path: ./front
-          target: /app
 
   back:
     build:
       context: ./back
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
       args:
         PORT: ${BACKEND_PORT}
-    container_name: back
     environment:
       - PORT=${BACKEND_PORT}
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
-    volumes:
-      - ./back:/app
-      - /app/node_modules
-    restart: always
-    develop:
-      watch:
-        - action: sync
-          path: ./back
-          target: /app
 
   db:
     image: postgres
@@ -52,8 +32,3 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080

@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// NOTE: After modifying this file, run:
+//   - `pnpm prisma migrate dev --name "name"` to apply migrations to your dev database.
+//   - `pnpm prisma generate` to update the generated client.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Media {
+  id       String @id @default(uuid())
+  url      String @unique
+  type     String
+  metadata Json?
+
+  folder_id String
+  folder    Folder     @relation(fields: [folder_id], references: [id])
+  user_id   String
+  user      User       @relation(fields: [user_id], references: [id])
+  reactions Reaction[]
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model User {
+  id     String  @id @default(uuid())
+  email  String? @unique
+  pseudo String
+
+  owned_folders  Folder[] @relation("OwnedFolders")
+  member_folders Folder[] @relation("FolderMembers")
+  media          Media[]
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Folder {
+  id           String  @id @default(uuid())
+  upload_url   String  @unique
+  download_url String  @unique
+  password     String?
+
+  members  User[] @relation("FolderMembers")
+  owner_id String
+  owner    User   @relation("OwnedFolders", fields: [owner_id], references: [id])
+
+  tags                Tag[]
+  available_reactions ReactionType[]
+  media               Media[]
+  unauthenticatedUser UnauthenticatedUser[]
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model UnauthenticatedUser {
+  id        String @id @default(uuid())
+  folder_id String
+  folder    Folder @relation(fields: [folder_id], references: [id])
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Tag {
+  id      String   @id @default(uuid())
+  name    String   @unique
+  folders Folder[]
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Reaction {
+  id String @id @default(uuid())
+
+  media_id String
+  media    Media  @relation(fields: [media_id], references: [id])
+
+  reaction_type_id String
+  reaction_type    ReactionType @relation(fields: [reaction_type_id], references: [id])
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ReactionType {
+  id   String @id @default(uuid())
+  name String @unique
+  svg  String @unique
+
+  folder   Folder[]
+  reaction Reaction[]
+
+  // Maintenance fields
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

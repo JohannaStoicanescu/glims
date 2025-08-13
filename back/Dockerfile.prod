@@ -1,0 +1,35 @@
+FROM node:20-alpine AS base
+
+USER nonroot
+
+ARG PORT
+ENV PORT ${PORT}
+
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY pnpm-lock.yaml ./
+COPY package.json ./
+
+RUN pnpm install --frozen-lockfile --ignore-scripts
+
+COPY generated src .env nest-cli.json tsconfig.json ./
+
+RUN pnpm build
+
+FROM node:20-alpine AS production
+
+USER nonroot
+
+# RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/dist ./dist
+COPY package.json ./
+
+EXPOSE ${PORT}
+
+CMD ["node", "dist/main"]
