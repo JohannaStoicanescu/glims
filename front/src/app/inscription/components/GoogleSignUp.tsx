@@ -9,7 +9,9 @@ export default function GoogleSignUp() {
     <div className="flex flex-col gap-4">
       <ButtonForm
         icon={<FaGoogle />}
-        text={<span className="hidden md:block">S'inscrire avec Google</span>}
+        text={
+          <span className="hidden md:block">S&apos;inscrire avec Google</span>
+        }
         style="light"
         onClick={() => {}}
       />

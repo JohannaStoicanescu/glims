@@ -19,7 +19,13 @@ export default function CompleteProfileSection({
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { newUserData, setNewUserData } = useContext(NewUserContext);
+  const context = useContext(NewUserContext);
+
+  if (!context) {
+    throw new Error();
+  }
+
+  const { newUserData, setNewUserData } = context;
 
   const handleProfileCompletion = (e: React.FormEvent) => {
     e.preventDefault();

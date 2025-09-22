@@ -7,6 +7,7 @@ import { NewUserContext } from '../utils/new-user-context';
 import StepIndicators from './StepIndicators';
 import { FiTrash2 } from 'react-icons/fi';
 import { LuPencil } from 'react-icons/lu';
+import Image from 'next/image';
 
 export default function ImagePicker() {
   const [currentStep, setCurrentStep] = useState(2);
@@ -14,7 +15,13 @@ export default function ImagePicker() {
 
   const id = useId();
 
-  const { newUserData, setNewUserData } = useContext(NewUserContext);
+  const context = useContext(NewUserContext);
+
+  if (!context) {
+    throw new Error();
+  }
+
+  const { newUserData, setNewUserData } = context;
 
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -87,7 +94,7 @@ export default function ImagePicker() {
         {currentStep === 3 && previewUrl && (
           <div className="flex flex-col items-center">
             <div className="relative inline-block px-6 py-4">
-              <img
+              <Image
                 src={previewUrl}
                 alt="Aperçu de l'image sélectionnée"
                 className="h-35 w-35 rounded-full object-cover"

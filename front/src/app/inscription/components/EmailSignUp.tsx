@@ -11,7 +11,13 @@ export default function EmailSignUp({
 }: {
   setInscriptionStep: (step: number) => void;
 }) {
-  const { newUserData, setNewUserData } = useContext(NewUserContext);
+  const context = useContext(NewUserContext);
+
+  if (!context) {
+    throw new Error();
+  }
+
+  const { newUserData, setNewUserData } = context;
 
   const handleEmailSignUp = (e: FormEvent) => {
     e.preventDefault();
@@ -48,7 +54,7 @@ export default function EmailSignUp({
         }
         icon={<HiOutlineMail />}
         style="dark"
-        onClick={(e) => {}}
+        onClick={() => {}}
       />
     </form>
   );

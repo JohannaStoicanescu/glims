@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { NavBar } from './ui';
 
 export const metadata: Metadata = {
   title: 'Inscription',

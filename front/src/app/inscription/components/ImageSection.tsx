@@ -14,7 +14,13 @@ export default function ImageForm({
 }: {
   setInscriptionStep: (step: number) => void;
 }) {
-  const { newUserData, setNewUserData } = useContext(NewUserContext);
+  const context = useContext(NewUserContext);
+
+  if (!context) {
+    throw new Error();
+  }
+
+  const { newUserData } = context;
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 
-import { NewUserContext } from '../utils/new-user-context';
+import { NewUser, NewUserContext } from '../utils/new-user-context';
 import CompleteProfileSection from './CompleteProfileSection';
 import ImageSection from './ImageSection';
 import SignUpSection from './SignUpSection';
 
 export default function InscriptionSteps() {
   const [inscriptionStep, setInscriptionStep] = useState(1);
-  const [newUserData, setNewUserData] = useState<any>({
+  const [newUserData, setNewUserData] = useState<NewUser>({
     email: null,
     firstName: null,
     lastName: null,
