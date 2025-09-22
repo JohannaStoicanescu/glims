@@ -10,9 +10,9 @@ import { NewUserContext } from '../utils/new-user-context';
 import { useContext } from 'react';
 
 export default function ImageForm({
-  setInscriptionStep,
+  setSignUpStep,
 }: {
-  setInscriptionStep: (step: number) => void;
+  setSignUpStep: (step: number) => void;
 }) {
   const context = useContext(NewUserContext);
 
@@ -27,7 +27,7 @@ export default function ImageForm({
     console.log(newUserData);
     // Handle form submission logic here
 
-    setInscriptionStep(1);
+    setSignUpStep(1);
   };
   return (
     <main className="flex flex-col h-screen w-screen md:flex-row">
@@ -47,7 +47,7 @@ export default function ImageForm({
         <div className="flex items-start md:items-center justify-center h-full">
           <section className="w-96">
             <button
-              onClick={() => setInscriptionStep(2)}
+              onClick={() => setSignUpStep(2)}
               className="flex items-center gap-2 md:hidden mt-3 cursor-pointer md:hover:text-slate-300 focus:text-slate-300">
               <IoIosArrowBack />
               <span>Retour</span>

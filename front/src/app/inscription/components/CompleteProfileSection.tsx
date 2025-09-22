@@ -13,9 +13,9 @@ import SideDisplay from './SideDisplay';
 import { NewUserContext } from '../utils/new-user-context';
 
 export default function CompleteProfileSection({
-  setInscriptionStep,
+  setSignUpStep,
 }: {
-  setInscriptionStep: (step: number) => void;
+  setSignUpStep: (step: number) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -48,7 +48,7 @@ export default function CompleteProfileSection({
         ) as HTMLInputElement
       ).value,
     });
-    setInscriptionStep(3);
+    setSignUpStep(3);
   };
 
   return (
@@ -69,7 +69,7 @@ export default function CompleteProfileSection({
         <div className="flex items-start md:items-center justify-center h-full">
           <section className="w-96">
             <button
-              onClick={() => setInscriptionStep(1)}
+              onClick={() => setSignUpStep(1)}
               className="flex items-center gap-2 md:hidden mt-3 cursor-pointer md:hover:text-slate-300 focus:text-slate-300">
               <IoIosArrowBack />
               <span>Retour</span>
@@ -159,7 +159,7 @@ export default function CompleteProfileSection({
                 text={'Continuer'}
                 style="dark"
                 onClick={() => {
-                  setInscriptionStep(3);
+                  setSignUpStep(3);
                 }}
               />
             </form>

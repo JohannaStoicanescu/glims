@@ -1,5 +1,5 @@
-import InscriptionSteps from './components/InscriptionSteps';
+import SignUpSteps from './components/SignUpSteps';
 
 export default function Page() {
-  return <InscriptionSteps />;
+  return <SignUpSteps />;
 }

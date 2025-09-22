@@ -7,9 +7,9 @@ import Divider from './Divider';
 import EmailSignUp from './EmailSignUp';
 
 export default function SignUpSection({
-  setInscriptionStep,
+  setSignUpStep,
 }: {
-  setInscriptionStep: (step: number) => void;
+  setSignUpStep: (step: number) => void;
 }) {
   return (
     <main className="flex flex-col h-screen w-screen md:flex-row">
@@ -47,7 +47,7 @@ export default function SignUpSection({
             </div>
 
             <div className="flex flex-col md:flex-col-reverse">
-              <EmailSignUp setInscriptionStep={setInscriptionStep} />
+              <EmailSignUp setSignUpStep={setSignUpStep} />
 
               <Divider />
 

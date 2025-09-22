@@ -4,8 +4,8 @@ import '../globals.css';
 import { NavBar } from '../ui';
 
 export const metadata: Metadata = {
-  title: 'Messages',
-  description: 'Les notifications nouvelles et anciennes',
+  title: 'Nouveau',
+  description: 'Créer un nouveau Glim',
 };
 
 export default function RootLayout({

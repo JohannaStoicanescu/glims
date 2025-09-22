@@ -7,8 +7,8 @@ import CompleteProfileSection from './CompleteProfileSection';
 import ImageSection from './ImageSection';
 import SignUpSection from './SignUpSection';
 
-export default function InscriptionSteps() {
-  const [inscriptionStep, setInscriptionStep] = useState(1);
+export default function SignUpSteps() {
+  const [signUpStep, setSignUpStep] = useState(1);
   const [newUserData, setNewUserData] = useState<NewUser>({
     email: null,
     firstName: null,
@@ -19,15 +19,11 @@ export default function InscriptionSteps() {
 
   return (
     <NewUserContext.Provider value={{ newUserData, setNewUserData }}>
-      {inscriptionStep === 1 && (
-        <SignUpSection setInscriptionStep={setInscriptionStep} />
+      {signUpStep === 1 && <SignUpSection setSignUpStep={setSignUpStep} />}
+      {signUpStep === 2 && (
+        <CompleteProfileSection setSignUpStep={setSignUpStep} />
       )}
-      {inscriptionStep === 2 && (
-        <CompleteProfileSection setInscriptionStep={setInscriptionStep} />
-      )}
-      {inscriptionStep === 3 && (
-        <ImageSection setInscriptionStep={setInscriptionStep} />
-      )}
+      {signUpStep === 3 && <ImageSection setSignUpStep={setSignUpStep} />}
     </NewUserContext.Provider>
   );
 }

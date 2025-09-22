@@ -7,9 +7,9 @@ import { InputForm, ButtonForm } from '@/app/ui';
 import { NewUserContext } from '../utils/new-user-context';
 
 export default function EmailSignUp({
-  setInscriptionStep,
+  setSignUpStep,
 }: {
-  setInscriptionStep: (step: number) => void;
+  setSignUpStep: (step: number) => void;
 }) {
   const context = useContext(NewUserContext);
 
@@ -28,7 +28,7 @@ export default function EmailSignUp({
         e.currentTarget.querySelector('input[name="email"]') as HTMLInputElement
       ).value,
     });
-    setInscriptionStep(2);
+    setSignUpStep(2);
   };
 
   return (
