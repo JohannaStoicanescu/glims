@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 
 interface AvatarRoundedProps {
@@ -17,9 +19,10 @@ export default function AvatarRounded({
     <Image
       src={src}
       alt={alt}
-      width={32}
-      height={32}
-      className={`${size} ${border} rounded-full`}
+      width={34}
+      height={34}
+      onClick={() => {}}
+      className={`${size} ${border} rounded-full cursor-pointer transition`}
       style={{ objectFit: 'cover' }}
     />
   );
