@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import './globals.css';
+
+import '../globals.css';
 
 export const metadata: Metadata = {
   title: 'Inscription',
@@ -18,7 +19,7 @@ export default function RootLayout({
         href="/favicon.ico"
         sizes="any"
       />
-      <body className="bg-white">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
