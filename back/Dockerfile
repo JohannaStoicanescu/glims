@@ -5,9 +5,7 @@ ENV PORT ${PORT}
 
 WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-RUN npm add --ignore-scripts -g @nestjs/cli
+RUN npm install -g --ignore-scripts pnpm@10.17.1 @nestjs/cli
 
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --ignore-scripts
