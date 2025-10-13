@@ -35,7 +35,7 @@ model Media {
 model User {
   id     String  @id @default(uuid())
   email  String? @unique
-  pseudo String
+  pseudo String?
 
   owned_folders  Folder[] @relation("OwnedFolders")
   member_folders Folder[] @relation("FolderMembers")
@@ -45,8 +45,8 @@ model User {
   name          String
   emailVerified Boolean
   image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
 
@@ -127,7 +127,7 @@ model Session {
   id        String   @id
   expiresAt DateTime
   token     String
-  createdAt DateTime
+  createdAt DateTime @default(now())
   updatedAt DateTime
   ipAddress String?
   userAgent String?
@@ -151,7 +151,7 @@ model Account {
   refreshTokenExpiresAt DateTime?
   scope                 String?
   password              String?
-  createdAt             DateTime
+  createdAt             DateTime  @default(now())
   updatedAt             DateTime
 
   @@map("account")
@@ -162,7 +162,7 @@ model Verification {
   identifier String
   value      String
   expiresAt  DateTime
-  createdAt  DateTime?
+  createdAt  DateTime? @default(now())
   updatedAt  DateTime?
 
   @@map("verification")

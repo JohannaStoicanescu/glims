@@ -5,10 +5,8 @@ import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from './lib/auth';
 
 @Module({
-  imports: [
-    AuthModule.forRoot(auth)
-  ],
+  imports: [AuthModule.forRoot(auth)],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
