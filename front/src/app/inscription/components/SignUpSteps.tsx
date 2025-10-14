@@ -17,17 +17,19 @@ export default function SignUpSteps() {
     password: null,
     profileImage: null,
   });
+  const authClient = useAuthClient();
+  const session = useSession();
 
   const formSubmit = async (newUserData: NewUser) => {
-    let result = await useAuthClient().signUp.email({
+    const result = await authClient.signUp.email({
       email: newUserData.email || '',
       password: newUserData.password || '',
       name: `${newUserData.firstName} ${newUserData.lastName}`,
       image: newUserData.profileImage?.name || undefined,
     });
     if (result.data) {
-      console.log("after signup");
-      console.table(useSession().value);
+      console.log('after signup');
+      console.table(session.value);
     }
   };
 
@@ -37,7 +39,12 @@ export default function SignUpSteps() {
       {signUpStep === 2 && (
         <CompleteProfileSection setSignUpStep={setSignUpStep} />
       )}
-      {signUpStep === 3 && <ImageSection setSignUpStep={() => { }} formSubmit={formSubmit} />}
+      {signUpStep === 3 && (
+        <ImageSection
+          setSignUpStep={() => {}}
+          formSubmit={formSubmit}
+        />
+      )}
     </NewUserContext.Provider>
   );
 }

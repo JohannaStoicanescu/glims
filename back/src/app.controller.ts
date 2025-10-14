@@ -4,7 +4,7 @@ import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   @Get()
   getHello(): string {
@@ -12,13 +12,13 @@ export class AppController {
   }
 
   @Get('insecure')
-  getInsecure() {
+  getInsecure(): { ok: boolean; msg: string } {
     return { ok: true, msg: 'this is insecure (public)' };
   }
 
   @Get('secure')
   @UseGuards(AuthGuard) // requires an authenticated session
-  getSecure(@Session() session: UserSession) {
+  getSecure(@Session() session: UserSession): { ok: boolean; user: UserSession['user'] } {
     // session contains user & session info
     return { ok: true, user: session.user };
   }

@@ -9,13 +9,15 @@ import SideDisplay from './SideDisplay';
 import { NewUser, NewUserContext } from '../utils/new-user-context';
 import { useContext } from 'react';
 
+interface Props {
+  setSignUpStep: (step: number) => void;
+  formSubmit: (newUserData: NewUser) => void;
+}
+
 export default function ImageForm({
   setSignUpStep,
   formSubmit,
-}: {
-  setSignUpStep: (step: number) => void;
-  formSubmit: (newUserData: NewUser) => void;
-}) {
+}: Readonly<Props>) {
   const context = useContext(NewUserContext);
 
   if (!context) {
