@@ -4,9 +4,10 @@ services:
       context: ./front
       dockerfile: Dockerfile.prod
       args:
-        PORT: ${BACKEND_PORT}
+        PORT: ${FRONTEND_PORT}
     environment:
       - PORT=${FRONTEND_PORT}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
 
@@ -14,21 +15,18 @@ services:
     build:
       context: ./back
       dockerfile: Dockerfile.prod
-      args:
-        PORT: ${BACKEND_PORT}
     environment:
-      - PORT=${BACKEND_PORT}
-    ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - DATABASE_URL=${DATABASE_URL}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
 
   db:
     image: postgres
     restart: always
     # set shared memory limit when using docker compose
     shm_size: 128mb
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-

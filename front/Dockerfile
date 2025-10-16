@@ -1,9 +1,11 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 ARG PORT
 ENV PORT ${PORT}
 
 WORKDIR /app
+
+RUN apk add --no-cache libc6-compat
 
 COPY package*.json ./ 
 RUN npm install --ignore-scripts

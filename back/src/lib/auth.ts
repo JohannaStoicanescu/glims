@@ -19,5 +19,5 @@ export const auth = betterAuth({
     },
     // facebook: { clientId, clientSecret } // add if needed
   },
-  trustedOrigins: ['http://localhost:3000', 'http://localhost:3001'],
+  trustedOrigins: [`http://${process.env.FRONTEND_HOST}`],
 });
