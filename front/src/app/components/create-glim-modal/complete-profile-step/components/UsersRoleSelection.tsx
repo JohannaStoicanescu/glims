@@ -87,8 +87,18 @@ export function UsersRoleSelection() {
               <div
                 className="relative"
                 ref={dropdownRefDesktop}>
-                <div
+                <button
+                  type="button"
                   onClick={() => setIsOpenDesktop(!isOpenDesktop)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setIsOpenDesktop(!isOpenDesktop);
+                    }
+                  }}
+                  aria-expanded={isOpenDesktop}
+                  aria-haspopup="listbox"
+                  aria-label="Sélectionner le rôle des invités"
                   className={`flex items-center justify-between cursor-pointer border border-gray-200 p-3 rounded-xl bg-gray-50 text-gray-500 hover:border-yellow-400 focus:border-yellow-400 transition`}>
                   <Eye
                     size={18}
@@ -98,21 +108,33 @@ export function UsersRoleSelection() {
                   <ChevronDown
                     className={`w-4 h-4 text-gray-600 transition-transform ${isOpenDesktop ? 'rotate-180' : ''}`}
                   />
-                </div>
+                </button>
                 {isOpenDesktop && (
                   <div className="absolute w-62 max-h-45 overflow-y-scroll scroll-smooth top-full right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg p-2 z-10">
                     {options.map((option, index) => (
-                      <div
+                      <button
                         key={option.value + index}
-                        className="py-3 px-3 hover:bg-gray-50 cursor-pointer rounded-xl"
+                        type="button"
+                        className="w-full py-3 px-3 hover:bg-gray-50 cursor-pointer rounded-xl text-left"
                         onClick={() => {
                           field.onChange(option.value);
                           setIsOpenDesktop(false);
-                        }}>
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            field.onChange(option.value);
+                            setIsOpenDesktop(false);
+                          } else if (e.key === 'Escape') {
+                            setIsOpenDesktop(false);
+                          }
+                        }}
+                        role="option"
+                        aria-selected={field.value === option.value}>
                         <span className="text-base font-medium text-gray-800">
                           {option.title}
                         </span>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 )}
@@ -126,9 +148,19 @@ export function UsersRoleSelection() {
                 className="relative"
                 ref={dropdownRefMobile}>
                 {/* SELECT BUTTON */}
-                <div
-                  className="w-full py-4 px-4 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:border-yellow-400 focus:border-yellow-400 "
-                  onClick={() => setIsOpenMobile(!isOpenMobile)}>
+                <button
+                  type="button"
+                  className="w-full py-4 px-4 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:border-yellow-400 focus:border-yellow-400"
+                  onClick={() => setIsOpenMobile(!isOpenMobile)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setIsOpenMobile(!isOpenMobile);
+                    }
+                  }}
+                  aria-expanded={isOpenMobile}
+                  aria-haspopup="listbox"
+                  aria-label="Sélectionner le rôle des invités">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Eye
@@ -143,19 +175,33 @@ export function UsersRoleSelection() {
                       className={`w-4 h-4 text-gray-400 transition-transform ${isOpenMobile ? 'rotate-180' : ''}`}
                     />
                   </div>
-                </div>
+                </button>
 
                 {/* DROPDOWN OPTIONS */}
                 {isOpenMobile && (
                   <div className="absolute bottom-[-100px] left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg p-2">
                     {options.map((option) => (
-                      <div
+                      <button
                         key={option.value}
-                        className="py-4 px-2 hover:bg-gray-50 cursor-pointer rounded-xl"
+                        type="button"
+                        className={`w-full py-4 px-2 hover:bg-gray-50 cursor-pointer rounded-xl text-left ${
+                          field.value === option.value ? 'bg-gray-50' : ''
+                        }`}
                         onClick={() => {
                           field.onChange(option.value);
                           setIsOpenMobile(false);
-                        }}>
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            field.onChange(option.value);
+                            setIsOpenMobile(false);
+                          } else if (e.key === 'Escape') {
+                            setIsOpenMobile(false);
+                          }
+                        }}
+                        role="option"
+                        aria-selected={field.value === option.value}>
                         <div className="flex items-center gap-3">
                           <div className="flex flex-col">
                             <span className="text-base font-medium text-gray-800">
@@ -163,7 +209,7 @@ export function UsersRoleSelection() {
                             </span>
                           </div>
                         </div>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 )}

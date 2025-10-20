@@ -6,8 +6,8 @@ import { AccessibilityToTheGlimCheckboxes } from './components/AccessibilityToTh
 import { UsersRoleSelection } from './components/UsersRoleSelection';
 
 interface CompleteProfileStepProps {
-  setStep: (step: number) => void;
-  onClose: () => void;
+  readonly setStep: (step: number) => void;
+  readonly onClose: () => void;
 }
 
 export function CompleteProfileStep({
@@ -83,7 +83,7 @@ export function CompleteProfileStep({
             style="medium"
             text="Annuler"
             onClick={() => onClose()}
-            extraCss="w-full"
+            extraCss="w-full hidden md:flex"
             icon={<ChevronLeft className="h-5 w-5" />}
           />
           <ButtonForm

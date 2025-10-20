@@ -3,8 +3,8 @@ import { StepIndicators } from '../../../ui';
 import { Breadcrumps } from './Breadcrumps';
 
 interface HeaderProps {
-  step?: number;
-  onClose?: () => void;
+  readonly step?: number;
+  readonly onClose?: () => void;
 }
 
 export function Header({ step, onClose }: HeaderProps) {

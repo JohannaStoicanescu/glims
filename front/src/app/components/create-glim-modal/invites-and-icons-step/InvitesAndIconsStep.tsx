@@ -6,11 +6,11 @@ import { IconSection } from './components/IconSection';
 import { InviteSection } from './components/InviteSection';
 
 interface InvitesAndIconsStepProps {
-  setStep: (step: number) => void;
+  readonly setStep: (step: number) => void;
 }
 
 export function InvitesAndIconsStep({ setStep }: InvitesAndIconsStepProps) {
-  const { handleSubmit, watch } = useFormContext();
+  const { handleSubmit } = useFormContext();
 
   const onSubmit = (data: any) => {
     // TODO: create hook to submit the form
@@ -51,12 +51,12 @@ export function InvitesAndIconsStep({ setStep }: InvitesAndIconsStepProps) {
             onClick={() => {
               setStep(1);
             }}
-            extraCss="w-full"
+            extraCss="w-full hidden md:flex"
             icon={<ChevronLeft className="h-5 w-5" />}
           />
           <ButtonForm
             style="dark"
-            text="Terminer"
+            text="Valider la création"
             onClick={handleFinish}
             extraCss="w-full"
             icon={<ChevronRight className="h-5 w-5" />}

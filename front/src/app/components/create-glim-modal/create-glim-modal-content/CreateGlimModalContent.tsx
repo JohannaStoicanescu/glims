@@ -10,8 +10,8 @@ import { InvitesAndIconsStep } from '../invites-and-icons-step/InvitesAndIconsSt
 import { defaultFormConfig, GlimFormData } from './utils/default-form-content';
 
 interface CreateGlimModalContentProps {
-  open: boolean;
-  onClose: () => void;
+  readonly open: boolean;
+  readonly onClose: () => void;
 }
 
 export function CreateGlimModalContent({
@@ -41,11 +41,10 @@ export function CreateGlimModalContent({
   if (!open) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-40 md:flex md:items-center md:justify-center md:p-4"
-      aria-labelledby="glims-title"
-      aria-modal="true"
-      role="dialog">
+    <dialog
+      open={open}
+      className="fixed w-full h-full inset-0 z-40 md:flex md:items-center md:justify-center md:p-4 bg-transparent"
+      aria-labelledby="glims-title">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[1px] z-0"
         onClick={onClose}
@@ -78,6 +77,6 @@ export function CreateGlimModalContent({
           </div>
         </FormProvider>
       </div>
-    </div>
+    </dialog>
   );
 }

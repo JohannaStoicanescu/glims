@@ -1,8 +1,8 @@
 interface NavLinksProps {
-  title: string;
-  href?: string;
-  onClick?: () => void;
-  icon: React.ReactNode;
+  readonly title: string;
+  readonly href?: string;
+  readonly onClick?: () => void;
+  readonly icon: React.ReactNode;
 }
 
 export default function NavLinks({

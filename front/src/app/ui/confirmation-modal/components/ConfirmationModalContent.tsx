@@ -2,14 +2,14 @@ import { ButtonForm } from '../..';
 import { X } from '../../icons';
 
 interface ConfirmationModalContentProps {
-  icon: React.ReactNode;
-  title: string;
-  message: string;
-  confirmButtonText: string;
-  cancelButtonText: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-  radial?: boolean;
+  readonly icon: React.ReactNode;
+  readonly title: string;
+  readonly message: string;
+  readonly confirmButtonText: string;
+  readonly cancelButtonText: string;
+  readonly onConfirm: () => void;
+  readonly onCancel: () => void;
+  readonly radial?: boolean;
 }
 
 export function ConfirmationModalContent({
@@ -26,10 +26,20 @@ export function ConfirmationModalContent({
     <div
       className={`rounded-xl p-6 pt-4 md:p-10 md:pt-8 flex flex-col items-center gap-4 
             ${radial ? 'bg-radial from-red-100 via-white to-white bg-[length:200%_200%] bg-top' : 'bg-white'}`}>
-      <div
-        className="w-full flex justify-end cursor-pointer hover:text-orange-300"
-        onClick={onCancel}>
-        <X />
+      <div className="w-full flex justify-end">
+        <button
+          type="button"
+          className="cursor-pointer hover:text-orange-300 p-1"
+          onClick={onCancel}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onCancel();
+            }
+          }}
+          aria-label="Fermer la modal">
+          <X />
+        </button>
       </div>
       <span className="text-4xl bg-red-50 text-red-500 rounded-full w-20 h-20 md:w-32 md:h-32 flex items-center justify-center">
         {icon}

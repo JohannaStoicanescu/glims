@@ -3,13 +3,13 @@
 import { useFormContext, FieldError } from 'react-hook-form';
 
 interface ControlledInputFormProps {
-  label: string;
-  showLabel?: boolean;
-  type: string;
-  name: string;
-  placeholder: string;
-  required?: boolean;
-  validation?: object;
+  readonly label: string;
+  readonly showLabel?: boolean;
+  readonly type: string;
+  readonly name: string;
+  readonly placeholder: string;
+  readonly required?: boolean;
+  readonly validation?: object;
 }
 
 export default function ControlledInputForm({
@@ -26,7 +26,7 @@ export default function ControlledInputForm({
     formState: { errors },
   } = useFormContext();
 
-  const error = errors[name] as FieldError | undefined;
+  const error = errors[name] as FieldError;
 
   return (
     <div>

@@ -1,21 +1,15 @@
 'use client';
 
-const buttonStyles = {
-  dark: 'text-white bg-black border border-black hover:bg-white hover:text-black',
-  medium:
-    'text-black bg-gray-100 border border-gray-100 hover:border-black hover:bg-white hover:text-black',
-  light:
-    'text-black bg-white border border-gray-300 hover:bg-black hover:text-white hover:border-black',
-} as const;
+import { buttonStyles } from './utils/button-styles';
 
 interface ButtonFormProps {
-  icon?: React.ReactNode;
-  iconPosition?: 'right' | 'left';
-  text?: React.ReactNode;
-  style: keyof typeof buttonStyles;
-  type?: 'button' | 'submit' | 'reset';
-  onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
-  extraCss?: string;
+  readonly icon?: React.ReactNode;
+  readonly iconPosition?: 'right' | 'left';
+  readonly text?: React.ReactNode;
+  readonly style: keyof typeof buttonStyles;
+  readonly type?: 'button' | 'submit' | 'reset';
+  readonly onClick?: (event?: React.MouseEvent<HTMLButtonElement>) => void;
+  readonly extraCss?: string;
 }
 
 export default function ButtonForm({

@@ -1,6 +1,10 @@
 import { X } from '../../../ui/icons';
 
-export function CloseModalButton({ onClose }: { onClose: () => void }) {
+interface CloseModalButtonProps {
+  readonly onClose: () => void;
+}
+
+export function CloseModalButton({ onClose }: CloseModalButtonProps) {
   return (
     <div className="flex justify-end items-center pt-2 px-2 md:px-4 md:pt-4">
       <button

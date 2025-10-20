@@ -1,5 +1,5 @@
 interface BreadcrumpsProps {
-  currentStep: number;
+  readonly currentStep: number;
 }
 
 export function Breadcrumps({ currentStep }: BreadcrumpsProps) {

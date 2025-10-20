@@ -1,6 +1,6 @@
 interface BreadcrumpsProps {
-  currentStep: number;
-  numberOfSteps: number;
+  readonly currentStep: number;
+  readonly numberOfSteps: number;
 }
 
 export default function StepIndicators({

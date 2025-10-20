@@ -1,8 +1,8 @@
 import { CreateGlimModalContent } from './create-glim-modal-content/CreateGlimModalContent';
 
 interface CreateGlimModalProps {
-  open: boolean;
-  onClose: () => void;
+  readonly open: boolean;
+  readonly onClose: () => void;
 }
 
 export default function CreateGlimModal({
@@ -10,11 +10,9 @@ export default function CreateGlimModal({
   onClose,
 }: CreateGlimModalProps) {
   return (
-    <>
-      <CreateGlimModalContent
-        open={open}
-        onClose={onClose}
-      />
-    </>
+    <CreateGlimModalContent
+      open={open}
+      onClose={onClose}
+    />
   );
 }
