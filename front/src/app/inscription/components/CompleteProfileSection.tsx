@@ -2,15 +2,12 @@
 
 import Image from 'next/image';
 import { useContext, useState } from 'react';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
-import ButtonForm from '@/app/ui/form/ButtonForm';
-import Checkboxes from './Checkboxes';
-import StepIndicators from './StepIndicators';
-import { FiEye } from 'react-icons/fi';
-import InputForm from '@/app/ui/form/InputForm';
-import SideDisplay from './SideDisplay';
+import { ChevronLeft, ChevronRight, Eye } from '../../ui/icons';
+import { ButtonForm, InputForm, StepIndicators } from '../../ui';
 import { NewUserContext } from '../utils/new-user-context';
+import Checkboxes from './Checkboxes';
+import SideDisplay from './SideDisplay';
 
 export default function CompleteProfileSection({
   setSignUpStep,
@@ -71,7 +68,7 @@ export default function CompleteProfileSection({
             <button
               onClick={() => setSignUpStep(1)}
               className="flex items-center gap-2 md:hidden mt-3 cursor-pointer md:hover:text-slate-300 focus:text-slate-300">
-              <IoIosArrowBack />
+              <ChevronLeft />
               <span>Retour</span>
             </button>
             <h1 className="text-center text-3xl font-bold my-8 md:mt-0">
@@ -138,7 +135,7 @@ export default function CompleteProfileSection({
                       }
                       className="w-full border-2 border-gray-200 p-3 rounded-xl bg-gray-50 hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
                     />
-                    <FiEye
+                    <Eye
                       size={20}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-yellow-400 transition"
                       aria-label="Afficher le mot de passe"
@@ -150,11 +147,14 @@ export default function CompleteProfileSection({
                 <Checkboxes />
               </div>
 
-              <StepIndicators currentStep={1} />
+              <StepIndicators
+                currentStep={1}
+                numberOfSteps={3}
+              />
 
               <ButtonForm
                 type="submit"
-                icon={<IoIosArrowForward />}
+                icon={<ChevronRight />}
                 iconPosition="right"
                 text={'Continuer'}
                 style="dark"
