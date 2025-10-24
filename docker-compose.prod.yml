@@ -10,6 +10,7 @@ services:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    restart: unless-stopped
 
   back:
     build:
@@ -21,10 +22,11 @@ services:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    restart: unless-stopped
 
   db:
     image: postgres
-    restart: always
+    restart: unless-stopped
     # set shared memory limit when using docker compose
     shm_size: 128mb
     environment:
