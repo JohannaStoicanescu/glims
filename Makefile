@@ -9,5 +9,6 @@ docker-prod:
 migrate-dev:
 	docker compose run --rm back pnpm prisma migrate dev
 
+# The migration uses another container that is detroyed as soon as the migration is over
 migrate-prod:
-	docker compose -f docker-compose.prod.yml run --rm back "pnpm prisma migrate deploy"
+	docker compose -f docker-compose.prod.yml run --rm migrate

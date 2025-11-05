@@ -22,7 +22,30 @@ services:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    ports:
+      - 3000:3000
     restart: unless-stopped
+
+  migrate:
+    build:
+      context: ./back
+      dockerfile: Dockerfile.prod
+      target: base # important: this stage includes Prisma CLI
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - db
+    command: >
+      sh -c "pnpm prisma migrate deploy"
+    # Prevents the container from running at `docker compose up`
+    profiles: ["manual"]
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    # Prevents the container from running at `docker compose up`
+    profiles: ["manual"]
 
   db:
     image: postgres

@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuthClient } from '@/hooks';
-import { clientApiFetch } from '@/utils';
+import { fetchApiFromClient } from '@/utils';
 import { useEffect, useState } from 'react';
 
 type Session = {
@@ -40,13 +40,13 @@ export default function Page() {
 
   const fetchRoutes = () => {
     // Example of calling insecure route
-    clientApiFetch('insecure')
+    fetchApiFromClient('insecure')
       .then((res) => res.json())
       .then((data) => setInsecureRouteData(data))
       .catch((err) => setInsecureRouteData({ error: err.message }));
 
     // Example of calling secure route
-    clientApiFetch(`secure`, {
+    fetchApiFromClient(`secure`, {
       credentials: 'include', // include cookies for authentication
     })
       .then((res) => res.json())
