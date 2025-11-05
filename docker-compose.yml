@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
       args:
         PORT: ${FRONTEND_PORT}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: front
     environment:
       - PORT=${FRONTEND_PORT}
@@ -33,6 +34,7 @@ services:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - IS_DEV=true
     ports:
       - "3000:3000"
     volumes:

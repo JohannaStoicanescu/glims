@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile.prod
       args:
         PORT: ${FRONTEND_PORT}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     environment:
       - PORT=${FRONTEND_PORT}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}

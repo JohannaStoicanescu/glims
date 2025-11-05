@@ -1,6 +1,10 @@
 FROM node:20-alpine AS builder
+
 ARG PORT
 ENV PORT ${PORT}
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
 WORKDIR /app
 
 # Copy package files first
@@ -29,6 +33,9 @@ RUN npm install --omit=dev --ignore-scripts
 RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 RUN chown -R nonroot:nonroot /app
 USER nonroot
+
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 EXPOSE ${PORT}
 CMD ["npm", "run", "start"]

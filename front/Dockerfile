@@ -3,6 +3,9 @@ FROM node:20-alpine
 ARG PORT
 ENV PORT ${PORT}
 
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat
