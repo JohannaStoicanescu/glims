@@ -10,9 +10,13 @@ export function IconSection() {
       defaultValue={false}
       render={({ field }) => (
         <div>
-          <div
-            className="inline-flex items-center cursor-pointer"
-            onClick={() => field.onChange(!field.value)}>
+          <button
+            type="button"
+            className="inline-flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+            onClick={() => field.onChange(!field.value)}
+            role="switch"
+            aria-checked={field.value}
+            aria-label="Afficher les réactions">
             <div
               className={`relative w-11 h-6 rounded-full transition-all ${
                 field.value ? 'bg-blue-600' : 'bg-gray-200'
@@ -25,7 +29,7 @@ export function IconSection() {
             <span className="ms-3 text-sm font-medium text-gray-900">
               Afficher les réactions
             </span>
-          </div>
+          </button>
 
           {/* CONDITIONAL CONTENT */}
           {field.value && (

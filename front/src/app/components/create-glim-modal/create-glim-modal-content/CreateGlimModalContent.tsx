@@ -45,9 +45,11 @@ export function CreateGlimModalContent({
       open={open}
       className="fixed w-full h-full inset-0 z-40 md:flex md:items-center md:justify-center md:p-4 bg-transparent"
       aria-labelledby="glims-title">
-      <div
+      <button
+        type="button"
         className="absolute inset-0 bg-black/40 backdrop-blur-[1px] z-0"
         onClick={onClose}
+        aria-label="Close modal"
       />
 
       <div

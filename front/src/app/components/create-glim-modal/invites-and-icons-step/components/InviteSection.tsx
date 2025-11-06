@@ -17,8 +17,7 @@ export function InviteSection() {
                 field.value === 'email'
                   ? 'bg-gray-100'
                   : 'bg-white hover:bg-gray-100'
-              }`}
-              onClick={() => field.onChange('email')}>
+              }`}>
               <Mail
                 size={18}
                 className="mr-2"
@@ -38,8 +37,7 @@ export function InviteSection() {
                 field.value === 'link-and-qr-code'
                   ? 'bg-gray-100'
                   : 'bg-white hover:bg-gray-100'
-              }`}
-              onClick={() => field.onChange('link-and-qr-code')}>
+              }`}>
               <QrCode
                 size={18}
                 className="mr-2"

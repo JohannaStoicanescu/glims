@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form';
+import { FieldValues, useFormContext } from 'react-hook-form';
 
 import { ChevronLeft, ChevronRight } from '../../../ui/icons';
 import { ButtonForm, StepIndicators } from '../../../ui';
@@ -12,7 +12,7 @@ interface InvitesAndIconsStepProps {
 export function InvitesAndIconsStep({ setStep }: InvitesAndIconsStepProps) {
   const { handleSubmit } = useFormContext();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FieldValues) => {
     // TODO: create hook to submit the form
     console.log('Données du formulaire:', data);
   };
