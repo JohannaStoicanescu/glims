@@ -3,6 +3,7 @@ interface NavLinksProps {
   readonly href?: string;
   readonly onClick?: () => void;
   readonly icon: React.ReactNode;
+  readonly reduced?: boolean;
 }
 
 export default function NavLinks({
@@ -10,6 +11,7 @@ export default function NavLinks({
   href,
   onClick,
   icon,
+  reduced,
 }: NavLinksProps) {
   const ariaLabel = `Lien de navigation vers ${title}`;
 
@@ -21,12 +23,12 @@ export default function NavLinks({
       <a
         href={href}
         aria-label={ariaLabel}
-        className="
-          flex items-center text-gray-600 font-medium
+        className={`
+          flex items-center ${reduced ? 'justify-center' : ''} text-gray-600 font-medium
           w-full p-2 rounded-lg border border-transparent
-          hover:text-orange-500 hover:bg-orange-100 hover:border-orange-200 focus:text-orange-500 focus:bg-orange-100 focus:border-orange-200 cursor-pointer transition">
-        {icon && <span className="mr-2">{icon}</span>}
-        <span>{title}</span>
+          hover:text-orange-500 hover:bg-orange-100 hover:border-orange-200 focus:text-orange-500 focus:bg-orange-100 focus:border-orange-200 cursor-pointer transition`}>
+        {icon && <span className={`${reduced ? '' : 'mr-2'}`}>{icon}</span>}
+        {!reduced && <span>{title}</span>}
       </a>
     );
   }
@@ -35,12 +37,12 @@ export default function NavLinks({
     <button
       onClick={onClick}
       aria-label={ariaLabel}
-      className="
-        flex items-center text-gray-600 font-medium
+      className={`
+        flex items-center ${reduced ? 'justify-center' : ''} text-gray-600 font-medium
         w-full p-2 rounded-lg border border-transparent
-        hover:text-orange-500 hover:bg-orange-100 hover:border-orange-200 focus:text-orange-500 focus:bg-orange-100 focus:border-orange-200 cursor-pointer transition">
-      {icon && <span className="mr-2">{icon}</span>}
-      <span>{title}</span>
+        hover:text-orange-500 hover:bg-orange-100 hover:border-orange-200 focus:text-orange-500 focus:bg-orange-100 focus:border-orange-200 cursor-pointer transition`}>
+      {icon && <span className={`${reduced ? '' : 'mr-2'}`}>{icon}</span>}
+      {!reduced && <span>{title}</span>}
     </button>
   );
 }
