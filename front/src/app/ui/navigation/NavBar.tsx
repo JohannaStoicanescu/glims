@@ -1,12 +1,13 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { CgAddR } from 'react-icons/cg';
 import { FaRegSun } from 'react-icons/fa';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { TbMessageCircle } from 'react-icons/tb';
-import Image from 'next/image';
 
+import { CreateGlimModal } from '../../components';
 import { AvatarRounded } from '..';
 import NavLinks from './components/NavLinks';
 
@@ -18,7 +19,6 @@ const NAV_LINKS = [
   },
   {
     title: 'Nouveau',
-    href: '/nouveau',
     icon: <CgAddR />,
   },
   {
@@ -29,6 +29,8 @@ const NAV_LINKS = [
 ];
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCreateGlimModalOpen, setIsCreateGlimModalOpen] = useState(false);
+
   return (
     <nav className="fixed flex items-center md:items-start justify-between max-md:py-3 max-md:px-4 w-full">
       <div className="flex items-center gap-4 md:w-1/6">
@@ -43,20 +45,25 @@ export default function NavBar() {
         {/* MOBILE MENU */}
         {isMenuOpen && (
           <div className="fixed top-0 left-0 w-full h-full flex md:hidden">
-            <div className="w-1/2 bg-white p-4">
+            <div className="w-1/2 bg-white p-4 max-h-fit">
               <Image
                 src={'/glims-logo.png'}
                 alt={'Logo textuel de Glims'}
                 className="pb-4"
+                style={{ objectFit: 'contain' }}
                 width={90}
                 height={90}
               />
-              {NAV_LINKS.map((link) => (
+              {NAV_LINKS.map((link, index) => (
                 <NavLinks
-                  key={link.href}
+                  key={link.title + index}
                   title={link.title}
                   href={link.href}
                   icon={link.icon}
+                  {...(link.title === 'Nouveau' && {
+                    onClick: () =>
+                      setIsCreateGlimModalOpen(!isCreateGlimModalOpen),
+                  })}
                 />
               ))}
             </div>
@@ -66,6 +73,7 @@ export default function NavBar() {
           </div>
         )}
 
+        {/* DESKTOP MENU */}
         <div className="md:h-screen md:w-full md:border-r-1 md:border-gray-200 md:p-4 md:pt-8">
           <Image
             src={'/glims-logo.png'}
@@ -76,15 +84,25 @@ export default function NavBar() {
           />
 
           <div className="max-md:hidden mt-4 flex flex-col items-start">
-            {NAV_LINKS.map((link) => (
+            {NAV_LINKS.map((link, index) => (
               <NavLinks
-                key={link.href}
+                key={link.title + index}
                 title={link.title}
                 href={link.href}
                 icon={link.icon}
+                {...(link.title === 'Nouveau' && {
+                  onClick: () =>
+                    setIsCreateGlimModalOpen(!isCreateGlimModalOpen),
+                })}
               />
             ))}
           </div>
+          {isCreateGlimModalOpen && (
+            <CreateGlimModal
+              open={isCreateGlimModalOpen}
+              onClose={() => setIsCreateGlimModalOpen(false)}
+            />
+          )}
         </div>
       </div>
       <div className="md:p-8">
