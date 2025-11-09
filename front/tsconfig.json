@@ -16,6 +16,10 @@
     "plugins": [
       {
         "name": "next"
+      },
+      {
+        "name": "@tailwindcss/forms",
+        "stage": 2
       }
     ],
     "paths": {

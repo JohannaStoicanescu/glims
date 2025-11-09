@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 
 import '../globals.css';
-import { NavBar } from '../ui';
 
 export const metadata: Metadata = {
-  title: 'Nouveau',
-  description: 'Créer un nouveau Glim',
+  title: 'Connexion',
+  description: 'Page de connexion Glims',
 };
 
 export default function RootLayout({
@@ -20,10 +19,7 @@ export default function RootLayout({
         href="/favicon.ico"
         sizes="any"
       />
-      <body className="bg-white">
-        <NavBar />
-        {children}
-      </body>
+      <body className="bg-white">{children}</body>
     </html>
   );
 }

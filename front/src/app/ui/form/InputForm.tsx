@@ -26,9 +26,9 @@ export default function InputForm({
   const [inputValue, setInputValue] = useState(value || '');
 
   return (
-    <>
+    <div>
       <label
-        className="text-black mb-1"
+        className="text-black font-medium mb-2 block"
         id={name}
         htmlFor={name}
         aria-label={label}>
@@ -45,8 +45,8 @@ export default function InputForm({
         id={name}
         placeholder={placeholder}
         required={required}
-        className="w-full border-2 border-gray-200 p-3 rounded-xl bg-gray-50 hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+        className="w-full border border-gray-200 p-3 rounded-xl bg-gray-50 hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
       />
-    </>
+    </div>
   );
 }

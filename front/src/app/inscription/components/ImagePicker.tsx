@@ -1,19 +1,17 @@
 'use client';
 
-import { useContext, useEffect, useId, useState } from 'react';
-import { MdOutlineAddBox } from 'react-icons/md';
-
-import { NewUserContext } from '../utils/new-user-context';
-import StepIndicators from './StepIndicators';
-import { FiTrash2 } from 'react-icons/fi';
-import { LuPencil } from 'react-icons/lu';
 import Image from 'next/image';
+import { useContext, useEffect, useState } from 'react';
+
+import { Pencil, Plus, Trash2 } from '../../ui/icons';
+import { StepIndicators } from '../../ui';
+import { NewUserContext } from '../utils/new-user-context';
 
 export default function ImagePicker() {
   const [currentStep, setCurrentStep] = useState(2);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const id = useId();
+  const id = 'image-picker-input';
 
   const context = useContext(NewUserContext);
 
@@ -40,7 +38,7 @@ export default function ImagePicker() {
       return url;
     });
 
-    // STEP 3 : preview
+    // STEP 3 : Preview
     setCurrentStep(3);
   }
 
@@ -50,7 +48,7 @@ export default function ImagePicker() {
       return null;
     });
 
-    // STEP 2 : pick image
+    // STEP 2 : Pick image
     setCurrentStep(2);
   }
 
@@ -78,7 +76,7 @@ export default function ImagePicker() {
               className="flex items-center justify-center py-12 w-full rounded-2xl border border-slate-200 bg-slate-50 cursor-pointer 
               hover:border-slate-300 hover:shadow-md hover:text-slate-400 transition"
               aria-label="Ajouter une image de vous">
-              <MdOutlineAddBox size={50} />
+              <Plus size={50} />
             </label>
             <input
               id={id}
@@ -96,6 +94,8 @@ export default function ImagePicker() {
             <div className="relative inline-block px-6 py-4">
               <Image
                 src={previewUrl}
+                width={140}
+                height={140}
                 alt="Aperçu de l'image sélectionnée"
                 className="h-35 w-35 rounded-full object-cover"
               />
@@ -105,14 +105,14 @@ export default function ImagePicker() {
                 aria-label="Supprimer l'image"
                 className="absolute top-0 right-0 cursor-pointer text-center text-white rounded-full bg-black p-4 border-7 border-white
               hover:text-black hover:bg-slate-100 transition">
-                <FiTrash2 size={18} />
+                <Trash2 size={18} />
               </button>
               <label
                 htmlFor={id}
                 aria-label="Modifier l'image"
                 className="absolute bottom-0 right-0  cursor-pointer text-center rounded-full bg-slate-100 p-4 border-7 border-white 
               hover:bg-black hover:text-white transition">
-                <LuPencil size={18} />
+                <Pencil size={18} />
               </label>
               <input
                 id={id}
@@ -126,7 +126,10 @@ export default function ImagePicker() {
         )}
       </div>
 
-      <StepIndicators currentStep={currentStep} />
+      <StepIndicators
+        currentStep={currentStep}
+        numberOfSteps={3}
+      />
     </>
   );
 }

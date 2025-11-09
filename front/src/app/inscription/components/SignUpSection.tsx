@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 
-import GoogleSignUp from './GoogleSignUp';
 import Divider from './Divider';
 import EmailSignUp from './EmailSignUp';
+import GoogleSignUp from './GoogleSignUp';
 
 export default function SignUpSection({
   setSignUpStep,
@@ -21,6 +21,7 @@ export default function SignUpSection({
             className="md:hidden"
             width={120}
             height={120}
+            style={{ height: 'auto' }}
           />
         </div>
       </div>
@@ -32,6 +33,7 @@ export default function SignUpSection({
           className="hidden md:block"
           width={100}
           height={100}
+          style={{ height: 'auto' }}
         />
 
         <div className="flex items-center justify-center h-full">
