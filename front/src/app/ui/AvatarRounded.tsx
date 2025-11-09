@@ -16,14 +16,16 @@ export default function AvatarRounded({
   border = 'border-none',
 }: AvatarRoundedProps) {
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={34}
-      height={34}
-      onClick={() => {}}
-      className={`${size} ${border} rounded-full cursor-pointer transition`}
-      style={{ objectFit: 'cover' }}
-    />
+    <a href="/profile">
+      <Image
+        src={src}
+        alt={alt}
+        width={34}
+        height={34}
+        onClick={() => {}}
+        className={`${size} ${border} rounded-full cursor-pointer transition`}
+        style={{ objectFit: 'cover' }}
+      />
+    </a>
   );
 }
