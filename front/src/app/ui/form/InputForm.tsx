@@ -3,7 +3,8 @@
 import { useState } from 'react';
 
 interface InputFormProps {
-  label: string;
+  label?: string;
+  ariaLabel?: string;
   showLabel?: boolean;
   type: string;
   name: string;
@@ -15,6 +16,7 @@ interface InputFormProps {
 
 export default function InputForm({
   label,
+  ariaLabel,
   showLabel = true,
   type,
   name,
@@ -28,10 +30,10 @@ export default function InputForm({
   return (
     <div>
       <label
-        className="text-black font-medium mb-2 block"
+        className={`text-black font-medium block ${label ? 'mb-2' : ''}`}
         id={name}
         htmlFor={name}
-        aria-label={label}>
+        aria-label={label ? label : ariaLabel}>
         {showLabel && <span>{label}</span>}
       </label>
       <input
@@ -45,7 +47,8 @@ export default function InputForm({
         id={name}
         placeholder={placeholder}
         required={required}
-        className="w-full border border-gray-200 p-3 rounded-xl bg-gray-50 hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+        className="w-full border border-gray-200 p-3 rounded-xl bg-gray-50 
+        hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
       />
     </div>
   );
