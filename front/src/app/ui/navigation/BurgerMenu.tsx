@@ -57,11 +57,14 @@ export default function BurgerMenu() {
                 ))}
               </div>
             </div>
-            <div
+
+            <button
+              type="button"
               onClick={() => setIsMenuOpen(false)}
-              className="flex-1 cursor-pointer"
+              className="flex-1"
               style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
-              aria-label="Fermer le menu"></div>
+              aria-label="Fermer le menu"
+            />
           </div>
         )}
       </nav>

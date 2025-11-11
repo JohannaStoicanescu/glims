@@ -31,9 +31,7 @@ export default function NoGlimsDisplay() {
                 className="w-full flex items-center justify-center gap-2 font-bold py-3 rounded-xl cursor-pointer transition-all
             text-white bg-black border border-black hover:bg-white hover:text-black">
                 Commencer
-                <span>
-                  <ChevronRight className="h-5 w-5" />
-                </span>
+                <ChevronRight className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -60,6 +58,7 @@ export default function NoGlimsDisplay() {
 
       {/* MOBILE DISPLAY */}
       <div className="flex md:hidden flex-col h-full">
+        {/* WELCOME BANNER */}
         <div className="w-full flex justify-center bg-red-50 border border-red-100 rounded-2xl py-10 px-2">
           <div className="flex flex-col justify-center">
             <h3 className="text-2xl sm:text-3xl font-bold mb-3">
@@ -71,15 +70,14 @@ export default function NoGlimsDisplay() {
             </div>
           </div>
         </div>
-        <div className="flex-1"></div>
+
+        {/* CREATE FIRST GLIM OR JOIN GLIM */}
         <div className="space-y-2 flex flex-col justify-center items-center pb-4">
           <button
             className="w-full flex items-center justify-center gap-2 font-bold py-3 rounded-xl cursor-pointer transition-all
             text-white bg-black border border-black focus:bg-white focus:text-black">
             Créer mon premier glim
-            <span>
-              <ChevronRight className="h-5 w-5" />
-            </span>
+            <ChevronRight className="h-5 w-5" />
           </button>
           <button
             className="flex items-center justify-center gap-2 py-3 rounded-xl text-gray-500 

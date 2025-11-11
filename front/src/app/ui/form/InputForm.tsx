@@ -3,15 +3,15 @@
 import { useState } from 'react';
 
 interface InputFormProps {
-  label?: string;
-  ariaLabel?: string;
-  showLabel?: boolean;
-  type: string;
-  name: string;
-  placeholder: string;
-  value?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  required?: boolean;
+  readonly label?: string;
+  readonly ariaLabel?: string;
+  readonly showLabel?: boolean;
+  readonly type: string;
+  readonly name: string;
+  readonly placeholder: string;
+  readonly value?: string;
+  readonly onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  readonly required?: boolean;
 }
 
 export default function InputForm({
