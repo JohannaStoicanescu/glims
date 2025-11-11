@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import '../globals.css';
-import { NavBar } from '../ui';
+import { Header, SidePanel } from '../ui';
 
 export const metadata: Metadata = {
   title: 'Mes Glims',
@@ -21,8 +21,13 @@ export default function RootLayout({
         sizes="any"
       />
       <body className="bg-white">
-        <NavBar />
-        {children}
+        <div className="flex">
+          <SidePanel />
+          <div className="w-full">
+            <Header />
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );
