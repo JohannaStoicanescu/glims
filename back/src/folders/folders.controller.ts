@@ -4,36 +4,24 @@ import {
   Delete,
   ForbiddenException,
   Get,
-  InternalServerErrorException,
+  LoggerService,
   NotFoundException,
   Param,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import {
-  FoldersError,
-  FoldersException,
-  FoldersService,
-} from './folders.service';
+import { uuidv4 } from 'better-auth/*';
+import { FoldersService } from './folders.service';
 import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { Folder } from '@prisma/client';
 
-function handleServiceErrors(error: Error): void {
-  if (error instanceof FoldersException) {
-    if (error.type === FoldersError.FOLDER_NOT_FOUND) {
-      throw new NotFoundException('Folder not found');
-    } else if (error.type === FoldersError.FORBIDDEN) {
-      throw new ForbiddenException('You do not have access to this folder');
-    }
-  } else {
-    throw new InternalServerErrorException('An unexpected error occurred');
-  }
-}
-
 @Controller('folders')
 export class FoldersController {
-  constructor(private readonly foldersService: FoldersService) {}
+  constructor(
+    private foldersService: FoldersService,
+    private logger: LoggerService
+  ) {}
 
   @Get(':id')
   @UseGuards(AuthGuard)
@@ -41,24 +29,17 @@ export class FoldersController {
     @Session() session: UserSession,
     @Param('id') folder_id: string
   ): Promise<Folder> {
-    try {
-      return await this.foldersService.getFolderById(
-        folder_id,
-        session.user.id
-      );
-    } catch (error) {
-      handleServiceErrors(error);
-    }
+    const folder = await this.foldersService.getFolderById(folder_id);
+    if (!folder) throw new NotFoundException('Folder not found');
+    if (folder.owner_id !== session.user.id)
+      throw new ForbiddenException('Not allowed');
+    return folder;
   }
 
   @Get()
   @UseGuards(AuthGuard)
   async getUserFolders(@Session() session: UserSession): Promise<Folder[]> {
-    try {
-      return await this.foldersService.getUserFolders(session.user.id);
-    } catch (error) {
-      handleServiceErrors(error);
-    }
+    return this.foldersService.getUserFolders(session.user.id);
   }
 
   @Post()
@@ -67,30 +48,44 @@ export class FoldersController {
     @Session() session: UserSession,
     @Body() body: { title: string; description?: string; password?: string }
   ): Promise<Folder> {
-    try {
-      return await this.foldersService.createFolder(body, session.user.id);
-    } catch (error) {
-      handleServiceErrors(error);
-    }
+    const upload_url = uuidv4().format;
+    const download_url = uuidv4().format;
+    this.logger.debug(`Generated upload URL: ${upload_url}`);
+    this.logger.debug(`Generated download URL: ${download_url}`);
+
+    const folderCreationDto = {
+      ...body,
+      upload_url,
+      download_url,
+      owner: { connect: { id: session.user.id } },
+    };
+
+    return this.foldersService.createFolder(folderCreationDto);
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard)
   async updateFolder(
     @Session() session: UserSession,
-    @Param('id') user_id: string,
+    @Param('id') id: string,
     @Body()
     body: Partial<{ title: string; description?: string; password?: string }>
   ): Promise<Folder> {
-    try {
-      return await this.foldersService.updateFolder(
-        user_id,
-        session.user.id,
-        body
-      );
-    } catch (error) {
-      handleServiceErrors(error);
-    }
+    this.checkFolderOwnership(id, session.user.id);
+    return this.foldersService.updateFolder({ where: { id }, data: body });
+  }
+
+  @Get(':id/remove-password')
+  @UseGuards(AuthGuard)
+  async removeFolderPassword(
+    @Session() session: UserSession,
+    @Param('id') id: string
+  ): Promise<Folder> {
+    this.checkFolderOwnership(id, session.user.id);
+    return this.foldersService.updateFolder({
+      where: { id },
+      data: { password: null },
+    });
   }
 
   @Get(':id/refresh-links')
@@ -99,11 +94,15 @@ export class FoldersController {
     @Session() session: UserSession,
     @Param('id') id: string
   ): Promise<Folder> {
-    try {
-      return await this.foldersService.refreshFolderLinks(session.user.id, id);
-    } catch (error) {
-      handleServiceErrors(error);
-    }
+    this.checkFolderOwnership(id, session.user.id);
+
+    const upload_url = uuidv4().format;
+    const download_url = uuidv4().format;
+
+    return this.foldersService.updateFolder({
+      where: { id },
+      data: { upload_url, download_url },
+    });
   }
 
   @Delete(':id')
@@ -112,10 +111,17 @@ export class FoldersController {
     @Session() session: UserSession,
     @Param('id') id: string
   ): Promise<Folder> {
-    try {
-      return await this.foldersService.deleteFolder(id, session.user.id);
-    } catch (error) {
-      handleServiceErrors(error);
-    }
+    this.checkFolderOwnership(id, session.user.id);
+    return this.foldersService.deleteFolder({ id });
+  }
+
+  private async checkFolderOwnership(
+    folder_id: string,
+    owner_id: string
+  ): Promise<void> {
+    const folder = await this.foldersService.getFolderById(folder_id);
+    if (!folder) throw new NotFoundException('Folder not found');
+    if (folder.owner_id !== owner_id)
+      throw new ForbiddenException('Not allowed');
   }
 }
