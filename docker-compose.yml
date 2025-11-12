@@ -1,3 +1,4 @@
+# This is the development docker-compose. For production use `docker-compose.prod.yml`.
 services:
   front:
     build:
@@ -5,9 +6,11 @@ services:
       dockerfile: Dockerfile
       args:
         PORT: ${FRONTEND_PORT}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: front
     environment:
       - PORT=${FRONTEND_PORT}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     volumes:
@@ -24,13 +27,16 @@ services:
     build:
       context: ./back
       dockerfile: Dockerfile
-      args:
-        PORT: ${BACKEND_PORT}
     container_name: back
     environment:
-      - PORT=${BACKEND_PORT}
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - DATABASE_URL=${DATABASE_URL}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - IS_DEV=true
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "3000:3000"
     volumes:
       - ./back:/app
       - /app/node_modules
@@ -49,11 +55,32 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3030:3000
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
