@@ -24,4 +24,3 @@ export async function fetchApiFromClient(
   const url = `${CLIENT_BASE_URL}${route.startsWith('/') ? route : `/${route}`}`;
   return fetch(url, options);
 }
-

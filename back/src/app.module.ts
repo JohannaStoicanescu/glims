@@ -9,12 +9,16 @@ import { httpRequestDurationProvider } from './providers/http-request-duration.m
 import { ResponseTimeMiddleware } from './middleware/response-time.middleware';
 
 @Module({
-  imports: [AuthModule.forRoot(auth), LoggerModule.forRoot(), PrometheusModule.register()],
+  imports: [
+    AuthModule.forRoot(auth),
+    LoggerModule.forRoot(),
+    PrometheusModule.register(),
+  ],
   controllers: [AppController],
   providers: [AppService, httpRequestDurationProvider],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer): void {
     consumer.apply(ResponseTimeMiddleware).forRoutes('*');
   }
 }

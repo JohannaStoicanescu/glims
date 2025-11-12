@@ -7,10 +7,10 @@ import type { Request, Response, NextFunction } from 'express';
 export class ResponseTimeMiddleware implements NestMiddleware {
   constructor(
     @InjectMetric('http_request_duration_seconds')
-    private readonly httpRequestDurationHistogram: Histogram<string>,
-  ) { }
+    private readonly httpRequestDurationHistogram: Histogram<string>
+  ) {}
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: Request, res: Response, next: NextFunction): void {
     const start = process.hrtime();
 
     res.on('finish', () => {
@@ -34,4 +34,3 @@ export class ResponseTimeMiddleware implements NestMiddleware {
     next();
   }
 }
-
