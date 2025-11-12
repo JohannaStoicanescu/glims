@@ -1,31 +1,41 @@
-FROM node:18 AS builder
-
-USER nonroot
+FROM node:20-alpine AS builder
 
 ARG PORT
 ENV PORT ${PORT}
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 WORKDIR /app
 
+# Copy package files first
 COPY package*.json ./
+
+# Copy configuration files
+COPY next-env.d.ts next.config.ts postcss.config.mjs tsconfig.json ./
+
+# Copy source directories
+COPY src ./src
+COPY public ./public
+
 RUN npm install --ignore-scripts
-
-COPY next-env.d.ts next.config.ts postcss.config.mjs tsconfig.json src/ public/ ./
-
 RUN npm run build
 
-FROM node:18-slim
-
-USER nonroot
-
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/.next .next
-COPY --from=builder /app/public public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
 RUN npm install --omit=dev --ignore-scripts
 
-EXPOSE ${PORT}
+# Create a non-root user to run our application safely
+RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
+RUN chown -R nonroot:nonroot /app
+USER nonroot
 
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
+EXPOSE ${PORT}
 CMD ["npm", "run", "start"]
