@@ -6,6 +6,8 @@ import ButtonForm from '@/app/ui/form/ButtonForm';
 import { useAuthClient } from '@/hooks';
 
 export default function GoogleSignUp() {
+  const authClient = useAuthClient();
+
   return (
     <div className="flex flex-col gap-4">
       <ButtonForm
@@ -15,7 +17,7 @@ export default function GoogleSignUp() {
         }
         style="light"
         onClick={async () => {
-          const data = await useAuthClient().signIn.social({
+          const data = await authClient.signIn.social({
             provider: 'google',
             callbackURL: `${window.location.origin}/exemple-auth?newUser=false`,
             errorCallbackURL: `${window.location.origin}/exemple-auth?error=true`,
