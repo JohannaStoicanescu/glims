@@ -39,7 +39,6 @@ export default function Page() {
   });
 
   const fetchRoutes = () => {
-    console.log('env: ', process.env);
     // Example of calling insecure route
     fetchApiFromClient('insecure')
       .then((res) => res.json())
