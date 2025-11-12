@@ -67,6 +67,7 @@ export default function Page() {
           authClient.signIn.email({
             email: 'paul.lv.ohl@gmail.com',
             password: 'password',
+            callbackURL: `${window.location.origin}/exemple-auth?newUser=false`,
           });
           getSession();
           fetchRoutes();
