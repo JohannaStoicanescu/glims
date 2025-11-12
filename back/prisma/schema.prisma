@@ -54,10 +54,13 @@ model User {
 }
 
 model Folder {
-  id           String  @id @default(uuid())
-  upload_url   String  @unique
-  download_url String  @unique
-  password     String?
+  id                String  @id @default(uuid())
+  upload_url        String  @unique
+  download_url      String  @unique
+  title             String
+  description       String?
+  password          String?
+  has_reached_limit Boolean @default(false)
 
   members  User[] @relation("FolderMembers")
   owner_id String
