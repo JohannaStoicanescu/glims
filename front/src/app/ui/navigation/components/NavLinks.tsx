@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 interface NavLinksProps {
   readonly title: string;
   readonly href?: string;
@@ -21,8 +23,8 @@ export default function NavLinks({
   if (shouldRenderLink) {
     return (
       // REDIRECT LINK TO ANOTHER PAGE
-      <a
-        href={href}
+      <Link
+        href={href || ''}
         aria-label={ariaLabel}
         className={`
           flex items-center ${reduced ? 'justify-center' : ''} text-gray-800 font-medium
@@ -30,7 +32,7 @@ export default function NavLinks({
           hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100 cursor-pointer transition`}>
         {icon && <span className={`${reduced ? '' : 'mr-4'}`}>{icon}</span>}
         {!reduced && <span className="text-sm lg:text-base">{title}</span>}
-      </a>
+      </Link>
     );
   }
 

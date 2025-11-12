@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import Divider from './Divider';
 import EmailSignUp from './EmailSignUp';
@@ -58,9 +59,11 @@ export default function SignUpSection({
 
             <p className="text-center font-medium mt-12">
               Déjà un compte ?{' '}
-              <a className="text-orange-400 cursor-pointer hover:text-slate-400 hover:underline">
+              <Link
+                className="text-orange-400 cursor-pointer hover:text-slate-400 hover:underline"
+                href="/connexion">
                 Connectez-vous
-              </a>
+              </Link>
             </p>
           </section>
         </div>
