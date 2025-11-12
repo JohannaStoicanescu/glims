@@ -57,14 +57,14 @@ export default function NoGlimsDisplay() {
       </div>
 
       {/* MOBILE DISPLAY */}
-      <div className="flex md:hidden flex-col h-full">
+      <div className="flex md:hidden flex-col justify-between h-full">
         {/* WELCOME BANNER */}
-        <div className="w-full flex justify-center bg-red-50 border border-red-100 rounded-2xl py-10 px-2">
-          <div className="flex flex-col justify-center">
-            <h3 className="text-2xl sm:text-3xl font-bold mb-3">
+        <div className="w-full flex justify-center bg-red-50 border border-red-100 rounded-2xl py-4 px-3">
+          <div className="flex flex-col justify-center text-center">
+            <h3 className="text-xl sm:text-2xl font-bold mb-1">
               Bienvenue sur Glims !
             </h3>
-            <div className="text-gray-500 text-sm">
+            <div className="text-gray-500 text-xs sm:text-sm">
               <p>Les images que vous ajouterez apparaitrons ici.</p>
               <p>Ajoutez des images et des vidéos dès maintenant !</p>
             </div>
@@ -72,7 +72,7 @@ export default function NoGlimsDisplay() {
         </div>
 
         {/* CREATE FIRST GLIM OR JOIN GLIM */}
-        <div className="space-y-2 flex flex-col justify-center items-center pb-4">
+        <div className="space-y-2 flex flex-col pb-16">
           <button
             className="w-full flex items-center justify-center gap-2 font-bold py-3 rounded-xl cursor-pointer transition-all
             text-white bg-black border border-black focus:bg-white focus:text-black">
@@ -80,7 +80,7 @@ export default function NoGlimsDisplay() {
             <ChevronRight className="h-5 w-5" />
           </button>
           <button
-            className="flex items-center justify-center gap-2 py-3 rounded-xl text-gray-500 
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-gray-500 
           focus:text-black cursor-pointer transition-all">
             Rejoindre un glim
           </button>
