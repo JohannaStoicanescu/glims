@@ -4,7 +4,7 @@ import { PrismaService } from 'src/lib/prisma.service';
 
 @Injectable()
 export class FoldersRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async getFolderById(folder_id: string): Promise<Folder | null> {
     return this.prisma.folder.findUnique({ where: { id: folder_id } });

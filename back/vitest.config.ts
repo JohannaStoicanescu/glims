@@ -10,6 +10,9 @@ export default defineConfig({
       '@test': './test',
     },
     root: './',
+    coverage: {
+      exclude: ['./src/lib/prisma.service.ts', '**.repository.ts', '**.controller.ts'],
+    },
   },
   resolve: {
     alias: {
