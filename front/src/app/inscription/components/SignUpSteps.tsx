@@ -6,7 +6,7 @@ import { NewUser, NewUserContext } from '../utils/new-user-context';
 import CompleteProfileSection from './CompleteProfileSection';
 import ImageSection from './ImageSection';
 import SignUpSection from './SignUpSection';
-import { useAuthClient, useSession } from '@/hooks';
+import { useAuthClient } from '@/hooks';
 
 export default function SignUpSteps() {
   const [signUpStep, setSignUpStep] = useState(1);
@@ -18,7 +18,6 @@ export default function SignUpSteps() {
     profileImage: null,
   });
   const authClient = useAuthClient();
-  const session = useSession();
 
   const formSubmit = async (newUserData: NewUser) => {
     const result = await authClient.signUp.email({
@@ -28,8 +27,7 @@ export default function SignUpSteps() {
       image: newUserData.profileImage?.name || undefined,
     });
     if (result.data) {
-      console.log('after signup');
-      console.table(session.value);
+      window.location.href = '/exemple-auth?newUser=true';
     }
   };
 
