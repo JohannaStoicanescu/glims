@@ -4,24 +4,22 @@ import {
   Delete,
   ForbiddenException,
   Get,
-  LoggerService,
   NotFoundException,
   Param,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { uuidv4 } from 'better-auth/*';
 import { FoldersService } from './folders.service';
 import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { Folder } from '@prisma/client';
+import { uuidv4 } from 'better-auth';
 
 @Controller('folders')
 export class FoldersController {
   constructor(
     private foldersService: FoldersService,
-    private logger: LoggerService
-  ) {}
+  ) { }
 
   @Get(':id')
   @UseGuards(AuthGuard)
@@ -50,8 +48,6 @@ export class FoldersController {
   ): Promise<Folder> {
     const upload_url = uuidv4().format;
     const download_url = uuidv4().format;
-    this.logger.debug(`Generated upload URL: ${upload_url}`);
-    this.logger.debug(`Generated download URL: ${download_url}`);
 
     const folderCreationDto = {
       ...body,
@@ -71,7 +67,7 @@ export class FoldersController {
     @Body()
     body: Partial<{ title: string; description?: string; password?: string }>
   ): Promise<Folder> {
-    this.checkFolderOwnership(id, session.user.id);
+    await this.checkFolderOwnership(id, session.user.id);
     return this.foldersService.updateFolder({ where: { id }, data: body });
   }
 
@@ -81,7 +77,7 @@ export class FoldersController {
     @Session() session: UserSession,
     @Param('id') id: string
   ): Promise<Folder> {
-    this.checkFolderOwnership(id, session.user.id);
+    await this.checkFolderOwnership(id, session.user.id);
     return this.foldersService.updateFolder({
       where: { id },
       data: { password: null },
@@ -94,7 +90,7 @@ export class FoldersController {
     @Session() session: UserSession,
     @Param('id') id: string
   ): Promise<Folder> {
-    this.checkFolderOwnership(id, session.user.id);
+    await this.checkFolderOwnership(id, session.user.id);
 
     const upload_url = uuidv4().format;
     const download_url = uuidv4().format;
@@ -111,7 +107,7 @@ export class FoldersController {
     @Session() session: UserSession,
     @Param('id') id: string
   ): Promise<Folder> {
-    this.checkFolderOwnership(id, session.user.id);
+    await this.checkFolderOwnership(id, session.user.id);
     return this.foldersService.deleteFolder({ id });
   }
 
