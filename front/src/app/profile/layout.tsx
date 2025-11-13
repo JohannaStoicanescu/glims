@@ -4,8 +4,8 @@ import '../globals.css';
 import { Header, SidePanel } from '../ui';
 
 export const metadata: Metadata = {
-  title: 'Messages',
-  description: 'Les notifications nouvelles et anciennes',
+  title: 'Profile',
+  description: 'Profile utilisateur',
 };
 
 export default function RootLayout({
