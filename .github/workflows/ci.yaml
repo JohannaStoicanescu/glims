@@ -115,6 +115,10 @@ jobs:
         working-directory: back
         run: pnpm run prettier:check
 
+      - name: Tests
+        working-directory: back
+        run: pnpm test
+
   test_build_back:
     name: Test & Build Back (pnpm)
     runs-on: ubuntu-latest
