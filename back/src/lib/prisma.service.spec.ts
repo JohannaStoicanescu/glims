@@ -38,7 +38,9 @@ describe('PrismaService', () => {
       const error = new Error('Disconnection failed');
       service.$disconnect = vi.fn().mockRejectedValue(error);
 
-      await expect(service.onModuleDestroy()).rejects.toThrow('Disconnection failed');
+      await expect(service.onModuleDestroy()).rejects.toThrow(
+        'Disconnection failed'
+      );
     });
   });
 
