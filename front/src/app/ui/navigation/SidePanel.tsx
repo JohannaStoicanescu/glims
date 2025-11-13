@@ -15,14 +15,14 @@ export default function SidePanel() {
 
   return (
     <>
-      <nav className="hidden md:flex min-w-1/6">
+      <nav className={`hidden md:flex ${isMenuReduced ? '' : 'min-w-1/6'}`}>
         <div
           className={`flex flex-col h-screen ${isMenuReduced ? 'w-18' : 'w-full'} 
         border-r border-gray-200 p-2 pt-8 lg:p-4 lg:pt-8`}>
           {/* GLIMS LOGO */}
           <div className={isMenuReduced ? 'flex justify-center' : ''}>
             <Image
-              src={`${isMenuReduced ? '/glims.png' : '/glims-logo.png'}`}
+              src={`${isMenuReduced ? '/glims-logo-filed.svg' : '/glims-logo-filed-with-text.svg'}`}
               alt={'Logo textuel de Glims'}
               className="pl-1 lg:p-0"
               width={isMenuReduced ? 29 : 100}
