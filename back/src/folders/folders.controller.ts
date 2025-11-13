@@ -17,9 +17,7 @@ import { uuidv4 } from 'better-auth';
 
 @Controller('folders')
 export class FoldersController {
-  constructor(
-    private foldersService: FoldersService,
-  ) { }
+  constructor(private foldersService: FoldersService) {}
 
   @Get(':id')
   @UseGuards(AuthGuard)
