@@ -1,10 +1,12 @@
 // Add Lucide icons here to export them from a single file
 export {
+  ArrowDownUp,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   Earth,
   Eye,
+  House,
   Mail,
   Menu,
   MessageCircle,
@@ -13,7 +15,7 @@ export {
   Plus,
   Lock,
   QrCode,
-  Sun,
+  Search,
   SquarePlus,
   Trash2,
   X,

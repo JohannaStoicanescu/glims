@@ -1,18 +1,9 @@
-'use client';
-
-import NoGlimsDisplay from './components/NoGlimsDisplay';
+import GlimsPageContent from './components/GlimsPageContent';
 
 export default function Page() {
-  // TODO: get glims from API
-  const glims = [];
-
-  if (glims.length === 0) {
-    return (
-      <div className="h-full">
-        <NoGlimsDisplay />
-      </div>
-    );
-  }
-
-  return <div></div>;
+  return (
+    <div className="flex flex-1">
+      <GlimsPageContent />
+    </div>
+  );
 }
