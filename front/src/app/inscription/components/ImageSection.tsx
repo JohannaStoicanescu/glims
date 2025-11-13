@@ -6,14 +6,18 @@ import Image from 'next/image';
 import { ButtonForm } from '@/app/ui';
 import ImagePicker from './ImagePicker';
 import SideDisplay from './SideDisplay';
-import { NewUserContext } from '../utils/new-user-context';
+import { NewUser, NewUserContext } from '../utils/new-user-context';
 import { useContext } from 'react';
+
+interface Props {
+  setSignUpStep: (step: number) => void;
+  formSubmit: (newUserData: NewUser) => void;
+}
 
 export default function ImageForm({
   setSignUpStep,
-}: {
-  setSignUpStep: (step: number) => void;
-}) {
+  formSubmit,
+}: Readonly<Props>) {
   const context = useContext(NewUserContext);
 
   if (!context) {
@@ -24,8 +28,8 @@ export default function ImageForm({
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(newUserData);
     // Handle form submission logic here
+    formSubmit(newUserData);
 
     setSignUpStep(1);
   };
