@@ -1,7 +1,9 @@
+export { default as AvatarRounded } from './header/components/AvatarRounded';
+export { default as BurgerMenu } from './navigation/BurgerMenu';
 export { default as ConfirmationModal } from './confirmation-modal/ConfirmationModal';
-export { default as NavBar } from './navigation/NavBar';
-export { default as AvatarRounded } from './AvatarRounded';
-export { default as StepIndicators } from './StepIndicators';
+export { default as Header } from './header/Header';
+export { default as SidePanel } from './navigation/SidePanel';
+export { default as StepIndicators } from './step-indicators/StepIndicators';
 
 // FORM COMPONENTS
 export { default as ButtonForm } from './form/ButtonForm';

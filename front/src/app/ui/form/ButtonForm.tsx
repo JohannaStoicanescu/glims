@@ -26,7 +26,8 @@ export default function ButtonForm({
   return (
     <button
       type={type}
-      className={`flex items-center justify-center gap-2 font-bold py-3 rounded-xl cursor-pointer transition-all ${buttonStyle} ${extraCss}`}
+      className={`flex items-center justify-center gap-2 font-bold py-3 rounded-xl cursor-pointer transition-all 
+        ${buttonStyle} ${extraCss}`}
       onClick={onClick}>
       {iconPosition === 'left' && icon}
       {text}

@@ -1,3 +1,4 @@
+// Add Lucide icons here to export them from a single file
 export {
   ChevronDown,
   ChevronLeft,
@@ -5,10 +6,15 @@ export {
   Earth,
   Eye,
   Mail,
+  Menu,
+  MessageCircle,
+  PanelLeftClose,
+  Pencil,
   Plus,
   Lock,
   QrCode,
+  Sun,
+  SquarePlus,
   Trash2,
   X,
-  Pencil,
 } from 'lucide-react';

@@ -18,7 +18,7 @@ export default function RootLayout({
         href="/favicon.ico"
         sizes="any"
       />
-      <body className="bg-white">{children}</body>
+      <body className="bg-white h-screen">{children}</body>
     </html>
   );
 }

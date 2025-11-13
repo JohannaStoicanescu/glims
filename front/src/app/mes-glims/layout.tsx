@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import '../globals.css';
-import { NavBar } from '../ui';
+import { Header, SidePanel } from '../ui';
 
 export const metadata: Metadata = {
   title: 'Mes Glims',
@@ -14,16 +14,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <link
-        rel="icon"
-        href="/favicon.ico"
-        sizes="any"
-      />
-      <body className="bg-white">
-        <NavBar />
-        {children}
-      </body>
-    </html>
+    <div className="flex h-screen">
+      <SidePanel />
+      <div className="w-full h-full flex flex-col">
+        <Header />
+        <div className="w-full h-full px-2 sm:px-4 md:px-8 flex-1">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }
