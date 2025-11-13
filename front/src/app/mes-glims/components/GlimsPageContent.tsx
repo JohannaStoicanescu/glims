@@ -11,7 +11,7 @@ export default function GlimsPageContent() {
   // TODO: get firstTimeUser from API
   const firstTimeUser = false;
   // TODO: get glims from API
-  const glims: any[] = [
+  const glims: [] = [
     // 'https://i.pravatar.cc/300',
     // 'https://i.pravatar.cc/500',
     // 'https://i.pravatar.cc/300',

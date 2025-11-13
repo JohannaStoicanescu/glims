@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 interface GlimsDisplayProps {
-  glims: any[];
+  glims: [];
 }
 
 export default function GlimsDisplay({ glims }: GlimsDisplayProps) {

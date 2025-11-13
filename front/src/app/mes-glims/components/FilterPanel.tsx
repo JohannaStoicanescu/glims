@@ -5,14 +5,16 @@ import { useState, useRef, useEffect } from 'react';
 import { ArrowDownUp, ChevronDown, Search } from '@/app/ui/icons';
 
 interface FilterPanelProps {
-  glimsToDisplay: any[];
-  setGlimsToDisplay: (glims: any[]) => void;
+  glimsToDisplay: [];
+  setGlimsToDisplay: (glims: []) => void;
 }
 
-export default function FilterPanel({
-  glimsToDisplay,
-  setGlimsToDisplay,
-}: FilterPanelProps) {
+export default function FilterPanel(
+  {
+    // glimsToDisplay,
+    // setGlimsToDisplay,
+  }: FilterPanelProps
+) {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [dropdownTitle, setDropdownTitle] = useState('Récent');
   const filterRef = useRef<HTMLDivElement>(null);
