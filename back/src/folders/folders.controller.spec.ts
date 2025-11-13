@@ -160,11 +160,9 @@ describe('FoldersController', () => {
       const updatedFolder = { ...mockFolder, title: 'Updated Title' };
       mockFoldersService.updateFolder.mockResolvedValue(updatedFolder);
 
-      const result = await controller.updateFolder(
-        mockSession,
-        'folder-1',
-        { title: 'Updated Title' }
-      );
+      const result = await controller.updateFolder(mockSession, 'folder-1', {
+        title: 'Updated Title',
+      });
 
       expect(result).toEqual(updatedFolder);
       expect(service.updateFolder).toHaveBeenCalledWith({
@@ -188,7 +186,10 @@ describe('FoldersController', () => {
       mockFoldersService.getFolderById.mockResolvedValue(mockFolder);
       mockFoldersService.updateFolder.mockResolvedValue(mockFolder);
 
-      const result = await controller.removeFolderPassword(mockSession, 'folder-1');
+      const result = await controller.removeFolderPassword(
+        mockSession,
+        'folder-1'
+      );
 
       expect(result).toEqual(mockFolder);
       expect(service.updateFolder).toHaveBeenCalledWith({
@@ -212,7 +213,10 @@ describe('FoldersController', () => {
       mockFoldersService.getFolderById.mockResolvedValue(mockFolder);
       mockFoldersService.updateFolder.mockResolvedValue(mockFolder);
 
-      const result = await controller.refreshFolderLinks(mockSession, 'folder-1');
+      const result = await controller.refreshFolderLinks(
+        mockSession,
+        'folder-1'
+      );
 
       expect(result).toEqual(mockFolder);
       expect(service.updateFolder).toHaveBeenCalledWith({
