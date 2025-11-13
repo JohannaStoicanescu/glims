@@ -8,4 +8,4 @@ import { FoldersRepository } from './folders.repository';
   controllers: [FoldersController],
   providers: [FoldersService, FoldersRepository, PrismaService],
 })
-export class FoldersModule {}
+export class FoldersModule { }
