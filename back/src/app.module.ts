@@ -7,12 +7,14 @@ import { LoggerModule } from 'nestjs-pino';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { httpRequestDurationProvider } from './providers/http-request-duration.metric';
 import { ResponseTimeMiddleware } from './middleware/response-time.middleware';
+import { FoldersModule } from './folders/folders.module';
 
 @Module({
   imports: [
     AuthModule.forRoot(auth),
     LoggerModule.forRoot(),
     PrometheusModule.register(),
+    FoldersModule,
   ],
   controllers: [AppController],
   providers: [AppService, httpRequestDurationProvider],

@@ -111,9 +111,13 @@ jobs:
         working-directory: back
         run: pnpm run typecheck
 
-      - name: Prettier check
+      - name: Format check
         working-directory: back
-        run: pnpm run prettier:check
+        run: pnpm run format:check
+
+      - name: Tests
+        working-directory: back
+        run: pnpm test
 
   test_build_back:
     name: Test & Build Back (pnpm)
