@@ -12,14 +12,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="fr">
-      <link
-        rel="icon"
-        href="/favicon.ico"
-        sizes="any"
-      />
-      <body className="bg-white">{children}</body>
-    </html>
-  );
+  return <div>{children}</div>;
 }

@@ -5,8 +5,8 @@ import { useState, useRef, useEffect } from 'react';
 import { ArrowDownUp, ChevronDown, Search } from '@/app/ui/icons';
 
 interface FilterPanelProps {
-  glimsToDisplay: [];
-  setGlimsToDisplay: (glims: []) => void;
+  readonly glimsToDisplay: [];
+  readonly setGlimsToDisplay: (glims: []) => void;
 }
 
 export default function FilterPanel(

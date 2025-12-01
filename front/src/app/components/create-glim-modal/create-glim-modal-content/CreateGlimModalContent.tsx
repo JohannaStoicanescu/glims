@@ -1,20 +1,18 @@
-'use client';
-
 import { useEffect, useRef, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
+import CompleteGlimsInfoStep from '../complete-glims-info-step/CompleteGlimsInfoStep';
 import { CloseModalButton } from '../components/CloseModalButton';
-import { CompleteProfileStep } from '../complete-profile-step/CompleteProfileStep';
 import { LeftGlimsIndicator } from '../components/LeftGlimsIndicator';
-import { InvitesAndIconsStep } from '../invites-and-icons-step/InvitesAndIconsStep';
 import { defaultFormConfig, GlimFormData } from './utils/default-form-content';
+import InvitesAndIconsStep from '../invites-and-icons-step/InvitesAndIconsStep';
 
 interface CreateGlimModalContentProps {
   readonly open: boolean;
   readonly onClose: () => void;
 }
 
-export function CreateGlimModalContent({
+export default function CreateGlimModalContent({
   open,
   onClose,
 }: CreateGlimModalContentProps) {
@@ -43,40 +41,37 @@ export function CreateGlimModalContent({
   return (
     <dialog
       open={open}
-      className="fixed w-full h-full inset-0 z-40 md:flex md:items-center md:justify-center md:p-4 bg-transparent"
+      className="fixed w-full h-full flex flex-col justify-end bottom-0 inset-0 z-40 md:flex md:items-center md:justify-center md:p-4 bg-transparent"
       aria-labelledby="glims-title">
       <button
         type="button"
-        className="absolute inset-0 bg-black/40 backdrop-blur-[1px] z-0"
+        className="absolute inset-0 bg-black/82 backdrop-blur-[1px] z-0"
         onClick={onClose}
         aria-label="Close modal"
       />
-
       <div
         ref={dialogRef}
-        className="relative w-full bg-white shadow-2xl transition-all overflow-y-auto
-                   md:w-[80vw] lg:w-[50vw] xl:w-[35vw] md:h-fit md:max-w-lg md:rounded-2xl md:overflow-hidden
-                   lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl duration-200">
-        <CloseModalButton onClose={onClose} />
+        className="relative w-full flex flex-col max-md:justify-center  bg-white rounded-t-2xl overflow-y-auto transition-all duration-200
+                   md:w-[80vw] md:max-w-lg md:rounded-2xl lg:max-w-2xl  lg:w-[50vw] xl:w-[35vw] xl:max-w-3xl 2xl:max-w-4xl">
+        <CloseModalButton
+          onClose={onClose}
+          setStep={setStep}
+        />
 
         <FormProvider {...methods}>
-          <div className="px-4 py-4 sm:px-6 md:px-8 lg:px-10 sm:py-6 md:py-8">
+          <form className="px-4 py-4 md:px-8 flex-1">
             {/* STEP 1 */}
-            {step === 1 && (
-              <CompleteProfileStep
-                setStep={setStep}
-                onClose={onClose}
-              />
-            )}
+            {step === 1 && <CompleteGlimsInfoStep setStep={setStep} />}
 
             {/* STEP 2 */}
             {step === 2 && <InvitesAndIconsStep setStep={setStep} />}
 
             {/* DIVIDER */}
-            <div className="border-t border-gray-200 my-4 sm:my-6 w-full" />
+            <div className="md:border-t md:border-gray-200 mt-4 md:my-6 w-full" />
 
+            {/* TODO: Add real left glims number */}
             <LeftGlimsIndicator remainingGlims={'3'} />
-          </div>
+          </form>
         </FormProvider>
       </div>
     </dialog>

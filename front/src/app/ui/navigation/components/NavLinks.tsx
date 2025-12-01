@@ -31,7 +31,11 @@ export default function NavLinks({
           w-full p-2 rounded-lg border border-transparent
           hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100 cursor-pointer transition`}>
         {icon && <span className={`${reduced ? '' : 'mr-4'}`}>{icon}</span>}
-        {!reduced && <span className="text-sm lg:text-base">{title}</span>}
+        {!reduced && (
+          <span className="text-sm lg:text-base animate-[slideInRightNavLinks_0.4s_ease-out_forwards]">
+            {title}
+          </span>
+        )}
       </Link>
     );
   }
@@ -46,7 +50,11 @@ export default function NavLinks({
         w-full p-2 rounded-lg border border-transparent
         hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100 cursor-pointer transition`}>
       {icon && <span className={`${reduced ? '' : 'mr-4'}`}>{icon}</span>}
-      {!reduced && <span className="text-sm lg:text-base">{title}</span>}
+      {!reduced && (
+        <span className="text-sm lg:text-base animate-[slideInRightNavLinks_0.4s_ease-out_forwards]">
+          {title}
+        </span>
+      )}
     </button>
   );
 }

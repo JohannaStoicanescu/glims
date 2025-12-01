@@ -1,25 +1,19 @@
+import { ButtonForm, ControlledInputForm, StepIndicators } from '@/app/ui';
 import { useFormContext } from 'react-hook-form';
-
-import { ChevronLeft, ChevronRight } from '../../../ui/icons';
-import { ButtonForm, ControlledInputForm, StepIndicators } from '../../../ui';
 import { AccessibilityToTheGlimCheckboxes } from './components/AccessibilityToTheGlimCheckboxes';
+import { ChevronRight } from '@/app/ui/icons';
 import { UsersRoleSelection } from './components/UsersRoleSelection';
 
-interface CompleteProfileStepProps {
+interface CompleteGlimsInfoStepProps {
   readonly setStep: (step: number) => void;
-  readonly onClose: () => void;
 }
 
-export function CompleteProfileStep({
+export default function CompleteGlimsInfoStep({
   setStep,
-  onClose,
-}: CompleteProfileStepProps) {
-  const { trigger, watch } = useFormContext();
+}: CompleteGlimsInfoStepProps) {
+  const { trigger } = useFormContext();
 
-  const handleContinue = async () => {
-    const test = watch(['name', 'description', 'accessibility', 'userRole']);
-
-    console.log(test);
+  const handleContinueCreation = async () => {
     const isStepValid = await trigger([
       'name',
       'description',
@@ -35,14 +29,14 @@ export function CompleteProfileStep({
     <div className="flex flex-col gap-5">
       <h2
         id="glims-title"
-        className="text-xl text-center font-semibold md:text-2xl">
-        Créer un Glim
+        className="text-2xl md:text-center font-semibold">
+        Créer un Glims
       </h2>
       <ControlledInputForm
         type="text"
-        label="Nom du Glim"
+        label="Nom du Glims"
         name="name"
-        placeholder="Le nom du Glim"
+        placeholder="Le nom du Glims"
         required
         validation={{
           minLength: {
@@ -78,23 +72,14 @@ export function CompleteProfileStep({
           numberOfSteps={2}
         />
 
-        <div className="flex gap-2">
-          <ButtonForm
-            style="medium"
-            text="Annuler"
-            onClick={() => onClose()}
-            extraCss="w-full hidden md:flex"
-            icon={<ChevronLeft className="h-5 w-5" />}
-          />
-          <ButtonForm
-            style="dark"
-            text="Continuer"
-            onClick={handleContinue}
-            extraCss="w-full"
-            icon={<ChevronRight className="h-5 w-5" />}
-            iconPosition="right"
-          />
-        </div>
+        <ButtonForm
+          style="dark"
+          text="Continuer"
+          onClick={handleContinueCreation}
+          extraCss="w-full"
+          icon={<ChevronRight className="h-5 w-5" />}
+          iconPosition="right"
+        />
       </div>
     </div>
   );
