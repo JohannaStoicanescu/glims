@@ -12,6 +12,7 @@ export default defineConfig({
     root: './',
     coverage: {
       exclude: ['./src/lib/prisma.service.ts', '**.repository.ts', '**.controller.ts'],
+      provider: 'v8',
     },
   },
   resolve: {
