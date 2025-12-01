@@ -54,10 +54,13 @@ model User {
 }
 
 model Folder {
-  id           String  @id @default(uuid())
-  upload_url   String  @unique
-  download_url String  @unique
-  password     String?
+  id                String  @id @default(uuid())
+  upload_url        String  @unique
+  download_url      String  @unique
+  title             String
+  description       String?
+  password          String?
+  has_reached_limit Boolean @default(false)
 
   members  User[] @relation("FolderMembers")
   owner_id String
@@ -77,10 +80,13 @@ model UnauthenticatedUser {
   id        String @id @default(uuid())
   folder_id String
   folder    Folder @relation(fields: [folder_id], references: [id])
+  name      String
 
   // Maintenance fields
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  @@unique([folder_id, name], name: "unique_name_per_folder")
 }
 
 model Tag {
