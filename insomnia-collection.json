@@ -1,0 +1,840 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-12-20T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_media_create",
+      "_type": "request",
+      "parentId": "fld_media",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media",
+      "name": "Create Media (Upload File)",
+      "description": "Upload a new media file. Requires multipart/form-data with 'file' field.",
+      "method": "POST",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "pair_file",
+            "name": "file",
+            "value": "",
+            "type": "file",
+            "description": "The image file to upload"
+          },
+          {
+            "id": "pair_folder_id",
+            "name": "folder_id",
+            "value": "{{ _.folder_id }}",
+            "description": "The folder ID where the media will be stored"
+          },
+          {
+            "id": "pair_metadata",
+            "name": "metadata",
+            "value": "{\"description\": \"My image\"}",
+            "description": "Optional JSON string for metadata"
+          }
+        ]
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1000000000000
+    },
+    {
+      "_id": "req_media_list_by_id",
+      "_type": "request",
+      "parentId": "fld_media_list",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/list/{{ _.media_id }}",
+      "name": "List Media by ID (Metadata Only)",
+      "description": "Get media metadata by ID. Returns only the media record without file content.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 2000000000000
+    },
+    {
+      "_id": "req_media_get_file",
+      "_type": "request",
+      "parentId": "fld_media_get",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/{{ _.media_id }}",
+      "name": "Get Media File (Binary)",
+      "description": "Get the actual file content for a media item. Returns binary file with proper Content-Type header.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 3000000000000
+    },
+    {
+      "_id": "req_media_list_user",
+      "_type": "request",
+      "parentId": "fld_media_list",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/list/user/{{ _.user_id }}",
+      "name": "List User Media (Metadata Only)",
+      "description": "List all media for a user. Returns only metadata (Media objects with storage_id), not file content.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_page",
+          "name": "page",
+          "value": "1",
+          "description": "Page number (default: 1)"
+        },
+        {
+          "id": "pair_limit",
+          "name": "limit",
+          "value": "10",
+          "description": "Items per page (default: 10)"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 4000000000000
+    },
+    {
+      "_id": "req_media_get_user",
+      "_type": "request",
+      "parentId": "fld_media_get",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/user/{{ _.user_id }}",
+      "name": "Get User Media (With Files)",
+      "description": "Get all media for a user with actual file content. Returns JSON with base64-encoded files.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_page",
+          "name": "page",
+          "value": "1",
+          "description": "Page number (default: 1)"
+        },
+        {
+          "id": "pair_limit",
+          "name": "limit",
+          "value": "10",
+          "description": "Items per page (default: 10)"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 5000000000000
+    },
+    {
+      "_id": "req_media_list_folder",
+      "_type": "request",
+      "parentId": "fld_media_list",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/list/folder/{{ _.folder_id }}",
+      "name": "List Folder Media (Metadata Only)",
+      "description": "List all media in a folder. Returns only metadata (Media objects with storage_id), not file content.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_page",
+          "name": "page",
+          "value": "1",
+          "description": "Page number (default: 1)"
+        },
+        {
+          "id": "pair_limit",
+          "name": "limit",
+          "value": "10",
+          "description": "Items per page (default: 10)"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 6000000000000
+    },
+    {
+      "_id": "req_media_get_folder",
+      "_type": "request",
+      "parentId": "fld_media_get",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/folder/{{ _.folder_id }}",
+      "name": "Get Folder Media (With Files)",
+      "description": "Get all media in a folder with actual file content. Returns JSON with base64-encoded files.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_page",
+          "name": "page",
+          "value": "1",
+          "description": "Page number (default: 1)"
+        },
+        {
+          "id": "pair_limit",
+          "name": "limit",
+          "value": "10",
+          "description": "Items per page (default: 10)"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 7000000000000
+    },
+    {
+      "_id": "req_media_list_folder_user",
+      "_type": "request",
+      "parentId": "fld_media_list",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/list/folder/{{ _.folder_id }}/user/{{ _.user_id }}",
+      "name": "List Folder User Media (Metadata Only)",
+      "description": "List a specific user's media in a folder. Returns only metadata (Media objects with storage_id), not file content.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_page",
+          "name": "page",
+          "value": "1",
+          "description": "Page number (default: 1)"
+        },
+        {
+          "id": "pair_limit",
+          "name": "limit",
+          "value": "10",
+          "description": "Items per page (default: 10)"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 8000000000000
+    },
+    {
+      "_id": "req_media_get_folder_user",
+      "_type": "request",
+      "parentId": "fld_media_get",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/folder/{{ _.folder_id }}/user/{{ _.user_id }}",
+      "name": "Get Folder User Media (With Files)",
+      "description": "Get a specific user's media in a folder with actual file content. Returns JSON with base64-encoded files.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_page",
+          "name": "page",
+          "value": "1",
+          "description": "Page number (default: 1)"
+        },
+        {
+          "id": "pair_limit",
+          "name": "limit",
+          "value": "10",
+          "description": "Items per page (default: 10)"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 9000000000000
+    },
+    {
+      "_id": "req_media_delete",
+      "_type": "request",
+      "parentId": "fld_media",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/media/{{ _.media_id }}",
+      "name": "Delete Media",
+      "description": "Delete a media item by ID.",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 10000000000000
+    },
+    {
+      "_id": "req_app_hello",
+      "_type": "request",
+      "parentId": "fld_app",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/",
+      "name": "Hello",
+      "description": "Get hello message from the API",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 11000000000000
+    },
+    {
+      "_id": "req_app_insecure",
+      "_type": "request",
+      "parentId": "fld_app",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/insecure",
+      "name": "Insecure Endpoint",
+      "description": "Public endpoint that doesn't require authentication",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 12000000000000
+    },
+    {
+      "_id": "req_app_secure",
+      "_type": "request",
+      "parentId": "fld_app",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/secure",
+      "name": "Secure Endpoint",
+      "description": "Protected endpoint that requires authentication. Returns user session info.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 13000000000000
+    },
+    {
+      "_id": "req_folders_list",
+      "_type": "request",
+      "parentId": "fld_folders",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/folders",
+      "name": "Get User Folders",
+      "description": "Get all folders for the authenticated user",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 14000000000000
+    },
+    {
+      "_id": "req_folders_get",
+      "_type": "request",
+      "parentId": "fld_folders",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/folders/{{ _.folder_id }}",
+      "name": "Get Folder by ID",
+      "description": "Get a specific folder by ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 15000000000000
+    },
+    {
+      "_id": "req_folders_create",
+      "_type": "request",
+      "parentId": "fld_folders",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/folders",
+      "name": "Create Folder",
+      "description": "Create a new folder",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"My Folder\",\n  \"description\": \"Folder description\",\n  \"password\": \"optional-password\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 16000000000000
+    },
+    {
+      "_id": "req_folders_update",
+      "_type": "request",
+      "parentId": "fld_folders",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/folders/{{ _.folder_id }}",
+      "name": "Update Folder",
+      "description": "Update a folder (partial update)",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Updated Title\",\n  \"description\": \"Updated description\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 17000000000000
+    },
+    {
+      "_id": "req_folders_refresh_links",
+      "_type": "request",
+      "parentId": "fld_folders",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/folders/{{ _.folder_id }}/refresh-links",
+      "name": "Refresh Folder Links",
+      "description": "Refresh the links for a folder",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 18000000000000
+    },
+    {
+      "_id": "req_folders_delete",
+      "_type": "request",
+      "parentId": "fld_folders",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/folders/{{ _.folder_id }}",
+      "name": "Delete Folder",
+      "description": "Delete a folder by ID",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 19000000000000
+    },
+    {
+      "_id": "req_auth_signin_email",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/api/auth/sign-in/email",
+      "name": "Sign In (Email/Password)",
+      "description": "Sign in with email and password",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 20000000000000
+    },
+    {
+      "_id": "req_auth_signup_email",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/api/auth/sign-up/email",
+      "name": "Sign Up (Email/Password)",
+      "description": "Create a new account with email and password",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"name\": \"John Doe\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 21000000000000
+    },
+    {
+      "_id": "req_auth_signout",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/api/auth/sign-out",
+      "name": "Sign Out",
+      "description": "Sign out the current user",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 22000000000000
+    },
+    {
+      "_id": "req_auth_session",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/api/auth/session",
+      "name": "Get Session",
+      "description": "Get the current user session",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Cookie",
+          "value": "{{ _.session_cookie }}",
+          "description": "Session cookie for authentication"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 23000000000000
+    },
+    {
+      "_id": "req_auth_forget_password",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/api/auth/forget-password",
+      "name": "Forget Password",
+      "description": "Request a password reset email",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 24000000000000
+    },
+    {
+      "_id": "req_auth_reset_password",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/api/auth/reset-password",
+      "name": "Reset Password",
+      "description": "Reset password with token from email",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"reset-token-from-email\",\n  \"password\": \"newpassword123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 25000000000000
+    },
+    {
+      "_id": "req_auth_oauth_google",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "url": "{{ _.base_url }}/api/auth/oauth/google",
+      "name": "OAuth Google (Redirect)",
+      "description": "Initiate Google OAuth login. This redirects to Google's login page.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "id": "pair_callbackURL",
+          "name": "callbackURL",
+          "value": "{{ _.base_url }}/api/auth/oauth/google/callback",
+          "description": "Callback URL after OAuth"
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": 26000000000000
+    },
+    {
+      "_id": "fld_media",
+      "_type": "request_group",
+      "parentId": "wrk_glims",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "Media",
+      "description": "Media management endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 1000000000000
+    },
+    {
+      "_id": "fld_media_list",
+      "_type": "request_group",
+      "parentId": "fld_media",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "List (Metadata Only)",
+      "description": "Endpoints that return only media metadata (storage_id, type, etc.) without file content",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 2000000000000
+    },
+    {
+      "_id": "fld_media_get",
+      "_type": "request_group",
+      "parentId": "fld_media",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "Get (With Files)",
+      "description": "Endpoints that return actual file content from storage",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 3000000000000
+    },
+    {
+      "_id": "fld_app",
+      "_type": "request_group",
+      "parentId": "wrk_glims",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "App",
+      "description": "Application root endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 11000000000000
+    },
+    {
+      "_id": "fld_folders",
+      "_type": "request_group",
+      "parentId": "wrk_glims",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "Folders",
+      "description": "Folder management endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 14000000000000
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_glims",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "Auth",
+      "description": "Authentication endpoints (better-auth)",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": 20000000000000
+    },
+    {
+      "_id": "wrk_glims",
+      "_type": "workspace",
+      "parentId": null,
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "Glims API",
+      "description": "Glims backend API collection",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_glims",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "folder_id": "your-folder-id-here",
+        "user_id": "your-user-id-here",
+        "media_id": "your-media-id-here",
+        "session_cookie": "better-auth.session_token=your-session-token-here"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "folder_id",
+          "user_id",
+          "media_id",
+          "session_cookie"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1703116800000
+    },
+    {
+      "_id": "env_prod",
+      "_type": "environment",
+      "parentId": "env_base",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "Production",
+      "data": {
+        "base_url": "https://api.glims.example.com"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url"
+        ]
+      },
+      "color": "#7d69cb",
+      "isPrivate": false,
+      "metaSortKey": 1703116801000
+    },
+    {
+      "_id": "env_dev",
+      "_type": "environment",
+      "parentId": "env_base",
+      "modified": 1703116800000,
+      "created": 1703116800000,
+      "name": "Development",
+      "data": {
+        "base_url": "http://localhost:3000"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url"
+        ]
+      },
+      "color": "#50fa7b",
+      "isPrivate": false,
+      "metaSortKey": 1703116802000
+    }
+  ]
+}
+

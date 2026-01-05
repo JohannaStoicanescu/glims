@@ -16,10 +16,10 @@ datasource db {
 }
 
 model Media {
-  id       String @id @default(uuid())
-  url      String @unique
-  type     String
-  metadata Json?
+  id         String @id @default(uuid())
+  type       String
+  storage_id String @unique
+  metadata   Json?
 
   folder_id String
   folder    Folder     @relation(fields: [folder_id], references: [id])

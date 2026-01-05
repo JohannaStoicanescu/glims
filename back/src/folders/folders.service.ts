@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Folder } from '@prisma/client';
 import { FoldersRepository } from './folders.repository';
-import { uuidv4 } from 'better-auth';
+import { randomUUID } from 'crypto';
+import { StorageService } from 'src/storage/storage.interface';
 
 export enum FoldersError {
   FOLDER_NOT_FOUND = 'Folder not found',
@@ -16,7 +17,7 @@ export class FoldersException extends Error {
 
 @Injectable()
 export class FoldersService {
-  constructor(private readonly repository: FoldersRepository) {}
+  constructor(private readonly repository: FoldersRepository) { }
 
   async getFolderById(folder_id: string, user_id: string): Promise<Folder> {
     const folder = await this.checkFolderOwnership(folder_id, user_id);
@@ -31,8 +32,8 @@ export class FoldersService {
     data: { title: string; description?: string; password?: string },
     user_id: string
   ): Promise<Folder> {
-    const upload_url = uuidv4().format;
-    const download_url = uuidv4().format;
+    const upload_url = randomUUID();
+    const download_url = randomUUID();
 
     return this.repository.createFolder({
       ...data,
@@ -63,8 +64,8 @@ export class FoldersService {
   ): Promise<Folder> {
     await this.checkFolderOwnership(folder_id, user_id);
 
-    const upload_url = uuidv4().format;
-    const download_url = uuidv4().format;
+    const upload_url = randomUUID();
+    const download_url = randomUUID();
 
     return this.updateFolder(folder_id, user_id, { upload_url, download_url });
   }
