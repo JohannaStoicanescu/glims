@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 import { DisplayMode } from '@/types';
 import FilterPanel from './FilterPanel';
-import './animations.css';
 
 type Picture = {
   id: string;
