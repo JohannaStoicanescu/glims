@@ -1,1 +1,3 @@
-// This file we'll be used for exporting all the types
+export type { UserRole } from './user-role';
+export type { DisplayMode } from './display';
+export type { NewUser } from './new-user';

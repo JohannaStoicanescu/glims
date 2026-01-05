@@ -17,7 +17,7 @@ export interface GlimFormData {
   showReactions: boolean;
 }
 
-export const defaultFormValues: GlimFormData = {
+const defaultFormValues: GlimFormData = {
   // STEP 1 - Profile
   name: '',
   description: '',

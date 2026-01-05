@@ -1,4 +1,4 @@
-import { CreateGlimModalContent } from './create-glim-modal-content/CreateGlimModalContent';
+import CreateGlimModalContent from './create-glim-modal-content/CreateGlimModalContent';
 
 interface CreateGlimModalProps {
   readonly open: boolean;

@@ -14,11 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <SidePanel />
-      <div className="w-full h-full flex flex-col">
+      <div className="w-full h-full flex flex-col min-w-0">
         <Header />
-        <div className="w-full h-full px-2 sm:px-4 md:px-8 flex-1">
+        <div className="w-full flex flex-1 px-2 sm:px-4 md:px-8 min-h-0">
           {children}
         </div>
       </div>

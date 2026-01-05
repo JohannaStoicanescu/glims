@@ -10,7 +10,7 @@ export function Breadcrumps({ currentStep }: BreadcrumpsProps) {
         <div
           className={`flex md:flex-col justify-center items-center ${currentStep === 2 ? 'hidden md:flex' : ''}`}>
           <div
-            className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold mr-2 md:mr-0 
+            className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold pr-2 md:pr-0 
               ${
                 currentStep === 1
                   ? 'bg-black text-white'
@@ -40,7 +40,7 @@ export function Breadcrumps({ currentStep }: BreadcrumpsProps) {
         <div
           className={`flex md:flex-col justify-center items-center ${currentStep === 1 ? 'hidden md:flex' : ''}`}>
           <div
-            className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold mr-2 sm:mr-0
+            className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold pr-2 sm:pr-0
               ${
                 currentStep === 2
                   ? 'bg-black text-white'

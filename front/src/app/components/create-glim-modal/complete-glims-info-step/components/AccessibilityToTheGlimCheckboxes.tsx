@@ -16,15 +16,15 @@ export function AccessibilityToTheGlimCheckboxes() {
         control={control}
         defaultValue="private"
         render={({ field }) => (
-          <div className="border border-gray-200 rounded-xl">
+          <div className="border border-gray-200 rounded-lg">
             {/* PRIVATE CHECKBOX */}
             <label
               htmlFor="private-checkbox"
-              className="w-full flex items-center justify-between px-4 py-3 rounded-t-xl cursor-pointer hover:bg-gray-50 font-medium">
+              className="w-full flex items-center justify-between px-4 py-3 rounded-t-lg cursor-pointer hover:bg-gray-50 font-medium">
               <div className="flex items-center">
                 <Lock
                   size={18}
-                  className="text-gray-500 inline mr-4"
+                  className="text-gray-500 inline pr-4"
                 />
                 <div className="flex flex-col items-start">
                   <span className="text-lg">Privée</span>
@@ -54,7 +54,7 @@ export function AccessibilityToTheGlimCheckboxes() {
               <div className="flex items-center">
                 <Earth
                   size={18}
-                  className="text-gray-500 inline mr-4"
+                  className="text-gray-500 inline pr-4"
                 />
                 <div className="flex flex-col items-start">
                   <span className="text-lg">Publique</span>

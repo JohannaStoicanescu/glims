@@ -31,7 +31,7 @@ export default function ControlledInputForm({
   return (
     <div>
       <label
-        className="text-black font-medium mb-2 block"
+        className="text-black font-medium pb-2 block"
         htmlFor={name}
         aria-label={label}>
         {showLabel && <span>{label}</span>}
@@ -40,7 +40,7 @@ export default function ControlledInputForm({
         type={type}
         id={name}
         placeholder={placeholder}
-        className={`w-full border p-3 rounded-xl bg-gray-50 hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition ${
+        className={`w-full border p-3 rounded-lg bg-gray-50 hover:border-orange-600 focus:outline-none focus:ring focus:ring-orange-600 transition ${
           error ? 'border-red-400 focus:ring-red-400' : 'border-gray-200'
         }`}
         {...register(name, {

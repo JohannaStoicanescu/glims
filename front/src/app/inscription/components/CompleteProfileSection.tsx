@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useContext, useState } from 'react';
 
 import { ChevronLeft, ChevronRight, Eye } from '../../ui/icons';
-import { ButtonForm, InputForm, StepIndicators } from '../../ui';
+import { ButtonForm, ControlledInputForm, StepIndicators } from '../../ui';
 import { NewUserContext } from '../utils/new-user-context';
 import Checkboxes from './Checkboxes';
 import SideDisplay from './SideDisplay';
@@ -52,7 +52,7 @@ export default function CompleteProfileSection({
     <main className="flex flex-col h-screen w-screen md:flex-row">
       <SideDisplay />
 
-      <div className="h-full m-8 bg-white md:w-1/2">
+      <div className="h-screen p-8 bg-white md:w-1/2">
         <div className="hidden md:block">
           <Image
             src={'/glims-logo.png'}
@@ -67,11 +67,11 @@ export default function CompleteProfileSection({
           <section className="w-96">
             <button
               onClick={() => setSignUpStep(1)}
-              className="flex items-center gap-2 md:hidden mt-3 cursor-pointer md:hover:text-slate-300 focus:text-slate-300">
+              className="flex items-center gap-2 pt-3 cursor-pointer hover:text-red-400 focus:text-slate-300">
               <ChevronLeft />
               <span>Retour</span>
             </button>
-            <h1 className="text-center text-3xl font-bold my-8 md:mt-0">
+            <h1 className="text-center text-3xl font-bold my-8 md:pt-0">
               Bienvenue sur Glims
             </h1>
 
@@ -80,35 +80,29 @@ export default function CompleteProfileSection({
               className="flex flex-col">
               <div className="flex flex-col gap-2 mb-5">
                 <div className="flex flex-col md:hidden">
-                  <InputForm
+                  <ControlledInputForm
                     label="Email"
                     type="email"
                     name="email"
                     placeholder="Votre email"
-                    required
-                    value={newUserData.email || ''}
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <InputForm
+                  <ControlledInputForm
                     label="Prénom"
                     type="text"
                     name="firstName"
                     placeholder="Votre prénom"
-                    required
-                    value={newUserData.firstName || ''}
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <InputForm
+                  <ControlledInputForm
                     label="Nom"
                     type="text"
                     name="lastName"
                     placeholder="Votre nom"
-                    required
-                    value={newUserData.lastName || ''}
                   />
                 </div>
 

@@ -8,7 +8,7 @@ export function LeftGlimsIndicator({
   remainingGlims,
 }: LeftGlimsIndicatorProps) {
   return (
-    <div className="flex justify-center items-center gap-3 bg-white md:rounded-b-2xl">
+    <div className="flex justify-center items-center pb-2 bg-white md:rounded-b-2xl">
       <div className="text-sm text-gray-600 align-middle text-center">
         Encore{' '}
         <span className="pb-1 inline-flex items-center gap-1 align-middle">

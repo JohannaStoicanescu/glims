@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import Divider from './Divider';
 import EmailSignUp from './EmailSignUp';
@@ -12,8 +13,8 @@ export default function SignUpSection({
   setSignUpStep: (step: number) => void;
 }) {
   return (
-    <main className="flex flex-col h-screen w-screen md:flex-row">
-      <div className="bg-orange-400 h-2/3 md:w-1/2 md:h-full">
+    <div className="flex flex-col h-screen w-screen md:flex-row">
+      <div className="bg-orange-400 h-2/3 md:h-screen md:w-1/2">
         <div className="flex justify-center mt-16">
           <Image
             src={'/glims-logo-blanc.png'}
@@ -26,7 +27,7 @@ export default function SignUpSection({
         </div>
       </div>
 
-      <div className="h-1/2 m-8 bg-white md:w-1/2 md:h-full">
+      <div className="h-1/2 p-8 bg-white md:w-1/2 md:h-screen">
         <Image
           src={'/glims-logo.png'}
           alt={'Logo textuel de Glims'}
@@ -38,7 +39,7 @@ export default function SignUpSection({
 
         <div className="flex items-center justify-center h-full">
           <section className="w-96">
-            <div className="flex flex-col items-center gap-2 mb-2 md:mb-8">
+            <div className="flex flex-col items-center gap-2 pb-2 md:pb-8">
               <div className="flex flex-col items-center text-xl md:text-3xl font-bold">
                 <h1>Partagez vos souvenirs</h1>
                 <h1>inmanquables</h1>
@@ -58,13 +59,15 @@ export default function SignUpSection({
 
             <p className="text-center font-medium mt-12">
               Déjà un compte ?{' '}
-              <a className="text-orange-400 cursor-pointer hover:text-slate-400 hover:underline">
+              <Link
+                className="text-orange-400 cursor-pointer hover:text-red-400 hover:underline"
+                href="/connexion">
                 Connectez-vous
-              </a>
+              </Link>
             </p>
           </section>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
