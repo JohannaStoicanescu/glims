@@ -1,10 +1,11 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function AvatarRounded() {
   return (
-    <a href="/profile">
+    <Link href="/profile">
       <Image
         src="/martin-luther-king.jpg"
         alt="Avatar utilisateur"
@@ -14,6 +15,6 @@ export default function AvatarRounded() {
         className={`w-10 h-10 rounded-full cursor-pointer transition`}
         style={{ objectFit: 'cover' }}
       />
-    </a>
+    </Link>
   );
 }

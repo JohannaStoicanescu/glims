@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
-import { NewUser, NewUserContext } from '../utils/new-user-context';
+import { NewUserContext } from '../utils/new-user-context';
 import CompleteProfileSection from './CompleteProfileSection';
 import ImageSection from './ImageSection';
 import SignUpSection from './SignUpSection';
 import { useAuthClient } from '@/hooks';
+import { NewUser } from '@/types';
 
 export default function SignUpSteps() {
   const [signUpStep, setSignUpStep] = useState(1);
@@ -31,18 +33,22 @@ export default function SignUpSteps() {
     }
   };
 
+  const methods = useForm<NewUser>();
+
   return (
     <NewUserContext.Provider value={{ newUserData, setNewUserData }}>
-      {signUpStep === 1 && <SignUpSection setSignUpStep={setSignUpStep} />}
-      {signUpStep === 2 && (
-        <CompleteProfileSection setSignUpStep={setSignUpStep} />
-      )}
-      {signUpStep === 3 && (
-        <ImageSection
-          setSignUpStep={() => {}}
-          formSubmit={formSubmit}
-        />
-      )}
+      <FormProvider {...methods}>
+        {signUpStep === 1 && <SignUpSection setSignUpStep={setSignUpStep} />}
+        {signUpStep === 2 && (
+          <CompleteProfileSection setSignUpStep={setSignUpStep} />
+        )}
+        {signUpStep === 3 && (
+          <ImageSection
+            setSignUpStep={() => {}}
+            formSubmit={formSubmit}
+          />
+        )}
+      </FormProvider>
     </NewUserContext.Provider>
   );
 }

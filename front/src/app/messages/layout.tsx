@@ -14,21 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <link
-        rel="icon"
-        href="/favicon.ico"
-        sizes="any"
-      />
-      <body className="bg-white">
-        <div className="flex">
-          <SidePanel />
-          <div className="w-full">
-            <Header />
-            {children}
-          </div>
-        </div>
-      </body>
-    </html>
+    <div className="flex">
+      <SidePanel />
+      <div className="w-full">
+        <Header />
+        {children}
+      </div>
+    </div>
   );
 }

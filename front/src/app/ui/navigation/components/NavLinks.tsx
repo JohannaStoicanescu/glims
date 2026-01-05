@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 interface NavLinksProps {
   readonly title: string;
   readonly href?: string;
@@ -21,16 +23,25 @@ export default function NavLinks({
   if (shouldRenderLink) {
     return (
       // REDIRECT LINK TO ANOTHER PAGE
-      <a
-        href={href}
+      <Link
+        href={href || ''}
         aria-label={ariaLabel}
         className={`
           flex items-center ${reduced ? 'justify-center' : ''} text-gray-800 font-medium
           w-full p-2 rounded-lg border border-transparent
           hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100 cursor-pointer transition`}>
-        {icon && <span className={`${reduced ? '' : 'mr-4'}`}>{icon}</span>}
-        {!reduced && <span className="text-sm lg:text-base">{title}</span>}
-      </a>
+        {icon && (
+          <span
+            className={`animate-[iconsMenuFadeIn_0.5s_ease-out_forwards] ${reduced ? '' : 'mr-4'}`}>
+            {icon}
+          </span>
+        )}
+        {!reduced && (
+          <span className="text-sm lg:text-base animate-[slideInRightNav_0.4s_ease-out_forwards]">
+            {title}
+          </span>
+        )}
+      </Link>
     );
   }
 
@@ -44,7 +55,11 @@ export default function NavLinks({
         w-full p-2 rounded-lg border border-transparent
         hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100 cursor-pointer transition`}>
       {icon && <span className={`${reduced ? '' : 'mr-4'}`}>{icon}</span>}
-      {!reduced && <span className="text-sm lg:text-base">{title}</span>}
+      {!reduced && (
+        <span className="text-sm lg:text-base animate-[slideInRightNav_0.4s_ease-out_forwards]">
+          {title}
+        </span>
+      )}
     </button>
   );
 }

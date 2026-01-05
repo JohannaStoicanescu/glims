@@ -1,9 +1,20 @@
 import type { NextConfig } from 'next';
-import { URL } from 'next/dist/compiled/@edge-runtime/primitives/url';
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
       {
         protocol: 'https',
         hostname: 'picsum.photos',

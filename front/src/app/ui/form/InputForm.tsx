@@ -47,8 +47,8 @@ export default function InputForm({
         id={name}
         placeholder={placeholder}
         required={required}
-        className="w-full border border-gray-200 p-3 rounded-xl bg-gray-50 
-        hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+        className="w-full border border-gray-200 p-3 rounded-lg bg-gray-50 
+        hover:border-orange-600 focus:outline-none focus:ring focus:ring-orange-600 transition"
       />
     </div>
   );

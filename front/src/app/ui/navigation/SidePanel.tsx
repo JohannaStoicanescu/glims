@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-import { CreateGlimModal } from '../../components';
+import CreateGlimModal from '../../components/create-glim-modal/CreateGlimModal';
 import { PanelLeftClose } from '../icons';
 import NavLinks from './components/NavLinks';
 import { NAV_LINKS } from './utils/get-nav-links';
@@ -15,16 +15,24 @@ export default function SidePanel() {
 
   return (
     <>
-      <nav className="hidden md:flex min-w-1/6">
+      <nav
+        className={`hidden md:flex ${isMenuReduced ? 'animate-[slideInRightNav_0.4s_ease-out_backwards]' : 'min-w-1/6 animate-[slideInRightNav_0.4s_ease-out_forwards]'}`}>
         <div
           className={`flex flex-col h-screen ${isMenuReduced ? 'w-18' : 'w-full'} 
         border-r border-gray-200 p-2 pt-8 lg:p-4 lg:pt-8`}>
           {/* GLIMS LOGO */}
-          <div className={isMenuReduced ? 'flex justify-center' : ''}>
+          <div
+            className={
+              isMenuReduced ? 'flex justify-center' : 'overflow-hidden'
+            }>
             <Image
-              src={`${isMenuReduced ? '/glims.png' : '/glims-logo.png'}`}
+              src={`${isMenuReduced ? '/glims-logo-filed.svg' : '/glims-logo-filed-with-text.svg'}`}
               alt={'Logo textuel de Glims'}
-              className="pl-1 lg:p-0"
+              className={`pl-1 lg:p-0 ${
+                !isMenuReduced
+                  ? 'animate-[slideInRight_0.5s_ease-out_forwards]'
+                  : 'animate-[iconsMenuFadeIn_0.5s_ease-out_forwards]'
+              }`}
               width={isMenuReduced ? 29 : 100}
               height={isMenuReduced ? 29 : 100}
             />
@@ -51,9 +59,9 @@ export default function SidePanel() {
             {/* REDUCE MENU TO THE LEFT TOGGLE BUTTON */}
             <div className="pb-4 flex justify-end">
               <button
-                className={`text-gray-600 font-medium ${isMenuReduced ? 'w-full flex justify-center' : ''}
+                className={`text-gray-600 font-medium ${isMenuReduced ? 'w-full flex justify-center rotate-180 transition-all duration-300' : 'transition-all duration-300'}
                             p-2 rounded-lg border border-transparent
-                          hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100 cursor-pointer transition`}
+                          hover:text-orange-600 hover:bg-red-50 hover:border-red-100 cursor-pointer transition`}
                 onClick={() => setIsMenuReduced(!isMenuReduced)}>
                 <PanelLeftClose
                   size={25}
