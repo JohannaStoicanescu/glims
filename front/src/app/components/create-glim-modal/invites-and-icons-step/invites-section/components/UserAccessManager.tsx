@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 
 import { ChevronDown, Plus } from '@/app/ui/icons';
 import { USERS_ROLE_OPTIONS } from '@/constants';
-import { userRole } from '@/types';
+import { UserRole } from '@/types';
 
 export default function UserAccessManager() {
-  const [selectedRole, setSelectedRole] = useState<userRole>('readonly');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('readonly');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [users, setUsers] = useState<
-    { id: number; email: string; role: userRole }[]
+    { id: number; email: string; role: UserRole }[]
   >([]);
 
   // Logic to close the dropdown when clicking outside
@@ -98,7 +98,7 @@ export default function UserAccessManager() {
                     onClick={(e) => {
                       e.preventDefault();
                       setIsDropdownOpen(false);
-                      setSelectedRole(role as userRole);
+                      setSelectedRole(role as UserRole);
                     }}
                     className="block w-full px-4 py-2 text-left text-sm text-gray-700 
                         hover:bg-orange-50 hover:text-orange-600 cursor-pointer transition-colors

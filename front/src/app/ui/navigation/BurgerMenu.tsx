@@ -26,7 +26,7 @@ export default function BurgerMenu() {
 
         {isMenuOpen && (
           <div className="fixed inset-0 z-50 flex">
-            <div className="w-4/5 sm:w-1/2 max-w-xs bg-white p-4 h-full overflow-y-auto shadow-lg">
+            <div className="w-4/5 sm:w-1/2 max-w-xs bg-white p-4 h-full overflow-y-auto shadow-lg animate-[slideInRightNavLinks_0.4s_ease-out_forwards]">
               {/* GLIMS LOGO */}
               <div className="flex items-center justify-between mt-2 mb-6">
                 <Image

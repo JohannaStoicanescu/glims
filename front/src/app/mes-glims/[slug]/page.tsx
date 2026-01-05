@@ -1,3 +1,5 @@
+import GlimsDetailsPageContent from './components/GlimsDetailsPageContent';
+
 export default function Page() {
-  return <div>Mes Glims détails</div>;
+  return <GlimsDetailsPageContent />;
 }

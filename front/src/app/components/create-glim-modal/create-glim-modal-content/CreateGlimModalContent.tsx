@@ -4,7 +4,10 @@ import { useForm, FormProvider } from 'react-hook-form';
 import CompleteGlimsInfoStep from '../complete-glims-info-step/CompleteGlimsInfoStep';
 import { CloseModalButton } from '../components/CloseModalButton';
 import { LeftGlimsIndicator } from '../components/LeftGlimsIndicator';
-import { defaultFormConfig, GlimFormData } from './utils/default-form-content';
+import {
+  defaultFormConfig,
+  GlimFormData,
+} from '../../../../utils/create-glims-form/default-form-config';
 import InvitesAndIconsStep from '../invites-and-icons-step/InvitesAndIconsStep';
 
 interface CreateGlimModalContentProps {

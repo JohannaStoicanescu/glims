@@ -16,7 +16,16 @@
   }
 }
 
-@keyframes slideInRightNavLinks {
+@keyframes iconsMenuFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRightNav {
   0% {
     transform: translateX(-20%);
     opacity: 0;

@@ -3,7 +3,7 @@
 import { FormEvent, useContext } from 'react';
 import { HiOutlineMail } from 'react-icons/hi';
 
-import { InputForm, ButtonForm } from '@/app/ui';
+import { ButtonForm, ControlledInputForm } from '@/app/ui';
 import { NewUserContext } from '../utils/new-user-context';
 
 export default function EmailSignUp({
@@ -36,14 +36,13 @@ export default function EmailSignUp({
       className="flex flex-col gap-4 w-full"
       onSubmit={handleEmailSignUp}>
       <div className="hidden md:block">
-        <InputForm
-          label="Email"
-          showLabel={false}
+        <ControlledInputForm
           type="email"
           name="email"
-          value={newUserData.email || ''}
+          label="Email"
+          showLabel={false}
           placeholder="Votre email"
-          required={true}
+          validation={{ require }}
         />
       </div>
 

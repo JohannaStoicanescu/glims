@@ -1,12 +1,12 @@
-import { userRole } from '@/types';
+import { UserRole } from '@/types';
 
-export const USERS_ROLE_OPTIONS: Record<userRole, string> = {
+export const USERS_ROLE_OPTIONS: Record<UserRole, string> = {
   readonly: 'Invité',
   uploaddownload: 'Éditeur',
   admin: 'Admin',
 };
 
-export const usersRoleOptions: Array<{ value: userRole; title: string }> = [
+export const usersRoleOptions: Array<{ value: UserRole; title: string }> = [
   {
     value: 'readonly',
     title: 'Invité',

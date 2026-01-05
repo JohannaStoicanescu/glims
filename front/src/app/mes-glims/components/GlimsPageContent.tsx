@@ -1,26 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import FilterPanel from './FilterPanel';
 import FirstTimeUserDisplay from './FirstTimeUserDisplay';
 import GlimsDisplay from './GlimsDisplay';
 import NoGlimsDisplay from './NoGlimsDisplay';
 
+type GlimType = {
+  id: string;
+  author: string;
+  width: number;
+  height: number;
+  url: string;
+  download_url: string;
+};
+
 export default function GlimsPageContent() {
   // TODO: get firstTimeUser from API
   const firstTimeUser = false;
+
+  const [glims, setGlims] = useState<GlimType[]>([]);
+  const [glimsToDisplay, setGlimsToDisplay] = useState<GlimType[]>([]);
+
   // TODO: get glims from API
-  const glims: [] = [
-    // 'https://i.pravatar.cc/300',
-    // 'https://i.pravatar.cc/500',
-    // 'https://i.pravatar.cc/300',
-    // 'https://i.pravatar.cc/600',
-    // 'https://i.pravatar.cc/700',
-    // 'https://i.pravatar.cc/700',
-    // 'https://i.pravatar.cc/200',
-  ];
-  const [glimsToDisplay, setGlimsToDisplay] = useState(glims);
+  const getGlims = async () => {
+    const res = await fetch('https://picsum.photos/v2/list?limit=50');
+    const glimsData = await res.json();
+    return glimsData as GlimType[];
+  };
+
+  useEffect(() => {
+    const fetchGlims = async () => {
+      const fetchedGlims = await getGlims();
+      setGlims(fetchedGlims);
+      setGlimsToDisplay(fetchedGlims);
+    };
+
+    fetchGlims();
+  }, []);
 
   return (
     <div className="flex flex-col flex-1">
@@ -28,8 +46,8 @@ export default function GlimsPageContent() {
         <FirstTimeUserDisplay />
       ) : (
         !firstTimeUser && (
-          <div className="flex flex-col flex-1">
-            <div>
+          <div className="flex flex-col flex-1 min-h-0">
+            <div className="flex-shrink-0">
               <h3 className="text-xl pl-2 sm:pl-0 sm:text-2xl md:text-3xl font-bold">
                 Vos Glims
               </h3>

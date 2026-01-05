@@ -5,16 +5,30 @@ import { useState, useRef, useEffect } from 'react';
 import { ArrowDownUp, ChevronDown, Search } from '@/app/ui/icons';
 
 interface FilterPanelProps {
-  readonly glimsToDisplay: [];
-  readonly setGlimsToDisplay: (glims: []) => void;
+  readonly glimsToDisplay: Array<{
+    id: string;
+    author: string;
+    width: number;
+    height: number;
+    url: string;
+    download_url: string;
+  }>;
+  readonly setGlimsToDisplay: (
+    glims: Array<{
+      id: string;
+      author: string;
+      width: number;
+      height: number;
+      url: string;
+      download_url: string;
+    }>
+  ) => void;
 }
 
-export default function FilterPanel(
-  {
-    // glimsToDisplay,
-    // setGlimsToDisplay,
-  }: FilterPanelProps
-) {
+export default function FilterPanel({
+  glimsToDisplay,
+  setGlimsToDisplay,
+}: FilterPanelProps) {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [dropdownTitle, setDropdownTitle] = useState('Récent');
   const filterRef = useRef<HTMLDivElement>(null);
@@ -41,7 +55,7 @@ export default function FilterPanel(
 
   // TODO: Add method to filter glims based on dropdown selection use setGlimsToDisplay(glimsToDisplay.filter or sort or something)
   return (
-    <div className="w-full py-4 md:flex md:items-center md:justify-start gap-4">
+    <div className="w-full pt-7 pb-9 md:flex md:items-center md:justify-start gap-4">
       {/* SEARCH BAR */}
       {/* TODO: Add logic and html so when user start to write text in the search bar 3 or 4 glims are displayed under */}
       <label
@@ -52,7 +66,7 @@ export default function FilterPanel(
           type="text"
           name="glims-search-bar"
           id="glims-search-bar"
-          placeholder="Rechercher un glim"
+          placeholder="Rechercher un Glims"
           className="w-full px-4 py-3 rounded-full border border-gray-200 shadow-xs
         hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
         />

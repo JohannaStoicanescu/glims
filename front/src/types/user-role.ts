@@ -1,1 +1,1 @@
-export type userRole = 'readonly' | 'uploaddownload' | 'admin';
+export type UserRole = 'readonly' | 'uploaddownload' | 'admin';

@@ -15,16 +15,15 @@ export default function SidePanel() {
 
   return (
     <>
-      <nav className={`hidden md:flex ${isMenuReduced ? '' : 'min-w-1/6'}`}>
+      <nav
+        className={`hidden md:flex ${isMenuReduced ? 'animate-[slideInRightNav_0.4s_ease-out_backwards]' : 'min-w-1/6 animate-[slideInRightNav_0.4s_ease-out_forwards]'}`}>
         <div
           className={`flex flex-col h-screen ${isMenuReduced ? 'w-18' : 'w-full'} 
         border-r border-gray-200 p-2 pt-8 lg:p-4 lg:pt-8`}>
           {/* GLIMS LOGO */}
           <div
             className={
-              isMenuReduced
-                ? 'flex justify-center rotate-30 transition-all duration-300'
-                : 'overflow-hidden'
+              isMenuReduced ? 'flex justify-center' : 'overflow-hidden'
             }>
             <Image
               src={`${isMenuReduced ? '/glims-logo-filed.svg' : '/glims-logo-filed-with-text.svg'}`}
@@ -32,7 +31,7 @@ export default function SidePanel() {
               className={`pl-1 lg:p-0 ${
                 !isMenuReduced
                   ? 'animate-[slideInRight_0.5s_ease-out_forwards]'
-                  : ''
+                  : 'animate-[iconsMenuFadeIn_0.5s_ease-out_forwards]'
               }`}
               width={isMenuReduced ? 29 : 100}
               height={isMenuReduced ? 29 : 100}

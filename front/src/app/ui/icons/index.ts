@@ -7,6 +7,7 @@ export {
   Earth,
   Eye,
   House,
+  LayoutDashboard,
   Mail,
   Menu,
   MessageCircle,
