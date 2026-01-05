@@ -27,7 +27,10 @@ function handleServiceErrors(error: Error): void {
       throw new ForbiddenException('You do not have access to this folder');
     }
   } else {
-    throw new InternalServerErrorException('An unexpected error occurred');
+    console.error('Unexpected error:', error);
+    throw new InternalServerErrorException(
+      error.message || 'An unexpected error occurred'
+    );
   }
 }
 
@@ -70,6 +73,7 @@ export class FoldersController {
     try {
       return await this.foldersService.createFolder(body, session.user.id);
     } catch (error) {
+      console.error('Error creating folder:', error);
       handleServiceErrors(error);
     }
   }
