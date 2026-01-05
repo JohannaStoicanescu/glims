@@ -4,12 +4,7 @@ import Image from 'next/image';
 import { useContext, useState } from 'react';
 
 import { ChevronLeft, ChevronRight, Eye } from '../../ui/icons';
-import {
-  ButtonForm,
-  ControlledInputForm,
-  InputForm,
-  StepIndicators,
-} from '../../ui';
+import { ButtonForm, ControlledInputForm, StepIndicators } from '../../ui';
 import { NewUserContext } from '../utils/new-user-context';
 import Checkboxes from './Checkboxes';
 import SideDisplay from './SideDisplay';

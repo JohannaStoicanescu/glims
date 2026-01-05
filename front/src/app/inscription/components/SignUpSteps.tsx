@@ -8,7 +8,6 @@ import CompleteProfileSection from './CompleteProfileSection';
 import ImageSection from './ImageSection';
 import SignUpSection from './SignUpSection';
 import { useAuthClient } from '@/hooks';
-import { useAuthClient, useSession } from '@/hooks';
 import { NewUser } from '@/types';
 
 export default function SignUpSteps() {

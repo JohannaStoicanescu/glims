@@ -25,10 +25,7 @@ interface FilterPanelProps {
   ) => void;
 }
 
-export default function FilterPanel({
-  glimsToDisplay,
-  setGlimsToDisplay,
-}: FilterPanelProps) {
+export default function FilterPanel({}: FilterPanelProps) {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [dropdownTitle, setDropdownTitle] = useState('Récent');
   const filterRef = useRef<HTMLDivElement>(null);

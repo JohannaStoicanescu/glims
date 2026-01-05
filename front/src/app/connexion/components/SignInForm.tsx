@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { FormProvider, UseFormProps, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
-import { ButtonForm, ControlledInputForm, InputForm } from '../../ui';
+import { ButtonForm, ControlledInputForm } from '../../ui';
 import { ChevronRight } from '@/app/ui/icons';
 
 interface User {

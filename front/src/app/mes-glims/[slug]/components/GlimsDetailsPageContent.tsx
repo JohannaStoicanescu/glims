@@ -16,12 +16,13 @@ type Picture = {
 
 export default function GlimsDetailsPageContent() {
   const [picturesToDisplay, setPicturesToDisplay] = useState<Picture[]>([]);
-  const [displayMode, setDisplayMode] = useState<DisplayMode>('default');
+  const [displayMode] = useState<DisplayMode>('default');
 
   // TODO: get details of a glims from API or cache based on slug param
   const getPictures = async () => {
     const res = await fetch('https://picsum.photos/v2/list?limit=60');
     const picturesData = await res.json();
+    console.log(picturesToDisplay);
     return picturesData as Picture[];
   };
 
@@ -38,17 +39,17 @@ export default function GlimsDetailsPageContent() {
     if (mode === displayMode) return;
   };
 
-  const renderGallery = () => {
-    if (picturesToDisplay.length === 0) {
-      return null;
-    }
+  // const renderGallery = () => {
+  //   if (picturesToDisplay.length === 0) {
+  //     return null;
+  //   }
 
-    if (displayMode === 'default') {
-      return <>masonry</>;
-    }
+  //   if (displayMode === 'default') {
+  //     return <>masonry</>;
+  //   }
 
-    return <></>;
-  };
+  //   return <></>;
+  // };
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
