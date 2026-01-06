@@ -33,7 +33,7 @@ export default function GlimsDetailsPageContent() {
     };
 
     fetchPictures();
-  }, []);
+  }, [getPictures]);
 
   const handleDisplayModeChange = (mode: DisplayMode) => {
     if (mode === displayMode) return;
