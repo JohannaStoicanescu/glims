@@ -13,6 +13,16 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiBody,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   MediaError,
@@ -21,6 +31,9 @@ import {
 } from './media.service';
 import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { Media } from '@prisma/client';
+import { PaginatedMediaResponseDto } from './dto/paginated-media-response.dto';
+import { MediaResponseDto } from './dto/media-response.dto';
+import { PaginatedResult } from 'src/lib/types';
 
 function handleServiceErrors(error: Error): void {
   if (error instanceof MediaException) {
@@ -39,12 +52,20 @@ function handleServiceErrors(error: Error): void {
   }
 }
 
+@ApiTags('media')
+@ApiBearerAuth('JWT-auth')
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) { }
 
   @Get(':id')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get a media item by ID' })
+  @ApiParam({ name: 'id', description: 'Media ID' })
+  @ApiResponse({ status: 200, description: 'Media found', type: MediaResponseDto })
+  @ApiResponse({ status: 404, description: 'Media not found' })
+  @ApiResponse({ status: 403, description: 'Forbidden - no access' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getMediaById(
     @Session() session: UserSession,
     @Param('id') media_id: string
@@ -58,12 +79,22 @@ export class MediaController {
 
   @Get('user/:user_id')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get paginated media for a user' })
+  @ApiParam({ name: 'user_id', description: 'User ID' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated media list',
+    type: PaginatedMediaResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getUserMedia(
     @Session() session: UserSession,
     @Param('user_id') user_id: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string
-  ): Promise<{ data: Media[]; total: number; page: number; limit: number }> {
+  ): Promise<PaginatedMediaResponseDto> {
     try {
       const pageNum = parseInt(page) || 1;
       const limitNum = parseInt(limit) || 10;
@@ -80,12 +111,24 @@ export class MediaController {
 
   @Get('folder/:folder_id')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get paginated media for a folder' })
+  @ApiParam({ name: 'folder_id', description: 'Folder ID' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated media list',
+    type: PaginatedMediaResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Folder not found' })
+  @ApiResponse({ status: 403, description: 'Forbidden - no access' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getFolderMedia(
     @Session() session: UserSession,
     @Param('folder_id') folder_id: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string
-  ): Promise<{ data: Media[]; total: number; page: number; limit: number }> {
+  ): Promise<PaginatedMediaResponseDto> {
     try {
       const pageNum = parseInt(page) || 1;
       const limitNum = parseInt(limit) || 10;
@@ -102,13 +145,26 @@ export class MediaController {
 
   @Get('folder/:folder_id/user/:user_id')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get paginated media for a user in a folder' })
+  @ApiParam({ name: 'folder_id', description: 'Folder ID' })
+  @ApiParam({ name: 'user_id', description: 'User ID' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated media list',
+    type: PaginatedMediaResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Folder or user not found' })
+  @ApiResponse({ status: 403, description: 'Forbidden - no access' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getFolderUserMedia(
     @Session() session: UserSession,
     @Param('folder_id') folder_id: string,
     @Param('user_id') user_id: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string
-  ): Promise<{ data: Media[]; total: number; page: number; limit: number }> {
+  ): Promise<PaginatedMediaResponseDto> {
     try {
       const pageNum = parseInt(page) || 1;
       const limitNum = parseInt(limit) || 10;
@@ -127,6 +183,35 @@ export class MediaController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Upload a new media file' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Media file to upload',
+        },
+        folder_id: {
+          type: 'string',
+          description: 'ID of the folder to upload to',
+          example: 'folder-id-123',
+        },
+        metadata: {
+          type: 'string',
+          description: 'Optional metadata as JSON string',
+          example: '{"title": "My Photo", "tags": ["vacation"]}',
+        },
+      },
+      required: ['file', 'folder_id'],
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Media created', type: MediaResponseDto })
+  @ApiResponse({ status: 404, description: 'Folder not found' })
+  @ApiResponse({ status: 403, description: 'Forbidden - no access' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async createMedia(
     @Session() session: UserSession,
     @UploadedFile() file: Express.Multer.File,
@@ -172,6 +257,12 @@ export class MediaController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Delete a media item by ID' })
+  @ApiParam({ name: 'id', description: 'Media ID' })
+  @ApiResponse({ status: 200, description: 'Media deleted', type: MediaResponseDto })
+  @ApiResponse({ status: 404, description: 'Media not found' })
+  @ApiResponse({ status: 403, description: 'Forbidden - no access' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async deleteMedia(
     @Session() session: UserSession,
     @Param('id') id: string

@@ -3,6 +3,7 @@ import { Folder } from '@prisma/client';
 import { FoldersRepository } from './folders.repository';
 import { randomUUID } from 'crypto';
 import { StorageService } from 'src/storage/storage.interface';
+import { GetUserFoldersQueryDto } from './dto/get-user-folders-query.dto';
 
 export enum FoldersError {
   FOLDER_NOT_FOUND = 'Folder not found',
@@ -24,8 +25,11 @@ export class FoldersService {
     return folder;
   }
 
-  async getUserFolders(owner_id: string): Promise<Folder[]> {
-    return this.repository.getUserFolders(owner_id);
+  async getUserFolders(
+    owner_id: string,
+    query?: GetUserFoldersQueryDto
+  ): Promise<Folder[]> {
+    return this.repository.getUserFolders(owner_id, query);
   }
 
   async createFolder(
