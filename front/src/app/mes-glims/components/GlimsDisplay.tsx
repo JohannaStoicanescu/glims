@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { UsersAvatarAndCountDisplay } from '@/app/components';
 
 interface GlimsDisplayProps {
   glims: Array<{
@@ -14,10 +15,39 @@ interface GlimsDisplayProps {
 
 //TODO: fetch glims data from API instead of passing as props and replace the prop usage
 export default function GlimsDisplay({ glims }: GlimsDisplayProps) {
+  // TODO: get glims users from API
+  const glimsUsers = [
+    {
+      id: '1',
+      profilePic: 'https://picsum.photos/200/200',
+    },
+    {
+      id: '2',
+      profilePic: 'https://picsum.photos/200/200',
+    },
+    {
+      id: '3',
+      profilePic: 'https://picsum.photos/200/200',
+    },
+    {
+      id: '4',
+      profilePic: 'https://picsum.photos/200/200',
+    },
+    {
+      id: '5',
+      name: 'John Doe',
+      profilePic: 'https://picsum.photos/200/200',
+    },
+    {
+      id: '6',
+      profilePic: 'https://picsum.photos/200/200',
+    },
+  ];
+
   return (
     <div className="flex-1 overflow-hidden">
-      <div className="h-full overflow-y-auto">
-        <div className="grid grid-rows-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="h-full overflow-y-auto pb-10">
+        <div className="grid grid-rows-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
           {glims.map((glim, index) => {
             return (
               <Link
@@ -34,10 +64,15 @@ export default function GlimsDisplay({ glims }: GlimsDisplayProps) {
                     height={480}
                   />
                 </div>
-                <div className="flex flex-col pt-4 pb-2 px-3 rounded-b-2xl transition-colors duration-300 ease-in-out group-hover:text-orange-600">
-                  <div className="flex flex-1 justify-between pb-2">
-                    <h3 className="font-bold text-xl">Glims Title Test</h3>
-                    <div className="p-4 bg-gray-400 rounded-full"></div>
+                <div className="flex flex-col py-2 rounded-b-2xl">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-bold text-xl transition-colors duration-300 ease-in-out group-hover:text-orange-600">
+                      Glims Title Test
+                    </h3>
+                    <UsersAvatarAndCountDisplay
+                      users={glimsUsers}
+                      numberOfUsersToShow={2}
+                    />
                   </div>
                   <div className="flex">
                     <p className="text-gray-800 pr-3">8 photos</p>
