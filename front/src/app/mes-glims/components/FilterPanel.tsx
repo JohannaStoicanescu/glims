@@ -5,14 +5,6 @@ import { useState, useRef, useEffect } from 'react';
 import { ArrowDownUp, ChevronDown, Search } from '@/app/ui/icons';
 
 interface FilterPanelProps {
-  readonly glimsToDisplay: Array<{
-    id: string;
-    author: string;
-    width: number;
-    height: number;
-    url: string;
-    download_url: string;
-  }>;
   readonly setGlimsToDisplay: (
     glims: Array<{
       id: string;
@@ -23,11 +15,23 @@ interface FilterPanelProps {
       download_url: string;
     }>
   ) => void;
+  readonly initialGlimsToDisplay: Array<{
+    id: string;
+    author: string;
+    width: number;
+    height: number;
+    url: string;
+    download_url: string;
+  }>;
 }
 
-export default function FilterPanel({}: FilterPanelProps) {
+export default function FilterPanel({
+  setGlimsToDisplay,
+  initialGlimsToDisplay,
+}: FilterPanelProps) {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [dropdownTitle, setDropdownTitle] = useState('Récent');
+  const [searchInputValue, setSearchInputValue] = useState('');
   const filterRef = useRef<HTMLDivElement>(null);
 
   // Logic to close the filter dropdown when clicking outside
@@ -50,14 +54,29 @@ export default function FilterPanel({}: FilterPanelProps) {
     };
   }, [isFilterDropdownOpen]);
 
-  // TODO: Add method to filter glims based on dropdown selection use setGlimsToDisplay(glimsToDisplay.filter or sort or something)
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInputValue(e.target.value);
+
+    if (e.target.value.trim() !== '') {
+      setGlimsToDisplay(
+        initialGlimsToDisplay.filter((glims) =>
+          // TODO: when connected to real API, change this filter to match glims title or ?description? instead of author
+          // glims.title.includes(e.target.value) || glims.description.includes(e.target.value)
+          glims.author.includes(e.target.value)
+        )
+      );
+    } else {
+      setGlimsToDisplay(initialGlimsToDisplay);
+    }
+  };
+
   return (
     <div className="w-full pt-7 pb-9 md:flex md:items-center md:justify-start gap-4">
       {/* SEARCH BAR */}
       {/* TODO: Add logic and html so when user start to write text in the search bar 3 or 4 glims are displayed under */}
       <label
         htmlFor="glims-search-bar"
-        aria-label="glims-search-bar"
+        aria-label="Barre de recherche des glims"
         className="relative w-full md:w-1/2 lg:w-1/3 ">
         <input
           type="text"
@@ -66,6 +85,10 @@ export default function FilterPanel({}: FilterPanelProps) {
           placeholder="Rechercher un Glims"
           className="w-full px-4 py-3 rounded-full border border-gray-200 shadow-xs
         hover:border-yellow-400 focus:outline-none focus:ring-1 focus:ring-yellow-400 transition"
+          value={searchInputValue}
+          onChange={(e) => {
+            handleSearchInputChange(e);
+          }} // TODO: change this filter logic
         />
         <Search
           size={15}

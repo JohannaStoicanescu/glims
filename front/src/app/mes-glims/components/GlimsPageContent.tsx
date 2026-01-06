@@ -51,8 +51,8 @@ export default function GlimsPageContent() {
               Vos Glims
             </h3>
             <FilterPanel
-              glimsToDisplay={glimsToDisplay}
               setGlimsToDisplay={setGlimsToDisplay}
+              initialGlimsToDisplay={glims}
             />
           </div>
           {glims.length === 0 && <NoGlimsDisplay />}

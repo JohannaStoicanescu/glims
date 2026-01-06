@@ -46,8 +46,8 @@ export default function GlimsDisplay({ glims }: GlimsDisplayProps) {
 
   return (
     <div className="flex-1 overflow-hidden">
-      <div className="h-full overflow-y-auto">
-        <div className="grid grid-rows-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="h-full overflow-y-auto pb-10">
+        <div className="grid grid-rows-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
           {glims.map((glim, index) => {
             return (
               <Link
@@ -64,7 +64,7 @@ export default function GlimsDisplay({ glims }: GlimsDisplayProps) {
                     height={480}
                   />
                 </div>
-                <div className="flex flex-col py-2 px-3 rounded-b-2xl">
+                <div className="flex flex-col py-2 rounded-b-2xl">
                   <div className="flex justify-between items-center">
                     <h3 className="font-bold text-xl transition-colors duration-300 ease-in-out group-hover:text-orange-600">
                       Glims Title Test
