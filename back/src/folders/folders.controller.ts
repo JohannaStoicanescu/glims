@@ -110,6 +110,22 @@ export class FoldersController {
     }
   }
 
+  @Delete()
+  @UseGuards(AuthGuard)
+  async deleteManyFolders(
+    @Session() session: UserSession,
+    @Body() body: { ids: string[] }
+  ): Promise<Folder[]> {
+    try {
+      return await this.foldersService.deleteManyFolders(
+        body.ids,
+        session.user.id
+      );
+    } catch (error) {
+      handleServiceErrors(error);
+    }
+  }
+
   @Delete(':id')
   @UseGuards(AuthGuard)
   async deleteFolder(
