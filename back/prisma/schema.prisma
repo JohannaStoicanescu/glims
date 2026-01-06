@@ -40,6 +40,7 @@ model User {
   owned_folders  Folder[] @relation("OwnedFolders")
   member_folders Folder[] @relation("FolderMembers")
   media          Media[]
+  reactions      Reaction[]
 
   // BetterAuth fields
   name          String
@@ -107,6 +108,9 @@ model Reaction {
 
   reaction_type_id String
   reaction_type    ReactionType @relation(fields: [reaction_type_id], references: [id])
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
 
   // Maintenance fields
   created_at DateTime @default(now())
