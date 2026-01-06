@@ -20,7 +20,7 @@ export class MediaResponseDto {
     description: 'Media metadata',
     example: { title: 'My Photo', tags: ['vacation'] },
   })
-  metadata?: any;
+  metadata?: unknown;
 
   @ApiProperty({
     description: 'Created at timestamp',
@@ -34,4 +34,3 @@ export class MediaResponseDto {
   })
   updated_at: Date;
 }
-

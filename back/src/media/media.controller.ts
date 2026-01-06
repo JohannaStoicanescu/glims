@@ -24,16 +24,11 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  MediaError,
-  MediaException,
-  MediaService,
-} from './media.service';
+import { MediaError, MediaException, MediaService } from './media.service';
 import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { Media } from '@prisma/client';
 import { PaginatedMediaResponseDto } from './dto/paginated-media-response.dto';
 import { MediaResponseDto } from './dto/media-response.dto';
-import { PaginatedResult } from 'src/lib/types';
 
 function handleServiceErrors(error: Error): void {
   if (error instanceof MediaException) {
@@ -56,13 +51,17 @@ function handleServiceErrors(error: Error): void {
 @ApiBearerAuth('JWT-auth')
 @Controller('media')
 export class MediaController {
-  constructor(private readonly mediaService: MediaService) { }
+  constructor(private readonly mediaService: MediaService) {}
 
   @Get(':id')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get a media item by ID' })
   @ApiParam({ name: 'id', description: 'Media ID' })
-  @ApiResponse({ status: 200, description: 'Media found', type: MediaResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Media found',
+    type: MediaResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Media not found' })
   @ApiResponse({ status: 403, description: 'Forbidden - no access' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -208,7 +207,11 @@ export class MediaController {
       required: ['file', 'folder_id'],
     },
   })
-  @ApiResponse({ status: 201, description: 'Media created', type: MediaResponseDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Media created',
+    type: MediaResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Folder not found' })
   @ApiResponse({ status: 403, description: 'Forbidden - no access' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -230,11 +233,11 @@ export class MediaController {
       const contentType = file.mimetype || 'application/octet-stream';
 
       // Parse metadata if provided as JSON string
-      let metadata: any = undefined;
+      let metadata: unknown = undefined;
       if (body.metadata) {
         try {
           metadata = JSON.parse(body.metadata);
-        } catch (e) {
+        } catch {
           // If parsing fails, use as-is
           metadata = body.metadata;
         }
@@ -259,7 +262,11 @@ export class MediaController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Delete a media item by ID' })
   @ApiParam({ name: 'id', description: 'Media ID' })
-  @ApiResponse({ status: 200, description: 'Media deleted', type: MediaResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Media deleted',
+    type: MediaResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Media not found' })
   @ApiResponse({ status: 403, description: 'Forbidden - no access' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

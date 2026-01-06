@@ -7,7 +7,12 @@ import { GarageStorageService } from 'src/storage/garage.service';
 
 @Module({
   controllers: [MediaController],
-  providers: [MediaService, MediaRepository, PrismaService, GarageStorageService],
+  providers: [
+    MediaService,
+    MediaRepository,
+    PrismaService,
+    GarageStorageService,
+  ],
   exports: [MediaService],
 })
 export class MediaModule {}

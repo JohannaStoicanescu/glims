@@ -26,4 +26,3 @@ export class PaginatedMediaResponseDto {
   })
   limit: number;
 }
-

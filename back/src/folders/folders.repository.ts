@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Folder, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/lib/prisma.service';
-import { GetUserFoldersQueryDto, SortBy, SortOrder } from './dto/get-user-folders-query.dto';
+import {
+  GetUserFoldersQueryDto,
+  SortBy,
+  SortOrder,
+} from './dto/get-user-folders-query.dto';
 
 @Injectable()
 export class FoldersRepository {
@@ -16,10 +20,7 @@ export class FoldersRepository {
     query?: GetUserFoldersQueryDto
   ): Promise<Folder[]> {
     const where: Prisma.FolderWhereInput = {
-      OR: [
-        { owner_id: user_id },
-        { members: { some: { id: user_id } } },
-      ],
+      OR: [{ owner_id: user_id }, { members: { some: { id: user_id } } }],
     };
 
     // Filter by owner_id if provided (allows filtering folders owned by a specific user)
@@ -28,13 +29,30 @@ export class FoldersRepository {
       where.AND = [
         { owner_id: query.owner_id },
         {
-          OR: [
-            { owner_id: user_id },
-            { members: { some: { id: user_id } } },
-          ],
+          OR: [{ owner_id: user_id }, { members: { some: { id: user_id } } }],
         },
       ];
       delete where.OR;
+    }
+
+    // Filter by tags (folders must have all specified tags)
+    if (query?.tags && query.tags.length > 0) {
+      // Create AND conditions for each tag to ensure folder has all specified tags
+      const tagFilters = query.tags.map((tagName) => ({
+        tags: {
+          some: {
+            name: tagName,
+          },
+        },
+      }));
+
+      if (Array.isArray(where.AND)) {
+        where.AND.push(...tagFilters);
+      } else if (where.AND) {
+        where.AND = [where.AND, ...tagFilters];
+      } else {
+        where.AND = tagFilters;
+      }
     }
 
     // Filter by date range
@@ -46,7 +64,7 @@ export class FoldersRepository {
       if (query.endDate) {
         dateFilter.lte = new Date(query.endDate);
       }
-      
+
       if (Array.isArray(where.AND)) {
         where.AND.push({ created_at: dateFilter });
       } else if (where.AND) {
@@ -85,7 +103,32 @@ export class FoldersRepository {
     return this.prisma.folder.delete({ where });
   }
 
-  async deleteManyFolders(where: Prisma.FolderWhereInput): Promise<{ count: number }> {
+  async deleteManyFolders(
+    where: Prisma.FolderWhereInput
+  ): Promise<{ count: number }> {
     return this.prisma.folder.deleteMany({ where });
+  }
+
+  /**
+   * Gets all folders where the user is listed as a member (not owner)
+   */
+  async getMemberFolders(user_id: string): Promise<Folder[]> {
+    return this.prisma.folder.findMany({
+      where: {
+        members: { some: { id: user_id } },
+        owner_id: { not: user_id }, // Exclude folders where user is owner
+      },
+    });
+  }
+
+  /**
+   * Gets all folders accessible to the user (owned or member)
+   */
+  async getAccessibleFolders(user_id: string): Promise<Folder[]> {
+    return this.prisma.folder.findMany({
+      where: {
+        OR: [{ owner_id: user_id }, { members: { some: { id: user_id } } }],
+      },
+    });
   }
 }

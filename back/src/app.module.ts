@@ -9,6 +9,7 @@ import { httpRequestDurationProvider } from './providers/http-request-duration.m
 import { ResponseTimeMiddleware } from './middleware/response-time.middleware';
 import { FoldersModule } from './folders/folders.module';
 import { MediaModule } from './media/media.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MediaModule } from './media/media.module';
     PrometheusModule.register(),
     FoldersModule,
     MediaModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService, httpRequestDurationProvider],
