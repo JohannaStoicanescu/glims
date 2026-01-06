@@ -28,4 +28,8 @@ export class FoldersRepository {
   async deleteFolder(where: Prisma.FolderWhereUniqueInput): Promise<Folder> {
     return this.prisma.folder.delete({ where });
   }
+
+  async deleteManyFolders(where: Prisma.FolderWhereInput): Promise<{ count: number }> {
+    return this.prisma.folder.deleteMany({ where });
+  }
 }

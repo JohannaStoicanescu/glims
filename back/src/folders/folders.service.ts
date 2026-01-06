@@ -75,6 +75,23 @@ export class FoldersService {
     return this.repository.deleteFolder({ id: folder_id });
   }
 
+  async deleteManyFolders(folder_ids: string[], user_id: string): Promise<Folder[]> {
+    // Check ownership for all folders first
+    const folders: Folder[] = [];
+    for (const folder_id of folder_ids) {
+      const folder = await this.checkFolderOwnership(folder_id, user_id);
+      folders.push(folder);
+    }
+
+    // Delete all folders that passed ownership check
+    await this.repository.deleteManyFolders({
+      id: { in: folder_ids },
+      owner_id: user_id,
+    });
+
+    return folders;
+  }
+
   private async checkFolderOwnership(
     folder_id: string,
     owner_id: string
