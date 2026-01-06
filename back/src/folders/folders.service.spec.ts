@@ -8,12 +8,10 @@ import {
   FoldersException,
 } from './folders.service';
 import { FoldersRepository } from './folders.repository';
-import { Folder } from '@prisma/client';
+import type { Folder } from '@prisma/client';
 
-vi.mock('better-auth', () => ({
-  uuidv4: vi.fn(() => ({
-    format: 'mocked-uuid',
-  })),
+vi.mock('crypto', () => ({
+  randomUUID: vi.fn(() => 'mocked-uuid'),
 }));
 
 describe('FoldersService', () => {
@@ -26,6 +24,10 @@ describe('FoldersService', () => {
     createFolder: vi.fn(),
     updateFolder: vi.fn(),
     deleteFolder: vi.fn(),
+  };
+
+  const mockTagsService = {
+    prepareTagsConnect: vi.fn(),
   };
 
   const mockFolder: Folder = {
@@ -43,7 +45,7 @@ describe('FoldersService', () => {
 
   beforeEach(() => {
     repository = mockRepository as any;
-    service = new FoldersService(repository);
+    service = new FoldersService(repository, mockTagsService as any);
   });
 
   afterEach(() => {
@@ -86,7 +88,7 @@ describe('FoldersService', () => {
       const result = await service.getUserFolders('user-1');
 
       expect(result).toEqual(mockFolders);
-      expect(repository.getUserFolders).toHaveBeenCalledWith('user-1');
+      expect(repository.getUserFolders).toHaveBeenCalledWith('user-1', undefined);
     });
 
     it('should return empty array when user has no folders', async () => {
@@ -112,6 +114,7 @@ describe('FoldersService', () => {
       expect(repository.createFolder).toHaveBeenCalledWith({
         title: 'New Folder',
         description: 'Description',
+        password: undefined,
         upload_url: 'mocked-uuid',
         download_url: 'mocked-uuid',
         owner: { connect: { id: 'user-1' } },
@@ -132,6 +135,7 @@ describe('FoldersService', () => {
 
       expect(repository.createFolder).toHaveBeenCalledWith({
         title: 'Secure Folder',
+        description: undefined,
         password: 'secret123',
         upload_url: 'mocked-uuid',
         download_url: 'mocked-uuid',
@@ -151,6 +155,8 @@ describe('FoldersService', () => {
       expect(repository.createFolder).toHaveBeenCalledWith(
         expect.objectContaining({
           title: 'Simple Folder',
+          description: undefined,
+          password: undefined,
           upload_url: 'mocked-uuid',
           download_url: 'mocked-uuid',
           owner: { connect: { id: 'user-1' } },
