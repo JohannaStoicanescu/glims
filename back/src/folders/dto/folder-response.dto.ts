@@ -51,4 +51,3 @@ export class FolderResponseDto {
   })
   updatedAt: Date;
 }
-

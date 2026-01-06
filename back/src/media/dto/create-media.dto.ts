@@ -20,4 +20,3 @@ export class CreateMediaDto {
   })
   file: Express.Multer.File;
 }
-

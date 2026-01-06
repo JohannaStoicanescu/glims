@@ -18,5 +18,11 @@ export class CreateFolderDto {
     example: 'securePassword123',
   })
   password?: string;
-}
 
+  @ApiPropertyOptional({
+    description: 'Tags to organize the folder',
+    example: ['vacation', 'photos', 'summer'],
+    type: [String],
+  })
+  tags?: string[];
+}

@@ -4,4 +4,3 @@ export interface PaginatedResult<T> {
   page: number;
   limit: number;
 }
-

@@ -44,5 +44,11 @@ export class GetUserFoldersQueryDto {
     example: '2024-12-31T23:59:59Z',
   })
   endDate?: string;
-}
 
+  @ApiPropertyOptional({
+    description: 'Filter by tags (folders must have all specified tags)',
+    example: ['vacation', 'photos'],
+    type: [String],
+  })
+  tags?: string[];
+}

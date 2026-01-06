@@ -1,4 +1,4 @@
-import { Readable } from "stream";
+import { Readable } from 'stream';
 
 export interface StorageService {
   uploadFile(key: string, file: Buffer, contentType?: string): Promise<string>;

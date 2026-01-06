@@ -1,5 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command, HeadObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+  ListObjectsV2Command,
+  HeadObjectCommand,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Readable } from 'stream';
 import { StorageService } from './storage.interface';
@@ -14,13 +21,13 @@ export class GarageStorageService implements StorageService {
     // Garage (S3-compatible) requires a region, but the value doesn't matter for Garage
     // Default to 'garage' if not specified
     const region = process.env.GARAGE_REGION || 'garage';
-    
+
     // Validate required environment variables
     const endpoint = process.env.GARAGE_ENDPOINT;
     const accessKeyId = process.env.GARAGE_ACCESS_KEY;
     const secretAccessKey = process.env.GARAGE_SECRET_KEY;
     const bucketName = process.env.GARAGE_BUCKET_NAME;
-    
+
     if (!endpoint) {
       throw new Error('GARAGE_ENDPOINT environment variable is required');
     }
@@ -33,7 +40,7 @@ export class GarageStorageService implements StorageService {
     if (!bucketName) {
       throw new Error('GARAGE_BUCKET_NAME environment variable is required');
     }
-    
+
     this.s3Client = new S3Client({
       endpoint: endpoint,
       region: region,
@@ -45,7 +52,11 @@ export class GarageStorageService implements StorageService {
     });
   }
 
-  async uploadFile(key: string, file: Buffer, contentType?: string): Promise<string> {
+  async uploadFile(
+    key: string,
+    file: Buffer,
+    contentType?: string
+  ): Promise<string> {
     try {
       const command = new PutObjectCommand({
         Bucket: this.bucketName,
@@ -124,7 +135,7 @@ export class GarageStorageService implements StorageService {
       });
 
       const response = await this.s3Client.send(command);
-      return response.Contents?.map(item => item.Key) || [];
+      return response.Contents?.map((item) => item.Key) || [];
     } catch (error) {
       this.logger.error(`Error listing files: ${error.message}`);
       throw error;
@@ -148,7 +159,10 @@ export class GarageStorageService implements StorageService {
     }
   }
 
-  async getPresignedUrl(key: string, expiresIn: number = 3600): Promise<string> {
+  async getPresignedUrl(
+    key: string,
+    expiresIn: number = 3600
+  ): Promise<string> {
     try {
       const command = new GetObjectCommand({
         Bucket: this.bucketName,

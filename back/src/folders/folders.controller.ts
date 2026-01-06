@@ -59,7 +59,11 @@ export class FoldersController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get a folder by ID' })
   @ApiParam({ name: 'id', description: 'Folder ID' })
-  @ApiResponse({ status: 200, description: 'Folder found', type: FolderResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Folder found',
+    type: FolderResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Folder not found' })
   @ApiResponse({ status: 403, description: 'Forbidden - not the owner' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -80,11 +84,42 @@ export class FoldersController {
   @Get()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get all folders for the authenticated user' })
-  @ApiQuery({ name: 'sortBy', required: false, enum: ['created_at', 'title'], description: 'Sort by field' })
-  @ApiQuery({ name: 'sortOrder', required: false, enum: ['asc', 'desc'], description: 'Sort order' })
-  @ApiQuery({ name: 'owner_id', required: false, type: String, description: 'Filter by owner ID' })
-  @ApiQuery({ name: 'startDate', required: false, type: String, description: 'Filter by start date (ISO 8601)' })
-  @ApiQuery({ name: 'endDate', required: false, type: String, description: 'Filter by end date (ISO 8601)' })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    enum: ['created_at', 'title'],
+    description: 'Sort by field',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    required: false,
+    enum: ['asc', 'desc'],
+    description: 'Sort order',
+  })
+  @ApiQuery({
+    name: 'owner_id',
+    required: false,
+    type: String,
+    description: 'Filter by owner ID',
+  })
+  @ApiQuery({
+    name: 'startDate',
+    required: false,
+    type: String,
+    description: 'Filter by start date (ISO 8601)',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    required: false,
+    type: String,
+    description: 'Filter by end date (ISO 8601)',
+  })
+  @ApiQuery({
+    name: 'tags',
+    required: false,
+    type: [String],
+    description: 'Filter by tags (comma-separated)',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of user folders',
@@ -106,7 +141,11 @@ export class FoldersController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create a new folder' })
   @ApiBody({ type: CreateFolderDto })
-  @ApiResponse({ status: 201, description: 'Folder created', type: FolderResponseDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Folder created',
+    type: FolderResponseDto,
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async createFolder(
     @Session() session: UserSession,
@@ -125,7 +164,11 @@ export class FoldersController {
   @ApiOperation({ summary: 'Update a folder' })
   @ApiParam({ name: 'id', description: 'Folder ID' })
   @ApiBody({ type: UpdateFolderDto })
-  @ApiResponse({ status: 200, description: 'Folder updated', type: FolderResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Folder updated',
+    type: FolderResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Folder not found' })
   @ApiResponse({ status: 403, description: 'Forbidden - not the owner' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -201,7 +244,11 @@ export class FoldersController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Delete a folder by ID' })
   @ApiParam({ name: 'id', description: 'Folder ID' })
-  @ApiResponse({ status: 200, description: 'Folder deleted', type: FolderResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Folder deleted',
+    type: FolderResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Folder not found' })
   @ApiResponse({ status: 403, description: 'Forbidden - not the owner' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
