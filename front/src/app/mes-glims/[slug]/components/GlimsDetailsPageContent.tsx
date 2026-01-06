@@ -26,14 +26,14 @@ export default function GlimsDetailsPageContent() {
     return picturesData as Picture[];
   };
 
-  useEffect(() => {
-    const fetchPictures = async () => {
-      const fetchedPictures = await getPictures();
-      setPicturesToDisplay(fetchedPictures);
-    };
+  const fetchPictures = async () => {
+    const fetchedPictures = await getPictures();
+    setPicturesToDisplay(fetchedPictures);
+  };
 
+  useEffect(() => {
     fetchPictures();
-  }, []);
+  }, [getPictures]);
 
   const handleDisplayModeChange = (mode: DisplayMode) => {
     if (mode === displayMode) return;

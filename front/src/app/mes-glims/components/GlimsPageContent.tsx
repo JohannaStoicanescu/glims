@@ -45,21 +45,19 @@ export default function GlimsPageContent() {
       {firstTimeUser ? (
         <FirstTimeUserDisplay />
       ) : (
-        !firstTimeUser && (
-          <div className="flex flex-col flex-1 min-h-0">
-            <div className="flex-shrink-0">
-              <h3 className="text-xl pl-2 sm:pl-0 sm:text-2xl md:text-3xl font-bold">
-                Vos Glims
-              </h3>
-              <FilterPanel
-                glimsToDisplay={glimsToDisplay}
-                setGlimsToDisplay={setGlimsToDisplay}
-              />
-            </div>
-            {glims.length === 0 && <NoGlimsDisplay />}
-            {glims.length > 0 && <GlimsDisplay glims={glimsToDisplay} />}
+        <div className="flex flex-col flex-1 min-h-0">
+          <div className="flex-shrink-0">
+            <h3 className="text-xl pl-2 sm:pl-0 sm:text-2xl md:text-3xl font-bold">
+              Vos Glims
+            </h3>
+            <FilterPanel
+              setGlimsToDisplay={setGlimsToDisplay}
+              initialGlimsToDisplay={glims}
+            />
           </div>
-        )
+          {glims.length === 0 && <NoGlimsDisplay />}
+          {glims.length > 0 && <GlimsDisplay glims={glimsToDisplay} />}
+        </div>
       )}
     </div>
   );
