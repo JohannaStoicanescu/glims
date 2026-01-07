@@ -6,6 +6,7 @@ import FilterPanel from './FilterPanel';
 import FirstTimeUserDisplay from './FirstTimeUserDisplay';
 import GlimsDisplay from './GlimsDisplay';
 import NoGlimsDisplay from './NoGlimsDisplay';
+import useGetUsersFoldersList from '@/hooks/folders/use-get-users-folders-list';
 
 type GlimType = {
   id: string;
@@ -23,6 +24,8 @@ export default function GlimsPageContent() {
   const [glims, setGlims] = useState<GlimType[]>([]);
   const [glimsToDisplay, setGlimsToDisplay] = useState<GlimType[]>([]);
 
+  // GET DATA EXEMPLE: there are other usefull object to add to the destructuration like isLoading, isError, refetch, etc.
+  // const { data } = useGetUsersFoldersList('connected-user-id');
   // TODO: get glims from API
   const getGlims = async () => {
     const res = await fetch('https://picsum.photos/v2/list?limit=50');
