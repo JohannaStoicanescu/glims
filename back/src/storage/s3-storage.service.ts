@@ -11,45 +11,108 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Readable } from 'stream';
 import { StorageService } from './storage.interface';
 
+type StorageProvider = 'garage' | 'R2';
+
 @Injectable()
-export class GarageStorageService implements StorageService {
-  private readonly logger = new Logger(GarageStorageService.name);
+export class S3StorageService implements StorageService {
+  private readonly logger = new Logger(S3StorageService.name);
   private readonly s3Client: S3Client;
-  private readonly bucketName = process.env.GARAGE_BUCKET_NAME!;
+  private readonly bucketName: string;
+  private readonly provider: StorageProvider;
 
   constructor() {
-    // Garage (S3-compatible) requires a region, but the value doesn't matter for Garage
-    // Default to 'garage' if not specified
-    const region = process.env.GARAGE_REGION || 'garage';
-
-    // Validate required environment variables
-    const endpoint = process.env.GARAGE_ENDPOINT;
-    const accessKeyId = process.env.GARAGE_ACCESS_KEY;
-    const secretAccessKey = process.env.GARAGE_SECRET_KEY;
-    const bucketName = process.env.GARAGE_BUCKET_NAME;
-
-    if (!endpoint) {
-      throw new Error('GARAGE_ENDPOINT environment variable is required');
-    }
-    if (!accessKeyId) {
-      throw new Error('GARAGE_ACCESS_KEY environment variable is required');
-    }
-    if (!secretAccessKey) {
-      throw new Error('GARAGE_SECRET_KEY environment variable is required');
-    }
-    if (!bucketName) {
-      throw new Error('GARAGE_BUCKET_NAME environment variable is required');
+    // Determine which storage provider to use
+    const storageProviderEnv = (process.env.STORAGE_PROVIDER || 'garage')
+      .toLowerCase();
+    
+    let storageProvider: StorageProvider;
+    if (storageProviderEnv === 'r2') {
+      storageProvider = 'R2';
+    } else if (storageProviderEnv === 'garage') {
+      storageProvider = 'garage';
+    } else {
+      throw new Error(
+        `Invalid STORAGE_PROVIDER: ${process.env.STORAGE_PROVIDER}. Must be 'garage' or 'R2'`
+      );
     }
 
-    this.s3Client = new S3Client({
-      endpoint: endpoint,
-      region: region,
-      credentials: {
-        accessKeyId: accessKeyId,
-        secretAccessKey: secretAccessKey,
-      },
-      forcePathStyle: true, // Important for Garage
-    });
+    this.provider = storageProvider;
+
+    if (storageProvider === 'R2') {
+      // R2 Configuration
+      const accountId = process.env.R2_ACCOUNT_ID;
+      const accessKeyId = process.env.R2_ACCESS_KEY_ID;
+      const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+      const bucketName = process.env.R2_BUCKET_NAME;
+
+      if (!accountId) {
+        throw new Error('R2_ACCOUNT_ID environment variable is required');
+      }
+      if (!accessKeyId) {
+        throw new Error('R2_ACCESS_KEY_ID environment variable is required');
+      }
+      if (!secretAccessKey) {
+        throw new Error(
+          'R2_SECRET_ACCESS_KEY environment variable is required'
+        );
+      }
+      if (!bucketName) {
+        throw new Error('R2_BUCKET_NAME environment variable is required');
+      }
+
+      this.bucketName = bucketName;
+
+      // R2 endpoint format: https://<account-id>.r2.cloudflarestorage.com
+      const endpoint = `https://${accountId}.r2.cloudflarestorage.com`;
+
+      this.s3Client = new S3Client({
+        endpoint: endpoint,
+        region: 'auto', // R2 uses 'auto' as the region
+        credentials: {
+          accessKeyId: accessKeyId,
+          secretAccessKey: secretAccessKey,
+        },
+        // R2 uses virtual-hosted style, not path style
+        forcePathStyle: false,
+      });
+
+      this.logger.log(`Initialized R2 storage: ${bucketName}`);
+    } else {
+      // Garage Configuration
+      const region = process.env.GARAGE_REGION || 'garage';
+      const endpoint = process.env.GARAGE_ENDPOINT;
+      const accessKeyId = process.env.GARAGE_ACCESS_KEY;
+      const secretAccessKey = process.env.GARAGE_SECRET_KEY;
+      const bucketName = process.env.GARAGE_BUCKET_NAME;
+
+      if (!endpoint) {
+        throw new Error('GARAGE_ENDPOINT environment variable is required');
+      }
+      if (!accessKeyId) {
+        throw new Error('GARAGE_ACCESS_KEY environment variable is required');
+      }
+      if (!secretAccessKey) {
+        throw new Error('GARAGE_SECRET_KEY environment variable is required');
+      }
+      if (!bucketName) {
+        throw new Error('GARAGE_BUCKET_NAME environment variable is required');
+      }
+
+      this.bucketName = bucketName;
+
+      this.s3Client = new S3Client({
+        endpoint: endpoint,
+        region: region,
+        credentials: {
+          accessKeyId: accessKeyId,
+          secretAccessKey: secretAccessKey,
+        },
+        // Garage requires path style
+        forcePathStyle: true,
+      });
+
+      this.logger.log(`Initialized Garage storage: ${bucketName}`);
+    }
   }
 
   async uploadFile(

@@ -3,7 +3,7 @@ import { MediaController } from './media.controller';
 import { MediaService } from './media.service';
 import { MediaRepository } from './media.repository';
 import { PrismaService } from 'src/lib/prisma.service';
-import { GarageStorageService } from 'src/storage/garage.service';
+import { S3StorageService } from 'src/storage/s3-storage.service';
 
 @Module({
   controllers: [MediaController],
@@ -11,7 +11,7 @@ import { GarageStorageService } from 'src/storage/garage.service';
     MediaService,
     MediaRepository,
     PrismaService,
-    GarageStorageService,
+    S3StorageService,
   ],
   exports: [MediaService],
 })

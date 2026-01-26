@@ -7,33 +7,83 @@ import {
 
 const prisma = new PrismaClient();
 
-// Initialize S3 client for Garage storage
+// Initialize S3 client for storage (Garage or R2)
 function getStorageClient() {
-  const endpoint = process.env.GARAGE_ENDPOINT;
-  const accessKeyId = process.env.GARAGE_ACCESS_KEY;
-  const secretAccessKey = process.env.GARAGE_SECRET_KEY;
-  const bucketName = process.env.GARAGE_BUCKET_NAME;
-  const region = process.env.GARAGE_REGION || 'garage';
+  // Determine which storage provider to use
+  const storageProviderEnv = (process.env.STORAGE_PROVIDER || 'garage')
+    .toLowerCase();
 
-  if (!endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
+  let storageProvider: 'garage' | 'R2';
+  if (storageProviderEnv === 'r2') {
+    storageProvider = 'R2';
+  } else if (storageProviderEnv === 'garage') {
+    storageProvider = 'garage';
+  } else {
     console.warn(
-      '⚠️  Storage environment variables not set. Skipping image uploads to storage.'
+      `⚠️  Invalid STORAGE_PROVIDER: ${process.env.STORAGE_PROVIDER}. Must be 'garage' or 'R2'. Skipping image uploads to storage.`
     );
     return null;
   }
 
-  return {
-    client: new S3Client({
-      endpoint: endpoint,
-      region: region,
-      credentials: {
-        accessKeyId: accessKeyId,
-        secretAccessKey: secretAccessKey,
-      },
-      forcePathStyle: true,
-    }),
-    bucketName,
-  };
+  if (storageProvider === 'R2') {
+    // R2 Configuration
+    const accountId = process.env.R2_ACCOUNT_ID;
+    const accessKeyId = process.env.R2_ACCESS_KEY_ID;
+    const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+    const bucketName = process.env.R2_BUCKET_NAME;
+
+    if (!accountId || !accessKeyId || !secretAccessKey || !bucketName) {
+      console.warn(
+        '⚠️  R2 storage environment variables not set. Skipping image uploads to storage.'
+      );
+      return null;
+    }
+
+    // R2 endpoint format: https://<account-id>.r2.cloudflarestorage.com
+    const endpoint = `https://${accountId}.r2.cloudflarestorage.com`;
+
+    return {
+      client: new S3Client({
+        endpoint: endpoint,
+        region: 'auto', // R2 uses 'auto' as the region
+        credentials: {
+          accessKeyId: accessKeyId,
+          secretAccessKey: secretAccessKey,
+        },
+        // R2 uses virtual-hosted style, not path style
+        forcePathStyle: false,
+      }),
+      bucketName,
+    };
+  } else {
+    // Garage Configuration
+    const endpoint = process.env.GARAGE_ENDPOINT;
+    const accessKeyId = process.env.GARAGE_ACCESS_KEY;
+    const secretAccessKey = process.env.GARAGE_SECRET_KEY;
+    const bucketName = process.env.GARAGE_BUCKET_NAME;
+    const region = process.env.GARAGE_REGION || 'garage';
+
+    if (!endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
+      console.warn(
+        '⚠️  Garage storage environment variables not set. Skipping image uploads to storage.'
+      );
+      return null;
+    }
+
+    return {
+      client: new S3Client({
+        endpoint: endpoint,
+        region: region,
+        credentials: {
+          accessKeyId: accessKeyId,
+          secretAccessKey: secretAccessKey,
+        },
+        // Garage requires path style
+        forcePathStyle: true,
+      }),
+      bucketName,
+    };
+  }
 }
 
 // Download image from Picsum and upload to storage

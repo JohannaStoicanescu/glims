@@ -8,7 +8,7 @@ import {
   MediaException,
 } from './media.service';
 import { MediaRepository } from './media.repository';
-import { GarageStorageService } from '../storage/garage.service';
+import { S3StorageService } from '../storage/s3-storage.service';
 import type { Media, Folder } from '@prisma/client';
 
 vi.mock('crypto', () => ({
@@ -18,7 +18,7 @@ vi.mock('crypto', () => ({
 describe('MediaService', () => {
   let service: MediaService;
   let repository: MediaRepository;
-  let storage: GarageStorageService;
+  let storage: S3StorageService;
 
   const mockRepository = {
     getMediaById: vi.fn(),

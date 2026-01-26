@@ -3,7 +3,7 @@ import { Media, Prisma } from '@prisma/client';
 import { MediaRepository } from './media.repository';
 import { PaginatedResult } from 'src/lib/types';
 import { randomUUID } from 'crypto';
-import { GarageStorageService } from 'src/storage/garage.service';
+import { S3StorageService } from 'src/storage/s3-storage.service';
 
 export enum MediaError {
   MEDIA_NOT_FOUND = 'Media not found',
@@ -21,7 +21,7 @@ export class MediaException extends Error {
 export class MediaService {
   constructor(
     private readonly repository: MediaRepository,
-    private readonly storage: GarageStorageService
+    private readonly storage: S3StorageService
   ) {}
 
   async getMediaById(media_id: string, user_id: string): Promise<Media> {
