@@ -37,8 +37,8 @@ model User {
   email  String? @unique
   pseudo String?
 
-  owned_folders  Folder[] @relation("OwnedFolders")
-  member_folders Folder[] @relation("FolderMembers")
+  owned_folders  Folder[]   @relation("OwnedFolders")
+  member_folders Folder[]   @relation("FolderMembers")
   media          Media[]
   reactions      Reaction[]
 
@@ -120,7 +120,7 @@ model Reaction {
 model ReactionType {
   id   String @id @default(uuid())
   name String @unique
-  svg  String @unique
+  svg  String
 
   folder   Folder[]
   reaction Reaction[]
