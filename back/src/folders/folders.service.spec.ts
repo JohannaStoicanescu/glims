@@ -88,7 +88,10 @@ describe('FoldersService', () => {
       const result = await service.getUserFolders('user-1');
 
       expect(result).toEqual(mockFolders);
-      expect(repository.getUserFolders).toHaveBeenCalledWith('user-1', undefined);
+      expect(repository.getUserFolders).toHaveBeenCalledWith(
+        'user-1',
+        undefined
+      );
     });
 
     it('should return empty array when user has no folders', async () => {

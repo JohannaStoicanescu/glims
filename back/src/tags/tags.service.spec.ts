@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TagsService } from './tags.service';
@@ -54,7 +53,10 @@ describe('TagsService', () => {
 
   describe('getAllTags', () => {
     it('should return all tags', async () => {
-      const mockTags = [mockTag, { ...mockTag, id: 'tag-2', name: 'Another Tag' }];
+      const mockTags = [
+        mockTag,
+        { ...mockTag, id: 'tag-2', name: 'Another Tag' },
+      ];
       mockTagsRepository.getAllTags.mockResolvedValue(mockTags);
 
       const result = await service.getAllTags();
@@ -100,11 +102,11 @@ describe('TagsService', () => {
 
   describe('getAvailableTags', () => {
     it('should return tags from accessible folders', async () => {
-      const mockFolders = [
-        mockFolder,
-        { ...mockFolder, id: 'folder-2' },
+      const mockFolders = [mockFolder, { ...mockFolder, id: 'folder-2' }];
+      const mockTags = [
+        mockTag,
+        { ...mockTag, id: 'tag-2', name: 'Another Tag' },
       ];
-      const mockTags = [mockTag, { ...mockTag, id: 'tag-2', name: 'Another Tag' }];
 
       mockFoldersRepository.getAccessibleFolders.mockResolvedValue(mockFolders);
       mockTagsRepository.getTagsFromFolders.mockResolvedValue(mockTags);
@@ -112,7 +114,9 @@ describe('TagsService', () => {
       const result = await service.getAvailableTags('user-1');
 
       expect(result).toEqual(mockTags);
-      expect(foldersRepository.getAccessibleFolders).toHaveBeenCalledWith('user-1');
+      expect(foldersRepository.getAccessibleFolders).toHaveBeenCalledWith(
+        'user-1'
+      );
       expect(tagsRepository.getTagsFromFolders).toHaveBeenCalledWith([
         'folder-1',
         'folder-2',
@@ -126,9 +130,10 @@ describe('TagsService', () => {
       const result = await service.getAvailableTags('user-1');
 
       expect(result).toEqual([]);
-      expect(foldersRepository.getAccessibleFolders).toHaveBeenCalledWith('user-1');
+      expect(foldersRepository.getAccessibleFolders).toHaveBeenCalledWith(
+        'user-1'
+      );
       expect(tagsRepository.getTagsFromFolders).toHaveBeenCalledWith([]);
     });
   });
 });
-

@@ -30,7 +30,10 @@ export class ReactionResponseDto {
   @ApiProperty({ description: 'Media ID', example: 'media-id-123' })
   media_id: string;
 
-  @ApiProperty({ description: 'Reaction type ID', example: 'reaction-type-id-123' })
+  @ApiProperty({
+    description: 'Reaction type ID',
+    example: 'reaction-type-id-123',
+  })
   reaction_type_id: string;
 
   @ApiProperty({

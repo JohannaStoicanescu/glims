@@ -3,7 +3,7 @@ import { PrismaService } from 'src/lib/prisma.service';
 import { FoldersService } from './folders.service';
 import { FoldersController } from './folders.controller';
 import { FoldersRepository } from './folders.repository';
-import { S3StorageService } from 'src/storage/s3-storage.service';
+import { StorageServiceProvider } from 'src/storage/storage.provider';
 import { TagsModule } from '../tags/tags.module';
 
 @Module({
@@ -13,7 +13,7 @@ import { TagsModule } from '../tags/tags.module';
     FoldersService,
     FoldersRepository,
     PrismaService,
-    S3StorageService,
+    StorageServiceProvider,
   ],
   exports: [FoldersRepository],
 })

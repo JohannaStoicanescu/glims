@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ReactionTypeResponseDto {
-  @ApiProperty({ description: 'Reaction type ID', example: 'reaction-type-id-123' })
+  @ApiProperty({
+    description: 'Reaction type ID',
+    example: 'reaction-type-id-123',
+  })
   id: string;
 
   @ApiProperty({ description: 'Reaction name', example: 'like' })
@@ -27,4 +30,3 @@ export class ReactionTypeResponseDto {
   })
   updated_at: Date;
 }
-

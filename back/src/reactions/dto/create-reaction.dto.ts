@@ -13,4 +13,3 @@ export class CreateReactionDto {
   })
   reaction_type_id: string;
 }
-

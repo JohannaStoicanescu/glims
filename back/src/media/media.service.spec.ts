@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import {
-  MediaService,
-  MediaError,
-  MediaException,
-} from './media.service';
+import { MediaService, MediaError, MediaException } from './media.service';
 import { MediaRepository } from './media.repository';
 import { S3StorageService } from '../storage/s3-storage.service';
 import type { Media, Folder } from '@prisma/client';
@@ -122,9 +117,9 @@ describe('MediaService', () => {
       mockRepository.getMediaById.mockResolvedValue(mockMedia);
       mockStorage.fileExists.mockResolvedValue(false);
 
-      await expect(
-        service.getMediaFile('media-1', 'user-1')
-      ).rejects.toThrow(new MediaException(MediaError.MEDIA_NOT_FOUND));
+      await expect(service.getMediaFile('media-1', 'user-1')).rejects.toThrow(
+        new MediaException(MediaError.MEDIA_NOT_FOUND)
+      );
     });
 
     it('should throw FORBIDDEN when user is not the owner', async () => {
@@ -394,9 +389,9 @@ describe('MediaService', () => {
 
       mockRepository.getFolderById.mockResolvedValue(null);
 
-      await expect(
-        service.createMedia(createData, 'user-1')
-      ).rejects.toThrow(new MediaException(MediaError.FOLDER_NOT_FOUND));
+      await expect(service.createMedia(createData, 'user-1')).rejects.toThrow(
+        new MediaException(MediaError.FOLDER_NOT_FOUND)
+      );
     });
 
     it('should throw FORBIDDEN when user is not folder owner', async () => {
@@ -409,9 +404,9 @@ describe('MediaService', () => {
       const otherUserFolder = { ...mockFolder, owner_id: 'user-2' };
       mockRepository.getFolderById.mockResolvedValue(otherUserFolder);
 
-      await expect(
-        service.createMedia(createData, 'user-1')
-      ).rejects.toThrow(new MediaException(MediaError.FORBIDDEN));
+      await expect(service.createMedia(createData, 'user-1')).rejects.toThrow(
+        new MediaException(MediaError.FORBIDDEN)
+      );
     });
   });
 
@@ -462,4 +457,3 @@ describe('MediaService', () => {
     });
   });
 });
-

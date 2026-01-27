@@ -39,12 +39,8 @@ function handleServiceErrors(error: Error): void {
     } else if (error.type === ReactionsError.REACTION_NOT_FOUND) {
       throw new NotFoundException('Reaction not found');
     } else if (error.type === ReactionsError.FORBIDDEN) {
-      throw new ForbiddenException(
-        'You do not have access to this folder'
-      );
-    } else if (
-      error.type === ReactionsError.REACTION_TYPE_NOT_AVAILABLE
-    ) {
+      throw new ForbiddenException('You do not have access to this folder');
+    } else if (error.type === ReactionsError.REACTION_TYPE_NOT_AVAILABLE) {
       throw new BadRequestException(
         'This reaction type is not available for this folder'
       );
@@ -65,7 +61,7 @@ function handleServiceErrors(error: Error): void {
 export class ReactionsController {
   constructor(private readonly reactionsService: ReactionsService) {}
 
-  @Get(':folder_id/available')
+  @Get(':folder_id')
   @UseGuards(AuthGuard)
   @ApiOperation({
     summary: 'Get available reactions for a folder',
@@ -215,4 +211,3 @@ export class ReactionsController {
     }
   }
 }
-

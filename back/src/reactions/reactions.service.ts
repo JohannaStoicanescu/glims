@@ -61,9 +61,7 @@ export class ReactionsService {
       (rt) => rt.id === reaction_type_id
     );
     if (!isAvailable) {
-      throw new ReactionsException(
-        ReactionsError.REACTION_TYPE_NOT_AVAILABLE
-      );
+      throw new ReactionsException(ReactionsError.REACTION_TYPE_NOT_AVAILABLE);
     }
     // Check if the user already has a reaction on this media
     const existingReaction = await this.repository.getReactionByMediaAndUser(
@@ -108,7 +106,10 @@ export class ReactionsService {
    * Deletes a reaction
    * User must have access to the folder containing the media
    */
-  async deleteReaction(reaction_id: string, user_id: string): Promise<Reaction> {
+  async deleteReaction(
+    reaction_id: string,
+    user_id: string
+  ): Promise<Reaction> {
     // Get reaction with media and folder info
     const reaction = await this.repository.getReactionById(reaction_id);
     if (!reaction) {
@@ -116,10 +117,7 @@ export class ReactionsService {
     }
 
     // Check if user has access to the folder
-    await this.checkFolderAccess(
-      reaction.media.folder.id,
-      user_id
-    );
+    await this.checkFolderAccess(reaction.media.folder.id, user_id);
 
     // Delete the reaction
     return this.repository.deleteReaction(reaction_id);
@@ -145,4 +143,3 @@ export class ReactionsService {
     }
   }
 }
-

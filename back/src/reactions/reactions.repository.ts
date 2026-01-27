@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ReactionType, Reaction, Prisma } from '@prisma/client';
+import { ReactionType, Reaction } from '@prisma/client';
 import { PrismaService } from 'src/lib/prisma.service';
 
 @Injectable()
@@ -27,7 +27,11 @@ export class ReactionsRepository {
   /**
    * Gets a folder by ID with basic info
    */
-  async getFolderById(folder_id: string) {
+  async getFolderById(folder_id: string): Promise<{
+    id: string;
+    owner_id: string;
+    members: { id: string }[];
+  } | null> {
     return this.prisma.folder.findUnique({
       where: { id: folder_id },
       select: {
@@ -45,7 +49,15 @@ export class ReactionsRepository {
   /**
    * Gets a media item by ID with folder info
    */
-  async getMediaById(media_id: string) {
+  async getMediaById(media_id: string): Promise<{
+    id: string;
+    folder: {
+      id: string;
+      owner_id: string;
+      members: { id: string }[];
+      available_reactions: { id: string }[];
+    };
+  } | null> {
     return this.prisma.media.findUnique({
       where: { id: media_id },
       include: {
@@ -72,7 +84,17 @@ export class ReactionsRepository {
   /**
    * Gets a reaction by ID with media and folder info
    */
-  async getReactionById(reaction_id: string) {
+  async getReactionById(reaction_id: string): Promise<{
+    id: string;
+    media: {
+      id: string;
+      folder: {
+        id: string;
+        owner_id: string;
+        members: { id: string }[];
+      };
+    };
+  } | null> {
     return this.prisma.reaction.findUnique({
       where: { id: reaction_id },
       include: {
@@ -161,4 +183,3 @@ export class ReactionsRepository {
     });
   }
 }
-

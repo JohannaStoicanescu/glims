@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { S3StorageService } from './s3-storage.service';
+import { GarageStorageService } from './garage-storage.service';
+import { R2StorageService } from './r2-storage.service';
 import { Readable } from 'stream';
 
 // Create a shared mock send function
@@ -37,40 +38,36 @@ vi.mock('@aws-sdk/s3-request-presigner', () => {
 });
 
 describe('S3StorageService', () => {
-  let service: S3StorageService;
   let originalEnv: NodeJS.ProcessEnv;
 
-  describe('Garage configuration', () => {
-    beforeEach(() => {
-      // Save original env
-      originalEnv = { ...process.env };
+  beforeEach(() => {
+    originalEnv = { ...process.env };
+  });
 
-      // Set required environment variables for Garage
-      process.env.STORAGE_PROVIDER = 'garage';
+  afterEach(() => {
+    vi.clearAllMocks();
+    mockGetSignedUrl.mockClear();
+    process.env = originalEnv;
+  });
+
+  describe('GarageStorageService', () => {
+    beforeEach(() => {
       process.env.GARAGE_ENDPOINT = 'http://localhost:3900';
       process.env.GARAGE_ACCESS_KEY = 'test-access-key';
       process.env.GARAGE_SECRET_KEY = 'test-secret-key';
       process.env.GARAGE_BUCKET_NAME = 'test-bucket';
       process.env.GARAGE_REGION = 'garage';
-
-      service = new S3StorageService();
-    });
-
-    afterEach(() => {
-      vi.clearAllMocks();
-      mockGetSignedUrl.mockClear();
-      // Restore original env
-      process.env = originalEnv;
     });
 
     it('should initialize with valid Garage environment variables', () => {
+      const service = new GarageStorageService();
       expect(service).toBeInstanceOf(S3StorageService);
     });
 
     it('should throw error when GARAGE_ENDPOINT is missing', () => {
       delete process.env.GARAGE_ENDPOINT;
 
-      expect(() => new S3StorageService()).toThrow(
+      expect(() => new GarageStorageService()).toThrow(
         'GARAGE_ENDPOINT environment variable is required'
       );
     });
@@ -78,7 +75,7 @@ describe('S3StorageService', () => {
     it('should throw error when GARAGE_ACCESS_KEY is missing', () => {
       delete process.env.GARAGE_ACCESS_KEY;
 
-      expect(() => new S3StorageService()).toThrow(
+      expect(() => new GarageStorageService()).toThrow(
         'GARAGE_ACCESS_KEY environment variable is required'
       );
     });
@@ -86,7 +83,7 @@ describe('S3StorageService', () => {
     it('should throw error when GARAGE_SECRET_KEY is missing', () => {
       delete process.env.GARAGE_SECRET_KEY;
 
-      expect(() => new S3StorageService()).toThrow(
+      expect(() => new GarageStorageService()).toThrow(
         'GARAGE_SECRET_KEY environment variable is required'
       );
     });
@@ -94,42 +91,44 @@ describe('S3StorageService', () => {
     it('should throw error when GARAGE_BUCKET_NAME is missing', () => {
       delete process.env.GARAGE_BUCKET_NAME;
 
-      expect(() => new S3StorageService()).toThrow(
+      expect(() => new GarageStorageService()).toThrow(
         'GARAGE_BUCKET_NAME environment variable is required'
       );
     });
+
+    it('should upload file successfully', async () => {
+      const service = new GarageStorageService();
+      const fileBuffer = Buffer.from('test file content');
+      mockSend.mockResolvedValue({});
+
+      const result = await service.uploadFile(
+        'test-key',
+        fileBuffer,
+        'image/jpeg'
+      );
+
+      expect(result).toBe('test-key');
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
   });
 
-  describe('R2 configuration', () => {
+  describe('R2StorageService', () => {
     beforeEach(() => {
-      // Save original env
-      originalEnv = { ...process.env };
-
-      // Set required environment variables for R2
-      process.env.STORAGE_PROVIDER = 'R2';
       process.env.R2_ACCOUNT_ID = 'test-account-id';
       process.env.R2_ACCESS_KEY_ID = 'test-access-key-id';
       process.env.R2_SECRET_ACCESS_KEY = 'test-secret-access-key';
       process.env.R2_BUCKET_NAME = 'test-bucket';
-
-      service = new S3StorageService();
-    });
-
-    afterEach(() => {
-      vi.clearAllMocks();
-      mockGetSignedUrl.mockClear();
-      // Restore original env
-      process.env = originalEnv;
     });
 
     it('should initialize with valid R2 environment variables', () => {
+      const service = new R2StorageService();
       expect(service).toBeInstanceOf(S3StorageService);
     });
 
     it('should throw error when R2_ACCOUNT_ID is missing', () => {
       delete process.env.R2_ACCOUNT_ID;
 
-      expect(() => new S3StorageService()).toThrow(
+      expect(() => new R2StorageService()).toThrow(
         'R2_ACCOUNT_ID environment variable is required'
       );
     });
@@ -137,7 +136,7 @@ describe('S3StorageService', () => {
     it('should throw error when R2_ACCESS_KEY_ID is missing', () => {
       delete process.env.R2_ACCESS_KEY_ID;
 
-      expect(() => new S3StorageService()).toThrow(
+      expect(() => new R2StorageService()).toThrow(
         'R2_ACCESS_KEY_ID environment variable is required'
       );
     });
@@ -145,7 +144,7 @@ describe('S3StorageService', () => {
     it('should throw error when R2_SECRET_ACCESS_KEY is missing', () => {
       delete process.env.R2_SECRET_ACCESS_KEY;
 
-      expect(() => new S3StorageService()).toThrow(
+      expect(() => new R2StorageService()).toThrow(
         'R2_SECRET_ACCESS_KEY environment variable is required'
       );
     });
@@ -153,71 +152,36 @@ describe('S3StorageService', () => {
     it('should throw error when R2_BUCKET_NAME is missing', () => {
       delete process.env.R2_BUCKET_NAME;
 
-      expect(() => new S3StorageService()).toThrow(
+      expect(() => new R2StorageService()).toThrow(
         'R2_BUCKET_NAME environment variable is required'
       );
     });
-  });
-
-  describe('Invalid provider', () => {
-    beforeEach(() => {
-      originalEnv = { ...process.env };
-    });
-
-    afterEach(() => {
-      process.env = originalEnv;
-    });
-
-    it('should throw error for invalid storage provider', () => {
-      process.env.STORAGE_PROVIDER = 'invalid';
-
-      expect(() => new S3StorageService()).toThrow(
-        "Invalid STORAGE_PROVIDER: invalid. Must be 'garage' or 'R2'"
-      );
-    });
-  });
-
-  describe('uploadFile', () => {
-    beforeEach(() => {
-      originalEnv = { ...process.env };
-      process.env.STORAGE_PROVIDER = 'garage';
-      process.env.GARAGE_ENDPOINT = 'http://localhost:3900';
-      process.env.GARAGE_ACCESS_KEY = 'test-access-key';
-      process.env.GARAGE_SECRET_KEY = 'test-secret-key';
-      process.env.GARAGE_BUCKET_NAME = 'test-bucket';
-      service = new S3StorageService();
-    });
-
-    afterEach(() => {
-      vi.clearAllMocks();
-      process.env = originalEnv;
-    });
 
     it('should upload file successfully', async () => {
+      const service = new R2StorageService();
       const fileBuffer = Buffer.from('test file content');
       mockSend.mockResolvedValue({});
 
-      const result = await service.uploadFile('test-key', fileBuffer, 'image/jpeg');
+      const result = await service.uploadFile(
+        'test-key',
+        fileBuffer,
+        'image/jpeg'
+      );
 
       expect(result).toBe('test-key');
       expect(mockSend).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('downloadFile', () => {
+  describe('Common functionality', () => {
+    let service: S3StorageService;
+
     beforeEach(() => {
-      originalEnv = { ...process.env };
-      process.env.STORAGE_PROVIDER = 'garage';
       process.env.GARAGE_ENDPOINT = 'http://localhost:3900';
       process.env.GARAGE_ACCESS_KEY = 'test-access-key';
       process.env.GARAGE_SECRET_KEY = 'test-secret-key';
       process.env.GARAGE_BUCKET_NAME = 'test-bucket';
-      service = new S3StorageService();
-    });
-
-    afterEach(() => {
-      vi.clearAllMocks();
-      process.env = originalEnv;
+      service = new GarageStorageService();
     });
 
     it('should download file successfully', async () => {
@@ -229,6 +193,50 @@ describe('S3StorageService', () => {
 
       expect(result).toEqual(fileContent);
       expect(mockSend).toHaveBeenCalledTimes(1);
+    });
+
+    it('should list files successfully', async () => {
+      const mockResponse = {
+        Contents: [
+          { Key: 'file1.jpg' },
+          { Key: 'file2.jpg' },
+          { Key: 'file3.jpg' },
+        ],
+      };
+      mockSend.mockResolvedValue(mockResponse);
+
+      const result = await service.listFiles();
+
+      expect(result).toEqual(['file1.jpg', 'file2.jpg', 'file3.jpg']);
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
+
+    it('should check if file exists', async () => {
+      mockSend.mockResolvedValue({});
+
+      const result = await service.fileExists('test-key');
+
+      expect(result).toBe(true);
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return false when file does not exist', async () => {
+      const error = new Error('Not found');
+      (error as any).name = 'NotFound';
+      mockSend.mockRejectedValue(error);
+
+      const result = await service.fileExists('test-key');
+
+      expect(result).toBe(false);
+    });
+
+    it('should generate presigned URL', async () => {
+      mockGetSignedUrl.mockResolvedValue('https://presigned-url.example.com');
+
+      const result = await service.getPresignedUrl('test-key');
+
+      expect(result).toBe('https://presigned-url.example.com');
+      expect(mockGetSignedUrl).toHaveBeenCalledTimes(1);
     });
   });
 });
