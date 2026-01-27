@@ -9,3 +9,9 @@ export interface Media {
 }
 
 export type MediaType = 'photo' | 'video';
+
+export interface CreateMediaInput {
+  file: File;
+  folderId: string;
+  metadata?: string | Record<string, unknown>;
+}

@@ -6,7 +6,6 @@ import FilterPanel from './FilterPanel';
 import FirstTimeUserDisplay from './FirstTimeUserDisplay';
 import GlimsDisplay from './GlimsDisplay';
 import NoGlimsDisplay from './NoGlimsDisplay';
-import useGetUsersFoldersList from '@/hooks/folders/use-get-users-folders-list';
 
 type GlimType = {
   id: string;

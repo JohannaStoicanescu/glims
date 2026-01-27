@@ -1,13 +1,39 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import type { CreateMediaInput } from '@/types';
 
-const createMedia = async (data: any) => {
-  return axios.post('/media', data);
+const createMedia = async (data: CreateMediaInput) => {
+  const { file, folderId, metadata } = data;
+
+  const formData = new FormData();
+
+  formData.append('file', file);
+  formData.append('folder_id', folderId);
+
+  if (metadata) {
+    formData.append(
+      'metadata',
+      typeof metadata === 'string' ? metadata : JSON.stringify(metadata)
+    );
+  }
+
+  try {
+    const response = await axios.post('/media', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading media:', error);
+    throw error;
+  }
 };
 
 const useCreateMedia = () => {
   return useMutation({
-    mutationFn: async (data: any) => await createMedia(data),
+    mutationFn: async (data: CreateMediaInput) => await createMedia(data),
   });
 };
 

@@ -18,22 +18,22 @@ export default function GlimsDetailsPageContent() {
   const [picturesToDisplay, setPicturesToDisplay] = useState<Picture[]>([]);
   const [displayMode] = useState<DisplayMode>('default');
 
-  // TODO: get details of a glims from API or cache based on slug param
-  const getPictures = async () => {
-    const res = await fetch('https://picsum.photos/v2/list?limit=60');
-    const picturesData = await res.json();
-    console.log(picturesToDisplay);
-    return picturesData as Picture[];
-  };
-
-  const fetchPictures = async () => {
-    const fetchedPictures = await getPictures();
-    setPicturesToDisplay(fetchedPictures);
-  };
-
   useEffect(() => {
+    // TODO: get details of a glims from API or cache based on slug param
+    const getPictures = async () => {
+      const res = await fetch('https://picsum.photos/v2/list?limit=60');
+      const picturesData = await res.json();
+      console.log(picturesToDisplay);
+      return picturesData as Picture[];
+    };
+
+    const fetchPictures = async () => {
+      const fetchedPictures = await getPictures();
+      setPicturesToDisplay(fetchedPictures);
+    };
+
     fetchPictures();
-  }, [getPictures]);
+  }, [picturesToDisplay]);
 
   const handleDisplayModeChange = (mode: DisplayMode) => {
     if (mode === displayMode) return;

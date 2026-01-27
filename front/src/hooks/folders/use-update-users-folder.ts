@@ -1,14 +1,20 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import type { UpdateFolderInput } from '@/types';
 
-const updateUsersFolder = async (folderId: string, data: any) => {
+const updateUsersFolder = async (folderId: string, data: UpdateFolderInput) => {
   return axios.patch(`/folders/${folderId}`, data);
 };
 
 const useUsersFolder = () => {
   return useMutation({
-    mutationFn: async ({ folderId, data }: { folderId: string; data: any }) =>
-      await updateUsersFolder(folderId, data),
+    mutationFn: async ({
+      folderId,
+      data,
+    }: {
+      folderId: string;
+      data: UpdateFolderInput;
+    }) => await updateUsersFolder(folderId, data),
   });
 };
 
