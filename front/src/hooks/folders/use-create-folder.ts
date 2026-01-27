@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import type { CreateFolderInput } from '@/types';
+import { apiClient } from '@/utils';
 
 const createFolder = async (data: CreateFolderInput) => {
-  return axios.post('/folders', data);
+  return apiClient.post('/folders', data);
 };
 
 const useCreateFolder = () => {

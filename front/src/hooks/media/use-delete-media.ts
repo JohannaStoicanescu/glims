@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { apiClient } from '@/utils';
 
 const deleteMedia = async (mediaId: string) => {
-  return axios.delete(`/media/${mediaId}`);
+  return apiClient.delete(`/media/${mediaId}`);
 };
 
 const useDeleteMedia = () => {

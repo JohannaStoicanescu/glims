@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { apiClient } from '@/utils';
 
 const deleteReaction = async (reactionId: string) => {
-  return axios.delete(`/reactions/${reactionId}`);
+  return apiClient.delete(`/reactions/${reactionId}`);
 };
 
-const useDeleteReaction = (reactionId: string) => {
+const useDeleteReaction = () => {
   return useMutation({
-    mutationFn: async () => await deleteReaction(reactionId),
+    mutationFn: async (reactionId: string) => await deleteReaction(reactionId),
   });
 };
 

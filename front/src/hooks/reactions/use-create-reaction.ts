@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import type { CreateReactionInput } from '@/types';
+import { apiClient } from '@/utils';
 
 const createReaction = async (reactionData: CreateReactionInput) => {
-  return axios.post('/reactions', {
+  return apiClient.post('/reactions', {
     media_id: reactionData.mediaId,
     reaction_type_id: reactionData.reactionTypeId,
   });

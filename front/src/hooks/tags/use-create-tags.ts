@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { apiClient } from '@/utils';
 
 const createTags = async (tags: string[]) => {
-  return await axios.post('/tags', { tags });
+  return await apiClient.post('/tags', { tags });
 };
 
 const useCreateTags = () => {

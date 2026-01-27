@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { apiClient } from '@/utils';
 
 const deleteTags = async (tags: string[]) => {
-  return await axios.delete('/tags', { data: { tags } });
+  return await apiClient.delete('/tags', { data: { tags } });
 };
 
 const useDeleteTags = () => {

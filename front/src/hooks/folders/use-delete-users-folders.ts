@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { apiClient } from '@/utils';
 
 const deleteUsersFolders = async (folderIds: Array<string>) => {
-  return axios.delete('/folders', {
+  return apiClient.delete('/folders', {
     data: { folderIds: folderIds },
   });
 };

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import type { CreateMediaInput } from '@/types';
+import { apiClient } from '@/utils';
 
 const createMedia = async (data: CreateMediaInput) => {
   const { file, folderId, metadata } = data;
@@ -18,7 +18,7 @@ const createMedia = async (data: CreateMediaInput) => {
   }
 
   try {
-    const response = await axios.post('/media', formData, {
+    const response = await apiClient.post('/media', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
