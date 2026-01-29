@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+
+import Providers from './provider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -18,7 +20,9 @@ export default function RootLayout({
         href="/favicon.ico"
         sizes="any"
       />
-      <body className="bg-white h-svh">{children}</body>
+      <body className="bg-white h-svh">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
