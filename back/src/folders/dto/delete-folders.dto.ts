@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 export class DeleteFoldersDto {
   @ApiProperty({
     description: 'Array of folder IDs to delete',
-    example: ['folder-id-1', 'folder-id-2', 'folder-id-3'],
+    example: ['176203ab-e423-472d-af7a-ab65b1338d1c', 'd8df355e-44b1-4fdc-8b98-d8d5724a860c'],
     type: [String],
   })
-  ids: string[];
+  folder_ids: string[];
 }

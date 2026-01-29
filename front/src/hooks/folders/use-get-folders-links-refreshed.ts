@@ -1,15 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/utils';
 
 const getFoldersLinksRefreshed = async (folderId: string) => {
-  return await fetch(`/folders/${folderId}/refresh-links`).then((res) =>
-    res.json()
-  );
+  const { data } = await apiClient.get(`/folders/${folderId}/refresh-links`);
+  return data;
 };
 
 const useGetFoldersLinksRefreshed = (folderId: string) => {
   return useQuery({
     queryKey: ['links-refreshed', folderId],
-    queryFn: async () => await getFoldersLinksRefreshed(folderId),
+    queryFn: () => getFoldersLinksRefreshed(folderId),
+    enabled: !!folderId,
   });
 };
 

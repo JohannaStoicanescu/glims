@@ -122,11 +122,6 @@ export class FoldersService {
     return this.updateFolder(folder_id, user_id, { upload_url, download_url });
   }
 
-  async deleteFolder(folder_id: string, user_id: string): Promise<Folder> {
-    await this.checkFolderOwnership(folder_id, user_id);
-    return this.repository.deleteFolder({ id: folder_id });
-  }
-
   async deleteManyFolders(
     folder_ids: string[],
     user_id: string

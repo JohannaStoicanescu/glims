@@ -53,7 +53,7 @@ function handleServiceErrors(error: Error): void {
 @ApiBearerAuth('JWT-auth')
 @Controller('folders')
 export class FoldersController {
-  constructor(private readonly foldersService: FoldersService) {}
+  constructor(private readonly foldersService: FoldersService) { }
 
   @Get(':id')
   @UseGuards(AuthGuard)
@@ -232,32 +232,9 @@ export class FoldersController {
   ): Promise<Folder[]> {
     try {
       return await this.foldersService.deleteManyFolders(
-        body.ids,
+        body.folder_ids,
         session.user.id
       );
-    } catch (error) {
-      handleServiceErrors(error);
-    }
-  }
-
-  @Delete(':id')
-  @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Delete a folder by ID' })
-  @ApiParam({ name: 'id', description: 'Folder ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Folder deleted',
-    type: FolderResponseDto,
-  })
-  @ApiResponse({ status: 404, description: 'Folder not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - not the owner' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async deleteFolder(
-    @Session() session: UserSession,
-    @Param('id') id: string
-  ): Promise<Folder> {
-    try {
-      return await this.foldersService.deleteFolder(id, session.user.id);
     } catch (error) {
       handleServiceErrors(error);
     }

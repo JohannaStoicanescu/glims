@@ -315,9 +315,20 @@ export class MediaService {
     } as Prisma.MediaCreateInput);
   }
 
-  async deleteMedia(media_id: string, user_id: string): Promise<Media> {
-    await this.checkMediaOwnership(media_id, user_id);
-    return this.repository.deleteMedia({ id: media_id });
+  async deleteManyMedia(
+    media_ids: string[],
+    user_id: string
+  ): Promise<Media[]> {
+    const mediaList: Media[] = [];
+    for (const media_id of media_ids) {
+      const media = await this.checkMediaOwnership(media_id, user_id);
+      mediaList.push(media);
+    }
+    await this.repository.deleteManyMedia({
+      id: { in: media_ids },
+      user_id,
+    });
+    return mediaList;
   }
 
   private async checkMediaOwnership(

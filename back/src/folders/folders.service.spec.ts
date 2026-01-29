@@ -23,7 +23,6 @@ describe('FoldersService', () => {
     getUserFolders: vi.fn(),
     createFolder: vi.fn(),
     updateFolder: vi.fn(),
-    deleteFolder: vi.fn(),
   };
 
   const mockTagsService = {
@@ -253,40 +252,6 @@ describe('FoldersService', () => {
     });
   });
 
-  describe('deleteFolder', () => {
-    it('should delete folder when user is owner', async () => {
-      mockRepository.getFolderById.mockResolvedValue(mockFolder);
-      mockRepository.deleteFolder.mockResolvedValue(mockFolder);
-
-      const result = await service.deleteFolder('folder-1', 'user-1');
-
-      expect(result).toEqual(mockFolder);
-      expect(repository.getFolderById).toHaveBeenCalledWith('folder-1');
-      expect(repository.deleteFolder).toHaveBeenCalledWith({ id: 'folder-1' });
-    });
-
-    it('should throw FOLDER_NOT_FOUND when folder does not exist', async () => {
-      mockRepository.getFolderById.mockResolvedValue(null);
-
-      await expect(
-        service.deleteFolder('non-existent', 'user-1')
-      ).rejects.toThrow(new FoldersException(FoldersError.FOLDER_NOT_FOUND));
-
-      expect(repository.deleteFolder).not.toHaveBeenCalled();
-    });
-
-    it('should throw FORBIDDEN when user is not owner', async () => {
-      const otherUserFolder = { ...mockFolder, owner_id: 'user-2' };
-      mockRepository.getFolderById.mockResolvedValue(otherUserFolder);
-
-      await expect(service.deleteFolder('folder-1', 'user-1')).rejects.toThrow(
-        new FoldersException(FoldersError.FORBIDDEN)
-      );
-
-      expect(repository.deleteFolder).not.toHaveBeenCalled();
-    });
-  });
-
   describe('checkFolderOwnership (private method tests via public methods)', () => {
     it('should validate ownership across all protected operations', async () => {
       const otherUserFolder = { ...mockFolder, owner_id: 'user-2' };
@@ -298,7 +263,6 @@ describe('FoldersService', () => {
         () =>
           service.updateFolder('folder-1', 'user-1', { title: 'New Title' }),
         () => service.refreshFolderLinks('user-1', 'folder-1'),
-        () => service.deleteFolder('folder-1', 'user-1'),
       ];
 
       for (const operation of operations) {

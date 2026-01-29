@@ -24,7 +24,7 @@ describe('MediaService', () => {
     getUserFolderMedia: vi.fn(),
     countUserFolderMedia: vi.fn(),
     createMedia: vi.fn(),
-    deleteMedia: vi.fn(),
+    deleteManyMedia: vi.fn(),
     getFolderById: vi.fn(),
   };
 
@@ -410,23 +410,45 @@ describe('MediaService', () => {
     });
   });
 
-  describe('deleteMedia', () => {
+  describe('deleteManyMedia', () => {
     it('should delete media when user is owner', async () => {
       mockRepository.getMediaById.mockResolvedValue(mockMedia);
-      mockRepository.deleteMedia.mockResolvedValue(mockMedia);
+      mockRepository.deleteManyMedia.mockResolvedValue({ count: 1 });
 
-      const result = await service.deleteMedia('media-1', 'user-1');
+      const result = await service.deleteManyMedia(['media-1'], 'user-1');
 
-      expect(result).toEqual(mockMedia);
+      expect(result).toEqual([mockMedia]);
       expect(repository.getMediaById).toHaveBeenCalledWith('media-1');
-      expect(repository.deleteMedia).toHaveBeenCalledWith({ id: 'media-1' });
+      expect(repository.deleteManyMedia).toHaveBeenCalledWith({
+        id: { in: ['media-1'] },
+        user_id: 'user-1',
+      });
+    });
+
+    it('should delete multiple media when user owns all', async () => {
+      const mockMedia2 = { ...mockMedia, id: 'media-2' };
+      mockRepository.getMediaById
+        .mockResolvedValueOnce(mockMedia)
+        .mockResolvedValueOnce(mockMedia2);
+      mockRepository.deleteManyMedia.mockResolvedValue({ count: 2 });
+
+      const result = await service.deleteManyMedia(
+        ['media-1', 'media-2'],
+        'user-1'
+      );
+
+      expect(result).toEqual([mockMedia, mockMedia2]);
+      expect(repository.deleteManyMedia).toHaveBeenCalledWith({
+        id: { in: ['media-1', 'media-2'] },
+        user_id: 'user-1',
+      });
     });
 
     it('should throw MEDIA_NOT_FOUND when media does not exist', async () => {
       mockRepository.getMediaById.mockResolvedValue(null);
 
       await expect(
-        service.deleteMedia('non-existent', 'user-1')
+        service.deleteManyMedia(['non-existent'], 'user-1')
       ).rejects.toThrow(new MediaException(MediaError.MEDIA_NOT_FOUND));
     });
 
@@ -434,9 +456,9 @@ describe('MediaService', () => {
       const otherUserMedia = { ...mockMedia, user_id: 'user-2' };
       mockRepository.getMediaById.mockResolvedValue(otherUserMedia);
 
-      await expect(service.deleteMedia('media-1', 'user-1')).rejects.toThrow(
-        new MediaException(MediaError.FORBIDDEN)
-      );
+      await expect(
+        service.deleteManyMedia(['media-1'], 'user-1')
+      ).rejects.toThrow(new MediaException(MediaError.FORBIDDEN));
     });
   });
 

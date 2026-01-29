@@ -69,8 +69,10 @@ export class MediaRepository {
     return this.prisma.media.create({ data });
   }
 
-  async deleteMedia(where: Prisma.MediaWhereUniqueInput): Promise<Media> {
-    return this.prisma.media.delete({ where });
+  async deleteManyMedia(
+    where: Prisma.MediaWhereInput
+  ): Promise<{ count: number }> {
+    return this.prisma.media.deleteMany({ where });
   }
 
   async getFolderById(folder_id: string): Promise<Folder | null> {

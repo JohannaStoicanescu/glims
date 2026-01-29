@@ -29,6 +29,7 @@ import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { Media } from '@prisma/client';
 import { PaginatedMediaResponseDto } from './dto/paginated-media-response.dto';
 import { MediaResponseDto } from './dto/media-response.dto';
+import { DeleteMediaDto } from './dto/delete-media.dto';
 
 function handleServiceErrors(error: Error): void {
   if (error instanceof MediaException) {
@@ -258,24 +259,30 @@ export class MediaController {
     }
   }
 
-  @Delete(':id')
+  @Delete()
   @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Delete a media item by ID' })
-  @ApiParam({ name: 'id', description: 'Media ID' })
+  @ApiOperation({ summary: 'Delete multiple media items' })
+  @ApiBody({ type: DeleteMediaDto })
   @ApiResponse({
     status: 200,
     description: 'Media deleted',
-    type: MediaResponseDto,
+    type: [MediaResponseDto],
   })
-  @ApiResponse({ status: 404, description: 'Media not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - no access' })
+  @ApiResponse({ status: 404, description: 'One or more media not found' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - not the owner of one or more media',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async deleteMedia(
+  async deleteManyMedia(
     @Session() session: UserSession,
-    @Param('id') id: string
-  ): Promise<Media> {
+    @Body() body: DeleteMediaDto
+  ): Promise<Media[]> {
     try {
-      return await this.mediaService.deleteMedia(id, session.user.id);
+      return await this.mediaService.deleteManyMedia(
+        body.media_ids,
+        session.user.id
+      );
     } catch (error) {
       handleServiceErrors(error);
     }

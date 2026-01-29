@@ -1,13 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/utils';
 
 const getMediaByFolderId = async (folderId: string) => {
-  return await fetch(`/media/folder/${folderId}`).then((res) => res.json());
+  const { data } = await apiClient.get(`/media/folder/${folderId}`);
+  return data;
 };
 
 const useGetMediaByFolderId = (folderId: string) => {
   return useQuery({
     queryKey: ['media-by-folder', folderId],
-    queryFn: async () => await getMediaByFolderId(folderId),
+    queryFn: () => getMediaByFolderId(folderId),
+    enabled: !!folderId,
   });
 };
 

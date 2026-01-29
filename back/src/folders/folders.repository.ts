@@ -99,10 +99,6 @@ export class FoldersRepository {
     return this.prisma.folder.update(params);
   }
 
-  async deleteFolder(where: Prisma.FolderWhereUniqueInput): Promise<Folder> {
-    return this.prisma.folder.delete({ where });
-  }
-
   async deleteManyFolders(
     where: Prisma.FolderWhereInput
   ): Promise<{ count: number }> {
