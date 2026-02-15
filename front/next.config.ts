@@ -23,6 +23,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/mes-glims',
+        permanent: true,
+      },
+      {
+        source: '/profile',
+        destination: '/profile/mon-compte',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
