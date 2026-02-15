@@ -1,4 +1,3 @@
-export { default as AvatarRounded } from './header/components/AvatarRounded';
 export { default as BurgerMenu } from './navigation/BurgerMenu';
 export { default as ConfirmationModal } from './confirmation-modal/ConfirmationModal';
 export { default as Header } from './header/Header';

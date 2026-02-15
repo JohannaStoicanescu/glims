@@ -57,7 +57,7 @@ export default function DisplayModeDropdown({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10 animate-in fade-in slide-in-from-bottom-4 duration-200">
+        <div className="absolute z-50 top-full right-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-200">
           <div className="py-1">
             {displayModes.map((mode, index) => (
               <button

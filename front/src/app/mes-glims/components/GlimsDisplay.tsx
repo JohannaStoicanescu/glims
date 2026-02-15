@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { UsersAvatarAndCountDisplay } from '@/app/components';
+
+import UsersAvatarAndCountDisplay from '@/app/components/users-avatar-and-count-display/UsersAvatarAndCountDisplay';
 
 interface GlimsDisplayProps {
   glims: Array<{
