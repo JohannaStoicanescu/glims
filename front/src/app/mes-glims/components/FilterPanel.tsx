@@ -5,6 +5,14 @@ import { useState, useRef, useEffect } from 'react';
 import { ArrowDownUp, ChevronDown, Search } from '@/app/ui/icons';
 
 interface FilterPanelProps {
+  readonly glimsToDisplay: Array<{
+    id: string;
+    author: string;
+    width: number;
+    height: number;
+    url: string;
+    download_url: string;
+  }>;
   readonly setGlimsToDisplay: (
     glims: Array<{
       id: string;
@@ -31,8 +39,9 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [dropdownTitle, setDropdownTitle] = useState('Récent');
-  const [searchInputValue, setSearchInputValue] = useState('');
   const filterRef = useRef<HTMLDivElement>(null);
+
+  const [searchInputValue, setSearchInputValue] = useState('');
 
   // Logic to close the filter dropdown when clicking outside
   useEffect(() => {
@@ -70,10 +79,14 @@ export default function FilterPanel({
     }
   };
 
+  const handleDropdownFilter = (filterTitle: string) => {
+    setDropdownTitle(filterTitle);
+    setIsFilterDropdownOpen(false);
+  };
+
   return (
     <div className="w-full pt-7 pb-9 md:flex md:items-center md:justify-start gap-4">
       {/* SEARCH BAR */}
-      {/* TODO: Add logic and html so when user start to write text in the search bar 3 or 4 glims are displayed under */}
       <label
         htmlFor="glims-search-bar"
         aria-label="Barre de recherche des glims"
@@ -88,7 +101,7 @@ export default function FilterPanel({
           value={searchInputValue}
           onChange={(e) => {
             handleSearchInputChange(e);
-          }} // TODO: change this filter logic
+          }}
         />
         <Search
           size={15}
@@ -121,24 +134,21 @@ export default function FilterPanel({
               <li
                 className="w-full text-start px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
-                  setDropdownTitle('Récent');
-                  setIsFilterDropdownOpen(false);
+                  handleDropdownFilter('Récent');
                 }}>
                 Récent
               </li>
               <li
                 className="w-full text-start px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
-                  setDropdownTitle('Vos Glims');
-                  setIsFilterDropdownOpen(false);
+                  handleDropdownFilter('Vos Glims');
                 }}>
                 Vos Glims
               </li>
               <li
                 className="w-full text-start px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
                 onClick={() => {
-                  setDropdownTitle('Les plus anciens');
-                  setIsFilterDropdownOpen(false);
+                  handleDropdownFilter('Les plus anciens');
                 }}>
                 Les plus anciens
               </li>

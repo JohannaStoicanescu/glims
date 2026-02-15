@@ -1,5 +1,5 @@
 import React from 'react';
-import { House, MessageCircle, SquarePlus } from '../../icons';
+import { House, SquarePlus, User } from '../../icons';
 
 export interface NavLink {
   title: string;
@@ -20,10 +20,10 @@ export const NAV_LINKS: NavLink[] = [
       React.createElement(SquarePlus, { className: 'w-5 h-5 lg:w-6 lg:h-6' }),
   },
   {
-    title: 'Messages',
-    href: '/messages',
+    title: 'Profile',
+    href: '/profile/mon-compte',
     icon: () =>
-      React.createElement(MessageCircle, {
+      React.createElement(User, {
         className: 'w-5 h-5 lg:w-6 lg:h-6',
       }),
   },

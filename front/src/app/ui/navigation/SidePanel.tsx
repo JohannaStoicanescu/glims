@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-import CreateGlimModal from '../../components/create-glim-modal/CreateGlimModal';
 import { PanelLeftClose } from '../icons';
 import NavLinks from './components/NavLinks';
 import { NAV_LINKS } from './utils/get-nav-links';
@@ -11,7 +10,7 @@ import { NAV_LINKS } from './utils/get-nav-links';
 export default function SidePanel() {
   // TODO: this state should be in cache or context to persist between pages
   const [isMenuReduced, setIsMenuReduced] = useState(false);
-  const [isCreateGlimModalOpen, setIsCreateGlimModalOpen] = useState(false);
+  const [isCreateGlimsModalOpen, setIsCreateGlimsModalOpen] = useState(false);
 
   return (
     <>
@@ -50,7 +49,7 @@ export default function SidePanel() {
                   reduced={isMenuReduced}
                   {...(link.title === 'Nouveau' && {
                     onClick: () =>
-                      setIsCreateGlimModalOpen(!isCreateGlimModalOpen),
+                      setIsCreateGlimsModalOpen(!isCreateGlimsModalOpen),
                   })}
                 />
               ))}
@@ -73,13 +72,8 @@ export default function SidePanel() {
         </div>
       </nav>
 
-      {/* CREATE GLIM MODAL */}
-      {isCreateGlimModalOpen && (
-        <CreateGlimModal
-          open={isCreateGlimModalOpen}
-          onClose={() => setIsCreateGlimModalOpen(false)}
-        />
-      )}
+      {/* CREATE GLIMS MODAL */}
+      {/* TODO */}
     </>
   );
 }

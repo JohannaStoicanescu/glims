@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 
-import '../globals.css';
 import { Header, SidePanel } from '../ui';
+import ProfileNavBar from './components/ProfileNavBar';
+import '../globals.css';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -14,21 +15,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <link
-        rel="icon"
-        href="/favicon.ico"
-        sizes="any"
-      />
-      <body className="bg-white">
-        <div className="flex">
-          <SidePanel />
-          <div className="w-full">
-            <Header />
-            {children}
+    <div className="flex h-screen overflow-hidden">
+      <SidePanel />
+      <div className="w-full h-full flex flex-col min-w-0">
+        <Header>
+          <ProfileNavBar />
+        </Header>
+        <div className="w-full flex flex-col px-2 sm:px-4 md:px-8 min-h-0">
+          <div className="md:hidden">
+            <ProfileNavBar />
+            <div className="h-[8px] bg-white w-full" />
           </div>
+          {children}
         </div>
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }
