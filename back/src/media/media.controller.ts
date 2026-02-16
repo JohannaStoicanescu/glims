@@ -52,7 +52,7 @@ function handleServiceErrors(error: Error): void {
 @ApiBearerAuth('JWT-auth')
 @Controller('media')
 export class MediaController {
-  constructor(private readonly mediaService: MediaService) {}
+  constructor(private readonly mediaService: MediaService) { }
 
   @Get(':id')
   @UseGuards(AuthGuard)
@@ -279,7 +279,7 @@ export class MediaController {
     @Body() body: DeleteMediaDto
   ): Promise<Media[]> {
     try {
-      return await this.mediaService.deleteManyMedia(
+      return await this.mediaService.deleteMultipleMedia(
         body.media_ids,
         session.user.id
       );

@@ -22,7 +22,7 @@ export class MediaService {
   constructor(
     private readonly repository: MediaRepository,
     private readonly storage: S3StorageService
-  ) {}
+  ) { }
 
   async getMediaById(media_id: string, user_id: string): Promise<Media> {
     const media = await this.checkMediaOwnership(media_id, user_id);
@@ -315,7 +315,7 @@ export class MediaService {
     } as Prisma.MediaCreateInput);
   }
 
-  async deleteManyMedia(
+  async deleteMultipleMedia(
     media_ids: string[],
     user_id: string
   ): Promise<Media[]> {
@@ -324,6 +324,20 @@ export class MediaService {
       const media = await this.checkMediaOwnership(media_id, user_id);
       mediaList.push(media);
     }
+
+    // Delete files from storage
+    await Promise.all(
+      mediaList.map((media) =>
+        this.storage.deleteFile(media.storage_id).catch((error) => {
+          console.error(
+            `Failed to delete file from storage for media ${media.id} with storage_id: ${media.storage_id}`,
+            error
+          );
+        })
+      )
+    );
+
+    // Delete media records from database
     await this.repository.deleteManyMedia({
       id: { in: media_ids },
       user_id,

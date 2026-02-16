@@ -415,7 +415,7 @@ describe('MediaService', () => {
       mockRepository.getMediaById.mockResolvedValue(mockMedia);
       mockRepository.deleteManyMedia.mockResolvedValue({ count: 1 });
 
-      const result = await service.deleteManyMedia(['media-1'], 'user-1');
+      const result = await service.deleteMultipleMedia(['media-1'], 'user-1');
 
       expect(result).toEqual([mockMedia]);
       expect(repository.getMediaById).toHaveBeenCalledWith('media-1');
@@ -432,7 +432,7 @@ describe('MediaService', () => {
         .mockResolvedValueOnce(mockMedia2);
       mockRepository.deleteManyMedia.mockResolvedValue({ count: 2 });
 
-      const result = await service.deleteManyMedia(
+      const result = await service.deleteMultipleMedia(
         ['media-1', 'media-2'],
         'user-1'
       );
@@ -448,7 +448,7 @@ describe('MediaService', () => {
       mockRepository.getMediaById.mockResolvedValue(null);
 
       await expect(
-        service.deleteManyMedia(['non-existent'], 'user-1')
+        service.deleteMultipleMedia(['non-existent'], 'user-1')
       ).rejects.toThrow(new MediaException(MediaError.MEDIA_NOT_FOUND));
     });
 
@@ -457,7 +457,7 @@ describe('MediaService', () => {
       mockRepository.getMediaById.mockResolvedValue(otherUserMedia);
 
       await expect(
-        service.deleteManyMedia(['media-1'], 'user-1')
+        service.deleteMultipleMedia(['media-1'], 'user-1')
       ).rejects.toThrow(new MediaException(MediaError.FORBIDDEN));
     });
   });
