@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 import { PanelLeftClose } from '../icons';
+import { CreateGlimsModal } from '..';
 import NavLinks from './components/NavLinks';
 import { NAV_LINKS } from './utils/get-nav-links';
 
@@ -48,8 +49,9 @@ export default function SidePanel() {
                   icon={link.icon()}
                   reduced={isMenuReduced}
                   {...(link.title === 'Nouveau' && {
-                    onClick: () =>
-                      setIsCreateGlimsModalOpen(!isCreateGlimsModalOpen),
+                    onClick: () => {
+                      setIsCreateGlimsModalOpen(!isCreateGlimsModalOpen);
+                    },
                   })}
                 />
               ))}
@@ -73,7 +75,11 @@ export default function SidePanel() {
       </nav>
 
       {/* CREATE GLIMS MODAL */}
-      {/* TODO */}
+      <CreateGlimsModal
+        isOpen={isCreateGlimsModalOpen}
+        onClose={() => setIsCreateGlimsModalOpen(false)}
+        availableGlims={3} // TODO: Replace with actual available Glims count
+      />
     </>
   );
 }

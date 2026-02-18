@@ -6,10 +6,11 @@ import { useState } from 'react';
 import NavLinks from './components/NavLinks';
 import { NAV_LINKS } from './utils/get-nav-links';
 import { Menu } from '../icons';
+import { CreateGlimsModal } from '..';
 
 export default function BurgerMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [isCreateGlimsModalOpen, setIsCreateGlimsModalOpen] = useState(false);
+  const [isCreateGlimsModalOpen, setIsCreateGlimsModalOpen] = useState(false);
 
   return (
     <>
@@ -48,7 +49,7 @@ export default function BurgerMenu() {
                     icon={link.icon()}
                     {...(link.title === 'Nouveau' && {
                       onClick: () => {
-                        // setIsCreateGlimsModalOpen(!isCreateGlimsModalOpen);
+                        setIsCreateGlimsModalOpen(!isCreateGlimsModalOpen);
                         setIsMenuOpen(false);
                       },
                     })}
@@ -69,7 +70,11 @@ export default function BurgerMenu() {
       </nav>
 
       {/* CREATE GLIM MODAL */}
-      {/* TODO */}
+      <CreateGlimsModal
+        isOpen={isCreateGlimsModalOpen}
+        onClose={() => setIsCreateGlimsModalOpen(false)}
+        availableGlims={3} // TODO: Replace with actual available Glims count
+      />
     </>
   );
 }

@@ -30,7 +30,7 @@ export const getMenuItems = (
   {
     icon: Heart,
     label: 'Voir mes favoris',
-    onClick: () => console.log('Voir mes favoris'),
+    onClick: () => console.log('//TODO: Voir mes favoris'),
   },
   {
     icon: Download,
@@ -48,7 +48,7 @@ export const getMenuItems = (
   {
     icon: AlertCircle,
     label: 'Signaler un membre',
-    onClick: () => console.log('Signaler'),
+    onClick: () => console.log('//TODO: Signaler'),
   },
 ];
 
@@ -56,11 +56,11 @@ export const dangerItems: MenuItem[] = [
   {
     icon: Trash2,
     label: 'Supprimer le Glims',
-    onClick: () => console.log('Supprimer'),
+    onClick: () => console.log('//TODO: Supprimer'),
   },
   {
     icon: DoorOpen,
     label: 'Quitter le Glims',
-    onClick: () => console.log('Quitter'),
+    onClick: () => console.log('//TODO: Quitter'),
   },
 ];

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
-import '../globals.css';
 import { Header, SidePanel } from '../ui';
+import '../globals.css';
 
 export const metadata: Metadata = {
   title: 'Mes Glims',
