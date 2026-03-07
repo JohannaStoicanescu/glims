@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { NewUserContext } from '../utils/new-user-context';
 import CompleteProfileSection from './CompleteProfileSection';
 import ImageSection from './ImageSection';
 import SignUpSection from './SignUpSection';
@@ -12,43 +11,83 @@ import { NewUser } from '@/types';
 
 export default function SignUpSteps() {
   const [signUpStep, setSignUpStep] = useState(1);
-  const [newUserData, setNewUserData] = useState<NewUser>({
-    email: null,
-    firstName: null,
-    lastName: null,
-    password: null,
-    profileImage: null,
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const authClient = useAuthClient();
 
-  const formSubmit = async (newUserData: NewUser) => {
-    const result = await authClient.signUp.email({
-      email: newUserData.email || '',
-      password: newUserData.password || '',
-      name: `${newUserData.firstName} ${newUserData.lastName}`,
-      image: newUserData.profileImage?.name || undefined,
-    });
-    if (result.data) {
-      window.location.href = '/exemple-auth?newUser=true';
+  const methods = useForm<NewUser>({
+    defaultValues: {
+      email: '',
+      firstName: '',
+      lastName: '',
+      password: '',
+      profileImage: undefined,
+    },
+  });
+
+  const { handleSubmit } = methods;
+
+  const onFormSubmit = async (data: NewUser) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { data: signUpData, error: signUpError } =
+        await authClient.signUp.email({
+          email: data.email || '',
+          password: data.password || '',
+          name: `${data.firstName} ${data.lastName}`,
+          // We omit image for now as we don't have a URL yet
+          // image: data.profileImage ? ... : undefined,
+        });
+
+      if (signUpError) {
+        setError(
+          signUpError.message ||
+            'Une erreur est survenue lors de l’inscription.'
+        );
+        return;
+      }
+
+      if (signUpData) {
+        // Redirect to a protected page or welcome page
+        window.location.href = '/mes-glims';
+      }
+    } catch (err) {
+      console.error('Sign up error:', err);
+      setError('Une erreur inattendue est survenue.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const methods = useForm<NewUser>();
+  const nextStep = () => setSignUpStep((prev) => prev + 1);
+  const prevStep = () => setSignUpStep((prev) => prev - 1);
 
   return (
-    <NewUserContext.Provider value={{ newUserData, setNewUserData }}>
-      <FormProvider {...methods}>
-        {signUpStep === 1 && <SignUpSection setSignUpStep={setSignUpStep} />}
+    <FormProvider {...methods}>
+      <form
+        onSubmit={handleSubmit(onFormSubmit)}
+        className="h-full">
+        {error && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl shadow-lg">
+            {error}
+          </div>
+        )}
+
+        {signUpStep === 1 && <SignUpSection onNext={nextStep} />}
         {signUpStep === 2 && (
-          <CompleteProfileSection setSignUpStep={setSignUpStep} />
+          <CompleteProfileSection
+            onNext={nextStep}
+            onBack={prevStep}
+          />
         )}
         {signUpStep === 3 && (
           <ImageSection
-            setSignUpStep={() => {}}
-            formSubmit={formSubmit}
+            onBack={prevStep}
+            isLoading={isLoading}
           />
         )}
-      </FormProvider>
-    </NewUserContext.Provider>
+      </form>
+    </FormProvider>
   );
 }

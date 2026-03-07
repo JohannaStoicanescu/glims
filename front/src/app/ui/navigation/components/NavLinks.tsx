@@ -30,17 +30,15 @@ export default function NavLinks({
           flex items-center ${reduced ? 'justify-center' : ''} text-gray-800 font-medium
           w-full p-2 rounded-lg border border-transparent
           hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100 cursor-pointer transition`}>
-        {icon && (
-          <span
-            className={`animate-[iconsMenuFadeIn_0.5s_ease-out_forwards] ${reduced ? '' : 'mr-4'}`}>
-            {icon}
-          </span>
-        )}
-        {!reduced && (
-          <span className="text-sm lg:text-base animate-[slideInRightNav_0.4s_ease-out_forwards]">
-            {title}
-          </span>
-        )}
+        {icon && <span className="flex-shrink-0">{icon}</span>}
+        <span
+          className={`text-sm lg:text-base whitespace-nowrap transition-all duration-300 ease-in-out overflow-hidden ${
+            reduced
+              ? 'max-w-0 opacity-0 ml-0'
+              : 'max-w-[200px] opacity-100 ml-4'
+          }`}>
+          {title}
+        </span>
       </Link>
     );
   }
@@ -54,12 +52,13 @@ export default function NavLinks({
         flex items-center ${reduced ? 'justify-center' : ''} text-gray-800 font-medium
         w-full p-2 rounded-lg border border-transparent
         hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100 cursor-pointer transition`}>
-      {icon && <span className={`${reduced ? '' : 'mr-4'}`}>{icon}</span>}
-      {!reduced && (
-        <span className="text-sm lg:text-base animate-[slideInRightNav_0.4s_ease-out_forwards]">
-          {title}
-        </span>
-      )}
+      {icon && <span className="flex-shrink-0">{icon}</span>}
+      <span
+        className={`text-sm lg:text-base whitespace-nowrap transition-all duration-300 ease-in-out overflow-hidden ${
+          reduced ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100 ml-4'
+        }`}>
+        {title}
+      </span>
     </button>
   );
 }

@@ -17,7 +17,6 @@ export default function GlimsDetailsPageContent() {
   const getPictures = async () => {
     const res = await fetch('https://picsum.photos/v2/list?limit=60');
     const picturesData = await res.json();
-    console.log(picturesToDisplay);
     return picturesData as Picture[];
   };
 

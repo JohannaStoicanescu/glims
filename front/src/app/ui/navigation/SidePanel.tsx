@@ -1,40 +1,70 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { PanelLeftClose } from '../icons';
+import { CreateGlimsModal } from '..';
 import NavLinks from './components/NavLinks';
 import { NAV_LINKS } from './utils/get-nav-links';
 
+const SIDEBAR_STORAGE_KEY = 'glims-sidebar-reduced';
+
 export default function SidePanel() {
-  // TODO: this state should be in cache or context to persist between pages
   const [isMenuReduced, setIsMenuReduced] = useState(false);
   const [isCreateGlimsModalOpen, setIsCreateGlimsModalOpen] = useState(false);
+
+  // Load state from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY);
+    if (stored !== null) {
+      setIsMenuReduced(stored === 'true');
+    }
+  }, []);
+
+  const toggleMenu = () => {
+    setIsMenuReduced((prev) => {
+      const next = !prev;
+      localStorage.setItem(SIDEBAR_STORAGE_KEY, String(next));
+      return next;
+    });
+  };
 
   return (
     <>
       <nav
-        className={`hidden md:flex ${isMenuReduced ? 'animate-[slideInRightNav_0.4s_ease-out_backwards]' : 'min-w-1/6 animate-[slideInRightNav_0.4s_ease-out_forwards]'}`}>
-        <div
-          className={`flex flex-col h-screen ${isMenuReduced ? 'w-18' : 'w-full'} 
-        border-r border-gray-200 p-2 pt-8 lg:p-4 lg:pt-8`}>
+        className={`hidden md:flex h-screen border-r border-gray-200 transition-all duration-300 ease-in-out ${
+          isMenuReduced ? 'w-20' : 'w-64'
+        }`}>
+        <div className="flex flex-col h-full w-full p-2 pt-8 lg:p-4 lg:pt-8 overflow-hidden">
           {/* GLIMS LOGO */}
-          <div
-            className={
-              isMenuReduced ? 'flex justify-center' : 'overflow-hidden'
-            }>
-            <Image
-              src={`${isMenuReduced ? '/glims-logo-filed.svg' : '/glims-logo-filed-with-text.svg'}`}
-              alt={'Logo textuel de Glims'}
-              className={`pl-1 lg:p-0 ${
-                !isMenuReduced
-                  ? 'animate-[slideInRight_0.5s_ease-out_forwards]'
-                  : 'animate-[iconsMenuFadeIn_0.5s_ease-out_forwards]'
-              }`}
-              width={isMenuReduced ? 29 : 100}
-              height={isMenuReduced ? 29 : 100}
-            />
+          <div className="flex items-center h-12 px-2">
+            <div className="relative w-full h-full">
+              <Image
+                src="/glims-logo-filed-with-text.svg"
+                alt="Logo textuel de Glims"
+                className={`absolute inset-0 transition-opacity duration-300 ${
+                  isMenuReduced
+                    ? 'opacity-0 pointer-events-none'
+                    : 'opacity-100'
+                }`}
+                width={100}
+                height={40}
+                style={{ objectFit: 'contain', objectPosition: 'left' }}
+              />
+              <Image
+                src="/glims-logo-filed.svg"
+                alt="Logo Glims"
+                className={`absolute inset-0 transition-opacity duration-300 ${
+                  isMenuReduced
+                    ? 'opacity-100'
+                    : 'opacity-0 pointer-events-none'
+                }`}
+                width={36}
+                height={36}
+                style={{ objectFit: 'contain', objectPosition: 'center' }}
+              />
+            </div>
           </div>
 
           {/* LIST OF NAV LINKS */}
@@ -48,8 +78,9 @@ export default function SidePanel() {
                   icon={link.icon()}
                   reduced={isMenuReduced}
                   {...(link.title === 'Nouveau' && {
-                    onClick: () =>
-                      setIsCreateGlimsModalOpen(!isCreateGlimsModalOpen),
+                    onClick: () => {
+                      setIsCreateGlimsModalOpen(!isCreateGlimsModalOpen);
+                    },
                   })}
                 />
               ))}
@@ -61,7 +92,7 @@ export default function SidePanel() {
                 className={`text-gray-600 font-medium ${isMenuReduced ? 'w-full flex justify-center rotate-180 transition-all duration-300' : 'transition-all duration-300'}
                             p-2 rounded-lg border border-transparent
                           hover:text-orange-600 hover:bg-red-50 hover:border-red-100 cursor-pointer transition`}
-                onClick={() => setIsMenuReduced(!isMenuReduced)}>
+                onClick={toggleMenu}>
                 <PanelLeftClose
                   size={25}
                   className="cursor-pointer transition-colors"
@@ -73,7 +104,10 @@ export default function SidePanel() {
       </nav>
 
       {/* CREATE GLIMS MODAL */}
-      {/* TODO */}
+      <CreateGlimsModal
+        isOpen={isCreateGlimsModalOpen}
+        onClose={() => setIsCreateGlimsModalOpen(false)}
+      />
     </>
   );
 }

@@ -29,28 +29,28 @@ export function ConfirmationModalContent({
       <div className="w-full flex justify-end">
         <button
           type="button"
-          className="cursor-pointer hover:text-orange-300 p-1"
+          className="cursor-pointer text-gray-400 hover:text-gray-600 p-1 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-full"
           onClick={onCancel}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              onCancel();
-            }
-          }}
-          aria-label="Fermer la modal">
+          aria-label="Fermer la modale">
           <X />
         </button>
       </div>
-      <span className="text-4xl bg-red-50 text-red-500 rounded-full w-20 h-20 md:w-32 md:h-32 flex items-center justify-center">
+      <div
+        className="text-4xl bg-red-50 text-red-500 rounded-full w-20 h-20 md:w-32 md:h-32 flex items-center justify-center"
+        aria-hidden="true">
         {icon}
-      </span>
-      <p
+      </div>
+      <h2
         id="confirmation-modal-title"
         className="text-center font-semibold text-2xl">
         {title}
+      </h2>
+      <p
+        id="confirmation-modal-description"
+        className="text-center text-gray-600 w-11/12 md:w-2/3">
+        {message}
       </p>
-      <p className="text-center text-gray-600 w-11/12 md:w-2/3">{message}</p>
-      <div className="w-full flex items-center gap-2">
+      <div className="w-full flex items-center gap-2 mt-2">
         <ButtonForm
           text={cancelButtonText}
           onClick={onCancel}

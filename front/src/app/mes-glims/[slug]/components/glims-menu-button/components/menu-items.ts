@@ -30,7 +30,10 @@ export const getMenuItems = (
   {
     icon: Heart,
     label: 'Voir mes favoris',
-    onClick: () => console.log('Voir mes favoris'),
+    onClick: () => {
+      // TODO: Connecter à l'API pour récupérer et afficher les favoris de l'utilisateur
+      console.log('//TODO: Voir mes favoris');
+    },
   },
   {
     icon: Download,
@@ -43,12 +46,18 @@ export const getMenuItems = (
   {
     icon: BellOff,
     label: 'Désactiver les notifications',
-    onClick: () => console.log('Désactiver notifs'),
+    onClick: () => {
+      // TODO: Connecter à l'API pour mettre à jour les préférences de notification du Glims
+      console.log('Désactiver notifs');
+    },
   },
   {
     icon: AlertCircle,
     label: 'Signaler un membre',
-    onClick: () => console.log('Signaler'),
+    onClick: () => {
+      // TODO: Connecter à l'API pour envoyer un signalement
+      console.log('//TODO: Signaler');
+    },
   },
 ];
 
@@ -56,11 +65,17 @@ export const dangerItems: MenuItem[] = [
   {
     icon: Trash2,
     label: 'Supprimer le Glims',
-    onClick: () => console.log('Supprimer'),
+    onClick: () => {
+      // TODO: Connecter à l'API pour supprimer définitivement le Glims
+      console.log('//TODO: Supprimer');
+    },
   },
   {
     icon: DoorOpen,
     label: 'Quitter le Glims',
-    onClick: () => console.log('Quitter'),
+    onClick: () => {
+      // TODO: Connecter à l'API pour que l'utilisateur quitte le Glims
+      console.log('//TODO: Quitter');
+    },
   },
 ];

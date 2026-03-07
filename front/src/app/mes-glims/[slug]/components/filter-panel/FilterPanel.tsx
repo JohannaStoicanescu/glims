@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { DisplayMode } from '@/types';
 import DisplayModeDropdown from '../DisplayModeDropdown';
 import { SlidersHorizontal } from '@/app/ui/icons';
@@ -10,6 +10,7 @@ import {
   FiltersMobileDrawer,
 } from './components';
 import { FileType, SortOption } from './utils/filter-data';
+import { useIsMobile } from '@/hooks/use-media-query';
 
 type FilterPanelProps = {
   displayMode: DisplayMode;
@@ -28,17 +29,7 @@ export default function FilterPanel({
   const [selectedPublishedBy, setSelectedPublishedBy] = useState<string[]>([]);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Detect screen size to toggle between desktop and mobile filter UIs
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const isMobile = useIsMobile();
 
   const handleReset = () => {
     setSortBy('recent');
@@ -75,7 +66,9 @@ export default function FilterPanel({
           {/* FILTER BUTTON */}
           <button
             onClick={() => setIsFiltersOpen(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors cursor-pointer border border-gray-200 md:border-0 text-gray-700 hover:bg-gray-50">
+            aria-label="Ouvrir les filtres"
+            aria-expanded={isFiltersOpen}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors cursor-pointer border border-gray-200 md:border-0 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 md:focus:ring-0">
             <span className="text-sm font-medium">Filtres</span>
             <SlidersHorizontal className="w-5 h-5" />
           </button>

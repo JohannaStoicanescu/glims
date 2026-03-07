@@ -4,29 +4,27 @@ import MenuItemButton from './MenuItemButton';
 import DangerItemButton from './DangerItemButton';
 
 interface DesktopDropdownProps {
-  menuRef: React.RefObject<HTMLDivElement>;
   menuItems: MenuItem[];
   dangerItems: MenuItem[];
   downloadProgress: number;
   onClose: () => void;
+  onOpenSettings: () => void;
 }
 
 export default function DesktopDropdown({
-  menuRef,
   menuItems,
   dangerItems,
   downloadProgress,
   onClose,
+  onOpenSettings,
 }: DesktopDropdownProps) {
   return (
-    <div
-      ref={menuRef}
-      className="hidden md:block absolute right-0 top-full px-2 pt-5 pb-2 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
-      <div className="flex justify-center">
+    <div className="flex flex-col py-2 rounded-2xl">
+      <div className="flex justify-center pt-2">
         <button
           className="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition"
-          onClick={() => console.log('Gérer les membres')}>
-          <span className="font-medium">Gérer les membres</span>
+          onClick={onOpenSettings}>
+          <span className="font-medium">Paramètres</span>
           <Users size={18} />
         </button>
       </div>
