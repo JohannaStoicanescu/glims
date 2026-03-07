@@ -28,7 +28,6 @@ export default function ProfilePhotoSection({
 
   // Trigger the file input dialog when the user clicks the button
   const onPickPhoto = () => {
-    console.log('Photo click');
     fileInputRef.current?.click();
   };
 
@@ -47,14 +46,16 @@ export default function ProfilePhotoSection({
   };
 
   return (
-    <div>
-      <div className="text-sm font-semibold text-slate-900">
+    <div className="flex flex-col items-center md:items-start">
+      <div className="w-full text-sm font-semibold text-slate-900 text-left">
         Photo de profil
       </div>
 
-      <div className="pt-5 flex flex-col items-center gap-4 sm:flex-row">
+      <div className="pt-5 flex flex-col items-center gap-6 w-full md:flex-row md:justify-start">
         {/* PHOTO PREVIEW */}
-        <div className="h-28 w-28 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200 sm:h-20 sm:w-20">
+        <div
+          onClick={onPickPhoto}
+          className="h-36 w-36 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200 cursor-pointer md:h-20 md:w-20 transition hover:opacity-80 flex items-center justify-center">
           {photoPreviewUrl ? (
             // Show the selected photo preview
             <img
@@ -65,7 +66,7 @@ export default function ProfilePhotoSection({
           ) : (
             // Placeholder if no photo is selected
             <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
-              —
+              <span className="text-4xl">—</span>
             </div>
           )}
         </div>
@@ -79,24 +80,15 @@ export default function ProfilePhotoSection({
           onChange={handleFileChange}
         />
 
-        <div className="flex flex-col md:flex-row items-center justify-start gap-3">
-          <div className="flex gap-3 sm:justify-start">
-            <button
-              type="button"
-              onClick={onPickPhoto}
-              className="text-xs sm:text-sm cursor-pointer rounded-xl border border-slate-300 bg-white px-4 py-2.5 font-semibold text-slate-900 transition hover:bg-slate-50 hover:border-slate-400">
-              {photoFile ? 'Changer la photo' : 'Ajouter une photo'}
-            </button>
+        <div className="flex flex-row items-center justify-center gap-4 w-full md:w-auto">
+          <button
+            type="button"
+            onClick={onDeletePhoto}
+            className="text-xs md:text-sm cursor-pointer rounded-xl border border-rose-200 bg-white px-8 py-3 font-bold text-rose-600 transition hover:bg-rose-50 hover:border-rose-300 shadow-sm">
+            Supprimer
+          </button>
 
-            <button
-              type="button"
-              onClick={onDeletePhoto}
-              className="text-xs sm:text-sm cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-rose-600 transition hover:bg-rose-50 hover:border-rose-300">
-              Supprimer
-            </button>
-          </div>
-
-          <div className="text-xs sm:text-sm font-semibold text-slate-500">
+          <div className="text-xs md:text-sm font-bold text-slate-500">
             {photoFile ? photoFile.name : "Aucune photo pour l'instant"}
           </div>
         </div>

@@ -1,73 +1,38 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-
 import Divider from './Divider';
 import EmailSignUp from './EmailSignUp';
 import GoogleSignUp from './GoogleSignUp';
+import { AuthLayout } from '@/app/ui';
 
-export default function SignUpSection({
-  setSignUpStep,
-}: {
-  setSignUpStep: (step: number) => void;
-}) {
+export default function SignUpSection({ onNext }: { onNext: () => void }) {
   return (
-    <div className="flex flex-col h-screen w-screen md:flex-row">
-      <div className="bg-orange-400 h-2/3 md:h-screen md:w-1/2">
-        <div className="flex justify-center mt-16">
-          <Image
-            src={'/glims-logo-blanc.png'}
-            alt={'Logo textuel de Glims'}
-            className="md:hidden"
-            width={120}
-            height={120}
-            style={{ height: 'auto' }}
-          />
+    <AuthLayout>
+      <div className="flex flex-col items-center gap-2 pb-6 md:pb-8">
+        <div className="text-center text-2xl md:text-3xl font-bold">
+          <h1>Partagez vos souvenirs</h1>
+          <h1>inmanquables</h1>
         </div>
+        <p className="text-gray-500 hidden md:block">
+          Inscris-toi pour débloquer toutes les fonctionnalités
+        </p>
       </div>
 
-      <div className="h-1/2 p-8 bg-white md:w-1/2 md:h-screen">
-        <Image
-          src={'/glims-logo.png'}
-          alt={'Logo textuel de Glims'}
-          className="hidden md:block"
-          width={100}
-          height={100}
-          style={{ height: 'auto' }}
-        />
-
-        <div className="flex items-center justify-center h-full">
-          <section className="w-96">
-            <div className="flex flex-col items-center gap-2 pb-2 md:pb-8">
-              <div className="flex flex-col items-center text-xl md:text-3xl font-bold">
-                <h1>Partagez vos souvenirs</h1>
-                <h1>inmanquables</h1>
-              </div>
-              <p className="text-gray-500 hidden md:block">
-                Inscris-toi pour débloquer toutes les fonctionnalités
-              </p>
-            </div>
-
-            <div className="flex flex-col md:flex-col-reverse">
-              <EmailSignUp setSignUpStep={setSignUpStep} />
-
-              <Divider />
-
-              <GoogleSignUp />
-            </div>
-
-            <p className="text-center font-medium mt-12">
-              Déjà un compte ?{' '}
-              <Link
-                className="text-orange-400 cursor-pointer hover:text-red-400 hover:underline"
-                href="/connexion">
-                Connectez-vous
-              </Link>
-            </p>
-          </section>
-        </div>
+      <div className="flex flex-col md:flex-col-reverse gap-4">
+        <EmailSignUp onNext={onNext} />
+        <Divider />
+        <GoogleSignUp />
       </div>
-    </div>
+
+      <p className="text-center font-medium mt-12">
+        Déjà un compte ?{' '}
+        <Link
+          className="text-orange-400 cursor-pointer hover:text-red-400 hover:underline"
+          href="/connexion">
+          Connectez-vous
+        </Link>
+      </p>
+    </AuthLayout>
   );
 }

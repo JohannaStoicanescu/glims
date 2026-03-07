@@ -1,11 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import JSZip from 'jszip';
 
 import { Picture, getMenuItems, dangerItems } from './menu-items';
 import DesktopDropdown from './DesktopDropdown';
 import MobileDrawer from './MobileDrawer';
+import { Modal } from '@/app/ui';
+import { useIsMobile } from '@/hooks/use-media-query';
+import GlimsSettingsModal from './glims-settings-modal/GlimsSettingsModal';
 
 interface GlimsOptionsMenuProps {
   isOpen: boolean;
@@ -20,9 +23,10 @@ export default function GlimsOptionsMenu({
   pictures = [],
   glimsName = 'album',
 }: GlimsOptionsMenuProps) {
-  const menuRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   // Function to download all photos as a ZIP file
   const handleDownloadAlbum = async () => {
@@ -79,45 +83,10 @@ export default function GlimsOptionsMenu({
     }
   };
 
-  // Close with escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      // Prevent body scroll on mobile
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [isOpen, onClose]);
-
-  // Close on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      // Delay to prevent the opening click from immediately closing
-      setTimeout(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-      }, 0);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
+  const handleOpenSettings = () => {
+    setIsSettingsOpen(true);
+    onClose();
+  };
 
   const menuItems = getMenuItems(
     isDownloading,
@@ -127,19 +96,44 @@ export default function GlimsOptionsMenu({
 
   return (
     <>
-      <DesktopDropdown
-        menuRef={menuRef}
-        menuItems={menuItems}
-        dangerItems={dangerItems}
-        downloadProgress={downloadProgress}
-        onClose={onClose}
-      />
-      <MobileDrawer
-        menuRef={menuRef}
-        menuItems={menuItems}
-        dangerItems={dangerItems}
-        downloadProgress={downloadProgress}
-        onClose={onClose}
+      {isMobile ? (
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          position="bottom"
+          ariaLabelledBy="mobile-menu-title">
+          <MobileDrawer
+            menuItems={menuItems}
+            dangerItems={dangerItems}
+            downloadProgress={downloadProgress}
+            onClose={onClose}
+            onOpenSettings={handleOpenSettings}
+          />
+        </Modal>
+      ) : (
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          showOverlay={false}
+          usePortal={false} // Stay relative to GlimsMenuButton trigger
+          position="custom"
+          className="absolute right-0 top-full mt-2 w-72 border border-gray-100 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="pointer-events-auto">
+            <DesktopDropdown
+              menuItems={menuItems}
+              dangerItems={dangerItems}
+              downloadProgress={downloadProgress}
+              onClose={onClose}
+              onOpenSettings={handleOpenSettings}
+            />
+          </div>
+        </Modal>
+      )}
+
+      <GlimsSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        glimName={glimsName}
       />
     </>
   );

@@ -1,40 +1,26 @@
 'use client';
 
-import { FormEvent, useContext } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HiOutlineMail } from 'react-icons/hi';
 
 import { ButtonForm, ControlledInputForm } from '@/app/ui';
-import { NewUserContext } from '../utils/new-user-context';
+import { NewUser } from '@/types';
 
-export default function EmailSignUp({
-  setSignUpStep,
-}: {
-  setSignUpStep: (step: number) => void;
-}) {
-  const context = useContext(NewUserContext);
+export default function EmailSignUp({ onNext }: { onNext: () => void }) {
+  const { trigger } = useFormContext<NewUser>();
 
-  if (!context) {
-    throw new Error();
-  }
-
-  const { newUserData, setNewUserData } = context;
-
-  const handleEmailSignUp = (e: FormEvent) => {
+  const handleEmailSignUp = async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    setNewUserData({
-      ...newUserData,
-      email: (
-        e.currentTarget.querySelector('input[name="email"]') as HTMLInputElement
-      ).value,
-    });
-    setSignUpStep(2);
+    // Validate only the email field before proceeding
+    const isValid = await trigger('email');
+    if (isValid) {
+      onNext();
+    }
   };
 
   return (
-    <form
-      className="flex flex-col gap-4 w-full"
-      onSubmit={handleEmailSignUp}>
+    <div className="flex flex-col gap-4 w-full">
       <div className="hidden md:block">
         <ControlledInputForm
           type="email"
@@ -42,19 +28,19 @@ export default function EmailSignUp({
           label="Email"
           showLabel={false}
           placeholder="Votre email"
-          validation={{ require }}
+          required={true}
         />
       </div>
 
       <ButtonForm
-        type="submit"
+        type="button"
         text={
           <span className="text-sm md:text-md">Inscription avec email</span>
         }
         icon={<HiOutlineMail />}
         style="dark"
-        onClick={() => {}}
+        onClick={handleEmailSignUp}
       />
-    </form>
+    </div>
   );
 }

@@ -26,6 +26,7 @@ export default function AddMediaButton({
     const files = event.target.files;
     if (files && files.length > 0) {
       const filesArray = Array.from(files);
+      // TODO: Connecter à l'API pour uploader les fichiers
       console.log('Fichiers sélectionnés:', filesArray);
       onFilesSelected?.(filesArray);
     }
