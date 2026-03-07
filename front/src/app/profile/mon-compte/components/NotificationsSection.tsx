@@ -5,11 +5,13 @@ import React from 'react';
 interface NotificationsSectionProps {
   newsletter: boolean;
   onToggle: () => void;
+  isLoading?: boolean;
 }
 
 export default function NotificationsSection({
   newsletter,
   onToggle,
+  isLoading = false,
 }: NotificationsSectionProps) {
   return (
     <div>
@@ -26,7 +28,8 @@ export default function NotificationsSection({
         <button
           type="button"
           onClick={onToggle}
-          className={`relative inline-flex h-8 w-14 items-center rounded-full transition cursor-pointer 
+          disabled={isLoading}
+          className={`relative inline-flex h-8 w-14 items-center rounded-full transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed
             ${newsletter ? 'bg-slate-900' : 'bg-slate-200'}`}
           aria-pressed={newsletter}
           aria-label="Activer/désactiver la newsletter">

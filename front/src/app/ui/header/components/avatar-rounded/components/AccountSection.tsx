@@ -22,14 +22,18 @@ export default function AccountSection({
   const accountLinks: AccountLink[] = [
     { href: '/profile', icon: User, label: 'Mon compte' },
     {
-      href: '/subscription',
+      href: '/profile/mon-abonnement',
       icon: CreditCard,
       label: 'Mon abonnement',
       badge: plan,
     },
-    { href: '/downloads', icon: Download, label: 'Téléchargements et favoris' },
-    { href: '/my-photos', icon: Camera, label: 'Mes photos' },
-    { href: '/security', icon: Lock, label: 'Sécurité' },
+    {
+      href: '/profile/telechargement-et-favoris',
+      icon: Download,
+      label: 'Téléchargements et favoris',
+    },
+    { href: '/profile/mes-photos', icon: Camera, label: 'Mes photos' },
+    { href: '/profile/securite', icon: Lock, label: 'Sécurité' },
   ];
 
   return (

@@ -7,7 +7,8 @@ import NotificationsBell from './components/NotificationsBell';
 export default function Header({ children }: { children?: React.ReactNode }) {
   return (
     <header
-      className={`flex justify-between md:justify-end py-6 pr-4 ${children ? 'md:pr-8' : 'pl-3 md:px-8'}`}>
+      className={`flex items-center justify-between py-6 px-4 md:px-8 ${children ? 'md:justify-between' : 'md:justify-end'}`}>
+      {/* Left side on Mobile: Burger + Logo */}
       <div className="flex items-center md:hidden">
         <BurgerMenu />
         <Image
@@ -15,15 +16,17 @@ export default function Header({ children }: { children?: React.ReactNode }) {
           alt={'Logo textuel de Glims'}
           width={100}
           height={100}
+          style={{ objectFit: 'contain' }}
         />
       </div>
-      <div
-        className={`${children ? 'flex flex-1 items-center justify-between' : ''}`}>
-        <div className="max-md:hidden">{children}</div>
-        <div className="flex items-center gap-4">
-          <NotificationsBell />
-          <AvatarRounded />
-        </div>
+
+      {/* Middle/Left on Desktop: Children */}
+      {children && <div className="hidden md:block flex-1">{children}</div>}
+
+      {/* Right side: Notifications + Avatar */}
+      <div className="flex items-center gap-4">
+        <NotificationsBell />
+        <AvatarRounded />
       </div>
     </header>
   );

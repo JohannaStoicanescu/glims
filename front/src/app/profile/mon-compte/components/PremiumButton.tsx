@@ -11,10 +11,19 @@ export default function PremiumButton({ onClick }: PremiumButtonProps) {
   return (
     <button
       type="button"
-      onClick={onClick ?? (() => console.log('Clicked'))}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-100 px-4 py-3 text-sm font-semibold text-amber-900 transition hover:bg-amber-200 sm:w-auto cursor-pointer">
+      onClick={
+        onClick ??
+        (() => {
+          // TODO: Connecter au service de paiement/backend pour la mise à niveau premium
+          console.log('Clicked Premium Upgrade');
+        })
+      }
+      className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-4 text-sm font-bold sm:w-auto text-slate-900 transition bg-amber-200 hover:bg-amber-300 cursor-pointer shadow-sm">
       <span aria-hidden>
-        <Crown size={15} />
+        <Crown
+          size={18}
+          fill="currentColor"
+        />
       </span>
       Mise à niveau premium
     </button>

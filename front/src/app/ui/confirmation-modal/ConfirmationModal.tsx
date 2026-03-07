@@ -1,21 +1,27 @@
 'use client';
 
-import { useState } from 'react';
-
+import { Modal } from '..';
 import { ConfirmationModalContent } from './components/ConfirmationModalContent';
 
 interface ConfirmationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   readonly icon: React.ReactNode;
   readonly title: string;
   readonly message: string;
   readonly confirmButtonText: string;
   readonly cancelButtonText: string;
   readonly onConfirm: () => void;
-  readonly onCancel: () => void;
+  readonly onCancel?: () => void;
   readonly radial?: boolean;
+  className?: string;
+  containerClassName?: string;
+  position?: 'center' | 'bottom' | 'custom';
 }
 
 export default function ConfirmationModal({
+  isOpen,
+  onClose,
   icon,
   title,
   message,
@@ -24,47 +30,35 @@ export default function ConfirmationModal({
   onConfirm,
   onCancel,
   radial = false,
+  className = '',
+  containerClassName = '',
+  position = 'center',
 }: ConfirmationModalProps) {
-  //TODO: handle show/hide from parent component : remove when implemented
-  const [showModal, setShowModal] = useState(true);
-
   return (
-    <dialog
-      open={showModal}
-      className="fixed inset-0 z-20 flex items-center justify-center backdrop-blur-[1px] bg-transparent p-0 m-0 w-full h-full max-w-none max-h-none"
-      onClick={(e) => {
-        // Only close if clicking on the dialog backdrop itself
-        if (e.target === e.currentTarget) {
-          setShowModal(false);
-        }
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') {
-          setShowModal(false);
-        }
-      }}
-      aria-labelledby="confirmation-modal-title">
-      <div
-        className="w-11/12 h-1/2 md:w-1/2 lg:w-2/6"
-        onClick={(e) => e.stopPropagation()}
-        role="presentation">
-        <ConfirmationModalContent
-          icon={icon}
-          title={title}
-          message={message}
-          confirmButtonText={confirmButtonText}
-          cancelButtonText={cancelButtonText}
-          onConfirm={() => {
-            setShowModal(false);
-            onConfirm();
-          }}
-          onCancel={() => {
-            setShowModal(false);
-            onCancel();
-          }}
-          radial={radial}
-        />
-      </div>
-    </dialog>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      ariaLabelledBy="confirmation-modal-title"
+      ariaDescribedBy="confirmation-modal-description"
+      className={className}
+      containerClassName={containerClassName}
+      position={position}>
+      <ConfirmationModalContent
+        icon={icon}
+        title={title}
+        message={message}
+        confirmButtonText={confirmButtonText}
+        cancelButtonText={cancelButtonText}
+        onConfirm={() => {
+          onConfirm();
+          onClose();
+        }}
+        onCancel={() => {
+          if (onCancel) onCancel();
+          onClose();
+        }}
+        radial={radial}
+      />
+    </Modal>
   );
 }
