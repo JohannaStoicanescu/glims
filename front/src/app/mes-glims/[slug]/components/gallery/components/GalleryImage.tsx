@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import Image from 'next/image';
 
 import {
   EllipsisVertical,
@@ -111,6 +110,33 @@ export default function GalleryImage({
     setIsMenuOpen(false);
   };
 
+  const handleDownload = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const extension = picture.contentType.split('/')[1] ?? 'jpg';
+    const a = document.createElement('a');
+    a.href = picture.url;
+    a.download = `photo-${picture.id}.${extension}`;
+    a.click();
+    setIsMenuOpen(false);
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMenuOpen(false);
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Photo partagée depuis Glims',
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+      }
+    } catch {
+      // User cancelled or API unavailable — silent fail
+    }
+  };
+
   return (
     <div
       className={`relative overflow-hidden rounded-lg group cursor-pointer ${getAspectRatioClass()} ${className}`}
@@ -123,15 +149,14 @@ export default function GalleryImage({
           onClick?.();
         }
       }}>
-      <Image
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={picture.url}
         alt="Photo"
-        fill
-        className={`object-cover transition-all duration-300 cursor-pointer group-hover:scale-105 ${
+        className={`absolute inset-0 w-full h-full object-cover transition-all duration-300 cursor-pointer group-hover:scale-105 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={() => setIsLoaded(true)}
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       />
       {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
@@ -187,11 +212,11 @@ export default function GalleryImage({
               {isMobile && (
                 <div className="absolute left-1/2 -translate-x-1/2 -top-36">
                   <div className="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg border-4 border-white">
-                    <Image
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                       src={picture.url}
                       alt="Photo"
-                      fill
-                      className="object-cover"
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
                   </div>
                 </div>
@@ -224,22 +249,14 @@ export default function GalleryImage({
                 )}
 
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // TODO: Télécharger
-                    setIsMenuOpen(false);
-                  }}
+                  onClick={handleDownload}
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
                   <Download className="w-5 h-5" />
                   <span className="text-base">Télécharger</span>
                 </button>
 
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // TODO: Partager
-                    setIsMenuOpen(false);
-                  }}
+                  onClick={handleShare}
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
                   <Share2 className="w-5 h-5" />
                   <span className="text-base">Partager</span>

@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
@@ -171,16 +170,14 @@ export default function ImageModalDesktop({
           {/* MAIN IMAGE */}
           <div className="relative flex-1 w-full flex items-center justify-center min-h-0">
             <div className="relative inline-block">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={picture.url}
                 alt="Photo"
-                width={800}
-                height={600}
                 className={`max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-lg transition-opacity duration-300 ${
                   isLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 onLoad={onImageLoad}
-                priority
               />
               {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -375,12 +372,11 @@ export default function ImageModalDesktop({
                   ? 'ring-2 ring-white scale-105'
                   : 'opacity-60 hover:opacity-100'
               }`}>
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={pic.url}
                 alt={`Miniature ${idx + 1}`}
-                fill
-                className="object-cover"
-                sizes="80px"
+                className="absolute inset-0 w-full h-full object-cover"
               />
             </button>
           ))}

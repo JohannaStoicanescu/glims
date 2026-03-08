@@ -50,7 +50,7 @@ export default function SidePanel() {
                 }`}
                 width={100}
                 height={40}
-                style={{ objectFit: 'contain', objectPosition: 'left' }}
+                style={{ objectFit: 'contain', objectPosition: 'left', height: 'auto' }}
               />
               <Image
                 src="/glims-logo-filed.svg"

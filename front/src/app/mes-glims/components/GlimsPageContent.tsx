@@ -18,6 +18,7 @@ export default function GlimsPageContent() {
     authClient.getSession().then(({ data }) => {
       setUserId(data?.user?.id ?? '');
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // authClient is a module-level singleton, only needs to run once
 
   const { data: glims, isLoading } = useGetUsersFoldersList(userId);

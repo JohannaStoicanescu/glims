@@ -2,7 +2,6 @@
 
 import { createPortal } from 'react-dom';
 import { useRef, useState } from 'react';
-import Image from 'next/image';
 
 import { Picture } from '.';
 import {
@@ -201,15 +200,14 @@ export default function ImageModalMobile({
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}>
         <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={picture.url}
             alt="Photo"
-            fill
-            className={`object-cover transition-opacity duration-300 ${
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             onLoad={onImageLoad}
-            priority
           />
           {!isLoaded && (
             <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
@@ -270,12 +268,11 @@ export default function ImageModalMobile({
                     key={pic.id}
                     onClick={() => handleImageClick(originalIndex)}
                     className="relative aspect-[4/3] rounded-xl overflow-hidden group">
-                    <Image
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                       src={pic.url}
                       alt={`Photo ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, 33vw"
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
                     <div className="absolute top-2 right-2 w-8 h-8 bg-black/40 rounded-lg flex items-center justify-center opacity-80 cursor-pointer hover:bg-white/30">
                       <EllipsisVertical className="w-4 h-4 text-white" />

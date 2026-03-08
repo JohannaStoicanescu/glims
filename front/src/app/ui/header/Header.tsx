@@ -15,8 +15,8 @@ export default function Header({ children }: { children?: React.ReactNode }) {
           src="/glims-logo-filed-with-text.svg"
           alt={'Logo textuel de Glims'}
           width={100}
-          height={100}
-          style={{ objectFit: 'contain' }}
+          height={40}
+          style={{ objectFit: 'contain', height: 'auto' }}
         />
       </div>
 
