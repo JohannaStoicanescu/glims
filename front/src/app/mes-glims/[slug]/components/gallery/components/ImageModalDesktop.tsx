@@ -18,6 +18,7 @@ import {
   Trash2,
   AlertCircle,
 } from '@/app/ui/icons';
+import { ConfirmationModal } from '@/app/ui';
 import { Picture } from '.';
 
 interface ImageModalDesktopProps {
@@ -50,6 +51,7 @@ export default function ImageModalDesktop({
   formatDate,
 }: ImageModalDesktopProps) {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const optionsButtonRef = useRef<HTMLButtonElement>(null);
   const optionsMenuRef = useRef<HTMLDivElement>(null);
@@ -129,6 +131,11 @@ export default function ImageModalDesktop({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOptionsMenuOpen]);
+
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+    setIsOptionsMenuOpen(false);
+  };
 
   return (
     <div
@@ -308,8 +315,7 @@ export default function ImageModalDesktop({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                // TODO: Supprimer
-                setIsOptionsMenuOpen(false);
+                handleDeleteClick();
               }}
               className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-red-50 transition-colors text-red-500">
               <Trash2 className="w-5 h-5" />
@@ -329,6 +335,21 @@ export default function ImageModalDesktop({
           </div>,
           document.body
         )}
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Supprimer la photo"
+        message="Êtes-vous sûr de vouloir supprimer cette photo ? Cette action est irréversible."
+        confirmButtonText="Supprimer"
+        cancelButtonText="Annuler"
+        onConfirm={() => {
+          // TODO: Appel API pour supprimer la photo
+          console.log('Photo supprimée');
+          onClose(); // On ferme la modale d'image après suppression
+        }}
+        icon={<Trash2 size={48} />}
+      />
 
       {/* THUMBNAILS AT THE BOTTOM */}
       <div

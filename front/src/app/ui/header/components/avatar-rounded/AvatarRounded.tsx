@@ -25,7 +25,7 @@ export default function AvatarRounded() {
       onClick={() => setIsMenuOpen(!isMenuOpen)}
       aria-label="Menu utilisateur"
       aria-expanded={isMenuOpen}
-      className="relative w-10 h-10 rounded-full overflow-hidden cursor-pointer transition hover:ring-2 hover:ring-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-600">
+      className="relative w-10 h-10 rounded-full overflow-hidden cursor-pointer transition hover:ring-2 hover:ring-red-400 focus:outline-none focus:ring-2 focus:ring-red-400">
       <Image
         src={user.avatar}
         alt="Avatar utilisateur"

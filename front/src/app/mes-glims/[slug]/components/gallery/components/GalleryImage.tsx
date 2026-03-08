@@ -15,6 +15,7 @@ import {
   AlertCircle,
   Heart,
 } from '@/app/ui/icons';
+import { ConfirmationModal } from '@/app/ui';
 
 export type Picture = {
   id: string;
@@ -40,6 +41,7 @@ export default function GalleryImage({
 }: GalleryImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [isMobile, setIsMobile] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -99,6 +101,11 @@ export default function GalleryImage({
       default:
         return '';
     }
+  };
+
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+    setIsMenuOpen(false);
   };
 
   return (
@@ -264,8 +271,7 @@ export default function GalleryImage({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    // TODO: Supprimer
-                    setIsMenuOpen(false);
+                    handleDeleteClick();
                   }}
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-red-50 transition-colors text-red-500">
                   <Trash2 className="w-5 h-5" />
@@ -287,6 +293,21 @@ export default function GalleryImage({
           </>,
           document.body
         )}
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Supprimer la photo"
+        message="Êtes-vous sûr de vouloir supprimer cette photo ? Cette action est irréversible."
+        confirmButtonText="Supprimer"
+        cancelButtonText="Annuler"
+        onConfirm={() => {
+          // TODO: Appel API pour supprimer la photo
+          console.log('Photo supprimée (grille)');
+        }}
+        icon={<Trash2 size={48} />}
+        position={isMobile ? 'bottom' : 'center'}
+      />
 
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
       <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
