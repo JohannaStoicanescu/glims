@@ -5,16 +5,25 @@ import Image from 'next/image';
 import { MenuContent } from './components';
 import { Dropdown, Modal } from '@/app/ui';
 import { useIsMobile } from '@/hooks/use-media-query';
+import { useSession } from '@/hooks';
 
 export default function AvatarRounded() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { data: session, isPending } = useSession();
 
-  // TODO: get user from API
+  if (isPending) {
+    return <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />;
+  }
+
+  if (!session) {
+    return null; // Should not happen on protected pages but good for safety
+  }
+
   const user = {
-    name: 'Barthélémy',
-    email: 'barthelemy@gmail.com',
-    avatar: '/martin-luther-king.jpg',
+    name: session.user.name || 'Utilisateur',
+    email: session.user.email,
+    avatar: session.user.image || '/martin-luther-king.jpg',
     plan: 'GRATUIT',
   };
 
