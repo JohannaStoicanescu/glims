@@ -22,7 +22,7 @@ export class MediaService {
   constructor(
     private readonly repository: MediaRepository,
     private readonly storage: S3StorageService
-  ) { }
+  ) {}
 
   async getMediaById(media_id: string, user_id: string): Promise<Media> {
     const media = await this.checkMediaOwnership(media_id, user_id);

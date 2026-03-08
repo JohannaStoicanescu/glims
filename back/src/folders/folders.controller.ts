@@ -53,7 +53,7 @@ function handleServiceErrors(error: Error): void {
 @ApiBearerAuth('JWT-auth')
 @Controller('folders')
 export class FoldersController {
-  constructor(private readonly foldersService: FoldersService) { }
+  constructor(private readonly foldersService: FoldersService) {}
 
   @Get(':id')
   @UseGuards(AuthGuard)

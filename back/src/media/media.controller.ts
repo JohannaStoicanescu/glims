@@ -52,7 +52,7 @@ function handleServiceErrors(error: Error): void {
 @ApiBearerAuth('JWT-auth')
 @Controller('media')
 export class MediaController {
-  constructor(private readonly mediaService: MediaService) { }
+  constructor(private readonly mediaService: MediaService) {}
 
   @Get(':id')
   @UseGuards(AuthGuard)

@@ -32,6 +32,7 @@ describe('MediaService', () => {
     uploadFile: vi.fn(),
     downloadFile: vi.fn(),
     fileExists: vi.fn(),
+    deleteFile: vi.fn().mockResolvedValue(undefined),
   };
 
   const mockMedia: Media = {
