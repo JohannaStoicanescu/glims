@@ -46,9 +46,12 @@ export default function FilterPanel({
 
     if (e.target.value.trim() !== '') {
       setGlimsToDisplay(
-        initialGlimsToDisplay.filter((glims) =>
-          glims.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          (glims.description ?? '').toLowerCase().includes(e.target.value.toLowerCase())
+        initialGlimsToDisplay.filter(
+          (glims) =>
+            glims.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            (glims.description ?? '')
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase())
         )
       );
     } else {

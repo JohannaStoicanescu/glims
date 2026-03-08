@@ -40,7 +40,9 @@ export default function GlimsDisplay({ glims }: GlimsDisplayProps) {
                     />
                   ) : (
                     <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                      <span className="text-gray-400 text-sm">Aucune photo</span>
+                      <span className="text-gray-400 text-sm">
+                        Aucune photo
+                      </span>
                     </div>
                   )}
                 </div>
@@ -56,7 +58,9 @@ export default function GlimsDisplay({ glims }: GlimsDisplayProps) {
                   </div>
                   <div className="flex">
                     <p className="text-gray-800 pr-3">
-                      {glim.media_count != null ? `${glim.media_count} photos` : ''}
+                      {glim.media_count != null
+                        ? `${glim.media_count} photos`
+                        : ''}
                     </p>
                     {glim.createdAt && (
                       <p className="text-gray-400">

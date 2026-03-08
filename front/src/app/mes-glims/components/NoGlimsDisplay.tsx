@@ -12,7 +12,9 @@ export default function NoGlimsDisplay() {
       <div className="pt-6 pb-10 md:pt-28 text-center flex-1 flex flex-col max-md:justify-between">
         <div>
           <div className="py-4">
-            <p className="text-lg font-bold">Pas de souvenirs pour l&apos;instant</p>
+            <p className="text-lg font-bold">
+              Pas de souvenirs pour l&apos;instant
+            </p>
             <div className="text-sm text-gray-500 mt-2 space-y-1">
               <p>Les images que vous ajouterez apparaitrons ici.</p>
               <p>Ajoutez des images et des vidéos dès maintenant !</p>

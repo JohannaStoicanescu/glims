@@ -220,9 +220,7 @@ export default function ImageModalDesktop({
         {/* AUTHOR INFO */}
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold">
-              {'?'}
-            </span>
+            <span className="text-white font-semibold">{'?'}</span>
           </div>
           <div>
             <p className="text-white font-medium">Utilisateur</p>
