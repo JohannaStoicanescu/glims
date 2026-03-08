@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/utils';
 
 const getAllTags = async () => {
-  return await fetch('/tags').then((res) => res.json());
+  const { data } = await apiClient.get('/tags');
+  return data;
 };
 
 const useGetAllTags = () => {
   return useQuery({
     queryKey: ['all-tags'],
-    queryFn: async () => await getAllTags(),
+    queryFn: getAllTags,
   });
 };
 

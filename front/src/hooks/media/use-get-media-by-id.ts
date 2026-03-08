@@ -1,13 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/utils';
 
 const getMediaById = async (mediaId: string) => {
-  return await fetch(`/media/${mediaId}`).then((res) => res.json());
+  const { data } = await apiClient.get(`/media/${mediaId}`);
+  return data;
 };
 
 const useGetMediaById = (mediaId: string) => {
   return useQuery({
     queryKey: ['media', mediaId],
-    queryFn: async () => await getMediaById(mediaId),
+    queryFn: () => getMediaById(mediaId),
+    enabled: !!mediaId,
   });
 };
 

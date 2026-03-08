@@ -8,13 +8,19 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { httpRequestDurationProvider } from './providers/http-request-duration.metric';
 import { ResponseTimeMiddleware } from './middleware/response-time.middleware';
 import { FoldersModule } from './folders/folders.module';
+import { MediaModule } from './media/media.module';
+import { TagsModule } from './tags/tags.module';
+import { ReactionsModule } from './reactions/reactions.module';
 
 @Module({
   imports: [
-    AuthModule.forRoot(auth),
+    AuthModule.forRoot({ auth }),
     LoggerModule.forRoot(),
     PrometheusModule.register(),
     FoldersModule,
+    MediaModule,
+    TagsModule,
+    ReactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, httpRequestDurationProvider],

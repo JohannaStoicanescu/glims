@@ -27,7 +27,9 @@ export default function GlimsDetailsPageContent() {
 
   useEffect(() => {
     fetchPictures();
-  }, [getPictures]);
+    // fetchPictures is defined in component scope and stable for mount-only fetch
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDisplayModeChange = (mode: DisplayMode) => {
     if (mode === displayMode) return;

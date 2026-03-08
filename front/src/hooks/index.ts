@@ -23,7 +23,5 @@ export { default as useGetReactionsOfAMedia } from './reactions/use-get-reaction
 
 // Tags
 
-export { default as useCreateTags } from './tags/use-create-tags';
-export { default as useDeleteTags } from './tags/use-delete-tags';
 export { default as useGetAllTags } from './tags/use-get-all-tags';
 export { default as useGetTagsAffiliatedToUser } from './tags/use-get-tags-affiliated-to-user';

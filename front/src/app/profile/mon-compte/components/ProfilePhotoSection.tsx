@@ -58,6 +58,7 @@ export default function ProfilePhotoSection({
           className="h-36 w-36 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200 cursor-pointer md:h-20 md:w-20 transition hover:opacity-80 flex items-center justify-center">
           {photoPreviewUrl ? (
             // Show the selected photo preview
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={photoPreviewUrl}
               alt="Aperçu"

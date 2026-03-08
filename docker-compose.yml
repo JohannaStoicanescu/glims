@@ -35,6 +35,18 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - IS_DEV=true
+      - STORAGE_PROVIDER=${STORAGE_PROVIDER}
+      # Garage configuration
+      - GARAGE_ENDPOINT=${GARAGE_ENDPOINT}
+      - GARAGE_ACCESS_KEY=${GARAGE_ACCESS_KEY}
+      - GARAGE_SECRET_KEY=${GARAGE_SECRET_KEY}
+      - GARAGE_BUCKET_NAME=${GARAGE_BUCKET_NAME}
+      - GARAGE_REGION=${GARAGE_REGION}
+      # R2 configuration
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
     ports:
       - "3000:3000"
     volumes:
@@ -84,3 +96,19 @@ services:
       - prometheus
     restart: unless-stopped
 
+  garage:
+    image: dxflrs/garage:v2.1.0
+    ports:
+      - 3900:3900
+      - 3901:3901
+      - 3902:3902
+      - 3903:3903
+    restart: always
+    volumes:
+      - ./garage.toml:/etc/garage.toml
+      - garage_meta:/var/lib/garage/meta
+      - garage_data:/var/lib/garage/data
+
+volumes:
+  garage_meta:
+  garage_data:
