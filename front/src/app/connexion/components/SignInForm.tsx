@@ -62,7 +62,7 @@ export default function SignInForm() {
     <AuthLayout>
       <div className="flex flex-col items-center gap-2 pb-6 md:pb-8">
         <div className="text-center text-2xl md:text-3xl font-bold">
-          <h1>Connectez vous</h1>
+          <h1>Connectez-vous</h1>
         </div>
       </div>
 
@@ -90,7 +90,7 @@ export default function SignInForm() {
               <input
                 {...register('password', { required: 'Mot de passe requis' })}
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Votre mots de passe"
+                placeholder="Votre mot de passe"
                 className={`w-full border-2 p-3 rounded-xl bg-gray-50 transition focus:outline-none focus:ring-1 
                   ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-200 hover:border-yellow-400 focus:ring-yellow-400'}`}
               />
