@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 import {
   X,
   ChevronLeft,
@@ -19,7 +20,7 @@ import {
 } from '@/app/ui/icons';
 import { ConfirmationModal } from '@/app/ui';
 import { Picture } from '.';
-import { useDeleteMedia } from '@/hooks';
+import { useDeleteMedia, useGetUserById } from '@/hooks';
 
 interface ImageModalDesktopProps {
   picture: Picture;
@@ -58,6 +59,7 @@ export default function ImageModalDesktop({
   const thumbnailsContainerRef = useRef<HTMLDivElement>(null);
   const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const deleteMedia = useDeleteMedia();
+  const { data: author } = useGetUserById(picture.user_id);
 
   // Automatic scroll to the selected thumbnail
   useEffect(() => {
@@ -170,10 +172,11 @@ export default function ImageModalDesktop({
           {/* MAIN IMAGE */}
           <div className="relative flex-1 w-full flex items-center justify-center min-h-0">
             <div className="relative inline-block">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={picture.url}
                 alt="Photo"
+                width={1920}
+                height={1080}
                 className={`max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-lg transition-opacity duration-300 ${
                   isLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
@@ -220,10 +223,14 @@ export default function ImageModalDesktop({
         {/* AUTHOR INFO */}
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold">{'?'}</span>
+            <span className="text-white font-semibold">
+              {author?.name.charAt(0).toUpperCase() ?? '?'}
+            </span>
           </div>
           <div>
-            <p className="text-white font-medium">Utilisateur</p>
+            <p className="text-white font-medium">
+              {author?.name ?? 'Utilisateur'}
+            </p>
             <p className="text-gray-400 text-sm">{formatDate()}</p>
           </div>
         </div>
@@ -370,11 +377,11 @@ export default function ImageModalDesktop({
                   ? 'ring-2 ring-white scale-105'
                   : 'opacity-60 hover:opacity-100'
               }`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={pic.url}
                 alt={`Miniature ${idx + 1}`}
-                className="absolute inset-0 w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             </button>
           ))}

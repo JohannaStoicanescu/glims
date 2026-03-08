@@ -11,6 +11,7 @@ import { FoldersModule } from './folders/folders.module';
 import { MediaModule } from './media/media.module';
 import { TagsModule } from './tags/tags.module';
 import { ReactionsModule } from './reactions/reactions.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ReactionsModule } from './reactions/reactions.module';
     MediaModule,
     TagsModule,
     ReactionsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, httpRequestDurationProvider],
