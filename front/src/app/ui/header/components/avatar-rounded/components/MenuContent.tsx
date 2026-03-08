@@ -1,3 +1,7 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useAuthClient } from '@/hooks';
 import ProfileHeader from './ProfileHeader';
 import PremiumButton from './PremiumButton';
 import AccountSection from './AccountSection';
@@ -18,9 +22,26 @@ interface MenuContentProps {
 }
 
 export default function MenuContent({ user, onClose }: MenuContentProps) {
-  const handleLogout = () => {
-    // TODO: Logique de déconnexion
-    onClose();
+  const authClient = useAuthClient();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            onClose();
+            router.push('/connexion');
+            router.refresh(); // Important to refresh the session state
+          },
+        },
+      });
+    } catch (err) {
+      console.error('Logout error:', err);
+      // Fallback redirection in case of error
+      onClose();
+      window.location.href = '/connexion';
+    }
   };
 
   return (
