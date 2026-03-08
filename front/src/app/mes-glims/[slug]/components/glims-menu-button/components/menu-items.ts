@@ -61,21 +61,18 @@ export const getMenuItems = (
   },
 ];
 
-export const dangerItems: MenuItem[] = [
+export const getDangerItems = (
+  onDeleteClick: () => void,
+  onLeaveClick: () => void
+): MenuItem[] => [
   {
     icon: Trash2,
     label: 'Supprimer le Glims',
-    onClick: () => {
-      // TODO: Connecter à l'API pour supprimer définitivement le Glims
-      console.log('//TODO: Supprimer');
-    },
+    onClick: onDeleteClick,
   },
   {
     icon: DoorOpen,
     label: 'Quitter le Glims',
-    onClick: () => {
-      // TODO: Connecter à l'API pour que l'utilisateur quitte le Glims
-      console.log('//TODO: Quitter');
-    },
+    onClick: onLeaveClick,
   },
 ];

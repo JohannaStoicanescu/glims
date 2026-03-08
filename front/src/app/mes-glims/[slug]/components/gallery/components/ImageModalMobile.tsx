@@ -17,6 +17,7 @@ import {
   AlertCircle,
   Share2,
 } from '@/app/ui/icons';
+import { ConfirmationModal } from '@/app/ui';
 
 interface ImageModalMobileProps {
   picture: Picture;
@@ -49,6 +50,7 @@ export default function ImageModalMobile({
 }: ImageModalMobileProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // Get other images (excluding the current image)
   const otherPictures = pictures.filter((_, index) => index !== currentIndex);
@@ -76,6 +78,11 @@ export default function ImageModalMobile({
     } catch (error) {
       console.error('Erreur lors du téléchargement:', error);
     }
+  };
+
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+    setIsOptionsMenuOpen(false);
   };
 
   return (
@@ -149,10 +156,7 @@ export default function ImageModalMobile({
                 </button>
 
                 <button
-                  onClick={() => {
-                    // TODO: Delete
-                    setIsOptionsMenuOpen(false);
-                  }}
+                  onClick={handleDeleteClick}
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-red-50 transition-colors text-red-500">
                   <Trash2 className="w-5 h-5" />
                   <span className="text-base">Supprimer</span>
@@ -172,6 +176,22 @@ export default function ImageModalMobile({
           </>,
           document.body
         )}
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Supprimer la photo"
+        message="Êtes-vous sûr de vouloir supprimer cette photo ? Cette action est irréversible."
+        confirmButtonText="Supprimer"
+        cancelButtonText="Annuler"
+        onConfirm={() => {
+          // TODO: Appel API pour supprimer la photo
+          console.log('Photo supprimée (mobile)');
+          onClose(); // On ferme la modale d'image après suppression
+        }}
+        icon={<Trash2 size={48} />}
+        position="bottom"
+      />
 
       {/* MAIN IMAGE DISPLAY */}
       <div

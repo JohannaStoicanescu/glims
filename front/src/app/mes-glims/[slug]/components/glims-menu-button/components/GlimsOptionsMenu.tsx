@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import JSZip from 'jszip';
 
-import { Picture, getMenuItems, dangerItems } from './menu-items';
+import { Picture, getMenuItems, getDangerItems } from './menu-items';
 import DesktopDropdown from './DesktopDropdown';
 import MobileDrawer from './MobileDrawer';
-import { Modal } from '@/app/ui';
+import { Modal, ConfirmationModal } from '@/app/ui';
 import { useIsMobile } from '@/hooks/use-media-query';
+import { Trash2, DoorOpen } from '@/app/ui/icons';
 import GlimsSettingsModal from './glims-settings-modal/GlimsSettingsModal';
 
 interface GlimsOptionsMenuProps {
@@ -26,6 +27,8 @@ export default function GlimsOptionsMenu({
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const isMobile = useIsMobile();
 
   // Function to download all photos as a ZIP file
@@ -88,11 +91,23 @@ export default function GlimsOptionsMenu({
     onClose();
   };
 
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+    onClose();
+  };
+
+  const handleLeaveClick = () => {
+    setIsLeaveModalOpen(true);
+    onClose();
+  };
+
   const menuItems = getMenuItems(
     isDownloading,
     downloadProgress,
     handleDownloadAlbum
   );
+
+  const dangerItems = getDangerItems(handleDeleteClick, handleLeaveClick);
 
   return (
     <>
@@ -134,6 +149,34 @@ export default function GlimsOptionsMenu({
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         glimName={glimsName}
+      />
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Supprimer le Glims"
+        message={`Êtes-vous sûr de vouloir supprimer "${glimsName}" ? Cette action est irréversible et tous les membres perdront l'accès aux photos.`}
+        confirmButtonText="Supprimer"
+        cancelButtonText="Annuler"
+        onConfirm={() => {
+          // TODO: Appel API pour supprimer
+          console.log('Glims supprimé');
+        }}
+        icon={<Trash2 size={48} />}
+      />
+
+      <ConfirmationModal
+        isOpen={isLeaveModalOpen}
+        onClose={() => setIsLeaveModalOpen(false)}
+        title="Quitter le Glims"
+        message={`Êtes-vous sûr de vouloir quitter "${glimsName}" ? Vous n'aurez plus accès à cet album photo.`}
+        confirmButtonText="Quitter"
+        cancelButtonText="Annuler"
+        onConfirm={() => {
+          // TODO: Appel API pour quitter
+          console.log('Glims quitté');
+        }}
+        icon={<DoorOpen size={48} />}
       />
     </>
   );
