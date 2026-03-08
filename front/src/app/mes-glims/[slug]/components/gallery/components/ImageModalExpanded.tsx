@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Minimize2 } from '@/app/ui/icons';
 import { Picture } from '.';
 
@@ -61,10 +62,11 @@ export default function ImageModalExpanded({
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}>
           <div className="relative inline-block max-w-full max-h-full">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={picture.url}
               alt="Photo"
+              width={1920}
+              height={1080}
               className={`max-w-full max-h-[95vh] w-auto h-auto object-contain transition-opacity duration-300 ${
                 isLoaded ? 'opacity-100' : 'opacity-0'
               }`}

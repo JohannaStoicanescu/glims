@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { createPortal } from 'react-dom';
 
 import {
@@ -101,7 +102,7 @@ export default function GalleryImage({
       case 'portrait':
         return 'aspect-[3/4]';
       default:
-        return 'aspect-square';
+        return '';
     }
   };
 
@@ -149,11 +150,11 @@ export default function GalleryImage({
           onClick?.();
         }
       }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={picture.url}
         alt="Photo"
-        className={`absolute inset-0 w-full h-full object-cover transition-all duration-300 cursor-pointer group-hover:scale-105 ${
+        fill
+        className={`object-cover transition-all duration-300 cursor-pointer group-hover:scale-105 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={() => setIsLoaded(true)}
@@ -212,11 +213,11 @@ export default function GalleryImage({
               {isMobile && (
                 <div className="absolute left-1/2 -translate-x-1/2 -top-36">
                   <div className="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg border-4 border-white">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={picture.url}
                       alt="Photo"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   </div>
                 </div>
