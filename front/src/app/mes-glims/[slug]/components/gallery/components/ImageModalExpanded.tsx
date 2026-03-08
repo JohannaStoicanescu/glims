@@ -64,10 +64,10 @@ export default function ImageModalExpanded({
           onTouchEnd={onTouchEnd}>
           <div className="relative inline-block max-w-full max-h-full">
             <Image
-              src={picture.download_url}
-              alt={`Photo by ${picture.author}`}
-              width={picture.width}
-              height={picture.height}
+              src={picture.url}
+              alt="Photo"
+              width={1200}
+              height={900}
               className={`max-w-full max-h-[95vh] w-auto h-auto object-contain transition-opacity duration-300 ${
                 isLoaded ? 'opacity-100' : 'opacity-0'
               }`}

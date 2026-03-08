@@ -16,14 +16,16 @@ import {
   Heart,
 } from '@/app/ui/icons';
 import { ConfirmationModal } from '@/app/ui';
+import { useDeleteMedia } from '@/hooks';
 
 export type Picture = {
   id: string;
-  author: string;
-  width: number;
-  height: number;
+  /** data: URL for display, produced by the hook */
   url: string;
-  download_url: string;
+  contentType: string;
+  user_id: string;
+  folder_id: string;
+  created_at: string;
 };
 
 interface GalleryImageProps {
@@ -46,6 +48,7 @@ export default function GalleryImage({
   const [isMobile, setIsMobile] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const deleteMedia = useDeleteMedia();
 
   // Detect if the device is mobile
   useEffect(() => {
@@ -99,7 +102,7 @@ export default function GalleryImage({
       case 'portrait':
         return 'aspect-[3/4]';
       default:
-        return '';
+        return 'aspect-square';
     }
   };
 
@@ -121,14 +124,12 @@ export default function GalleryImage({
         }
       }}>
       <Image
-        src={picture.download_url}
-        alt={`Photo by ${picture.author}`}
-        fill={aspectRatio !== 'auto'}
-        width={aspectRatio === 'auto' ? picture.width : undefined}
-        height={aspectRatio === 'auto' ? picture.height : undefined}
+        src={picture.url}
+        alt="Photo"
+        fill
         className={`object-cover transition-all duration-300 cursor-pointer group-hover:scale-105 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
-        } ${aspectRatio === 'auto' ? 'w-full h-auto' : ''}`}
+        }`}
         onLoad={() => setIsLoaded(true)}
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       />
@@ -187,8 +188,8 @@ export default function GalleryImage({
                 <div className="absolute left-1/2 -translate-x-1/2 -top-36">
                   <div className="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg border-4 border-white">
                     <Image
-                      src={picture.download_url}
-                      alt={`Photo by ${picture.author}`}
+                      src={picture.url}
+                      alt="Photo"
                       fill
                       className="object-cover"
                     />
@@ -264,7 +265,7 @@ export default function GalleryImage({
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
                   <Camera className="w-5 h-5" />
                   <span className="text-base">
-                    Toutes les photos de {picture.author}
+                    Toutes les photos de cet utilisateur
                   </span>
                 </button>
 
@@ -302,19 +303,13 @@ export default function GalleryImage({
         confirmButtonText="Supprimer"
         cancelButtonText="Annuler"
         onConfirm={() => {
-          // TODO: Appel API pour supprimer la photo
-          console.log('Photo supprimée (grille)');
+          deleteMedia.mutate([picture.id]);
         }}
         icon={<Trash2 size={48} />}
         position={isMobile ? 'bottom' : 'center'}
       />
 
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <p className="text-white text-sm font-medium truncate">
-          {picture.author}
-        </p>
-      </div>
     </div>
   );
 }

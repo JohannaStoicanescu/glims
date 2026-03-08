@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { MenuContent } from './components';
 import { Dropdown, Modal } from '@/app/ui';
@@ -25,7 +25,20 @@ export default function AvatarRounded() {
     email: session.user.email,
     avatar: session.user.image || '/martin-luther-king.jpg',
     plan: 'GRATUIT',
-  };
+  });
+
+  useEffect(() => {
+    authClient.getSession().then(({ data }) => {
+      if (data?.user) {
+        setUser({
+          name: data.user.name ?? 'Utilisateur',
+          email: data.user.email ?? '',
+          avatar: data.user.image ?? '/martin-luther-king.jpg',
+          plan: 'GRATUIT',
+        });
+      }
+    });
+  }, []); // authClient is a module-level singleton, only needs to run once
 
   const closeMenu = () => setIsMenuOpen(false);
 

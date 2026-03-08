@@ -4,21 +4,18 @@ import { useState } from 'react';
 
 import { EllipsisVertical } from '@/app/ui/icons';
 import GlimsOptionsMenu from './components/GlimsOptionsMenu';
-
-interface Picture {
-  id: string;
-  author: string;
-  download_url: string;
-}
+import { Picture } from './components/menu-items';
 
 interface GlimsMenuButtonProps {
   pictures: Picture[];
   glimsName: string;
+  folderId: string;
 }
 
 export default function GlimsMenuButton({
   pictures,
   glimsName,
+  folderId,
 }: GlimsMenuButtonProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -35,6 +32,7 @@ export default function GlimsMenuButton({
         onClose={() => setIsMenuOpen(false)}
         pictures={pictures}
         glimsName={glimsName}
+        folderId={folderId}
       />
     </div>
   );

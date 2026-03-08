@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import JSZip from 'jszip';
 
 import { Picture, getMenuItems, getDangerItems } from './menu-items';
@@ -10,12 +11,14 @@ import { Modal, ConfirmationModal } from '@/app/ui';
 import { useIsMobile } from '@/hooks/use-media-query';
 import { Trash2, DoorOpen } from '@/app/ui/icons';
 import GlimsSettingsModal from './glims-settings-modal/GlimsSettingsModal';
+import { useDeleteUsersFolders } from '@/hooks';
 
 interface GlimsOptionsMenuProps {
   isOpen: boolean;
   onClose: () => void;
   pictures?: Picture[];
   glimsName?: string;
+  folderId: string;
 }
 
 export default function GlimsOptionsMenu({
@@ -23,6 +26,7 @@ export default function GlimsOptionsMenu({
   onClose,
   pictures = [],
   glimsName = 'album',
+  folderId,
 }: GlimsOptionsMenuProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -30,6 +34,8 @@ export default function GlimsOptionsMenu({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const isMobile = useIsMobile();
+  const deleteFolder = useDeleteUsersFolders();
+  const router = useRouter();
 
   // Function to download all photos as a ZIP file
   const handleDownloadAlbum = async () => {
@@ -49,9 +55,9 @@ export default function GlimsOptionsMenu({
       for (let i = 0; i < pictures.length; i++) {
         const picture = pictures[i];
         try {
-          const response = await fetch(picture.download_url);
+          const response = await fetch(picture.url);
           const blob = await response.blob();
-          const fileName = `${picture.author}-${picture.id}.jpg`;
+          const fileName = `photo-${picture.id}.jpg`;
           folder?.file(fileName, blob);
 
           // Update the download progress
@@ -149,6 +155,7 @@ export default function GlimsOptionsMenu({
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         glimName={glimsName}
+        folderId={folderId}
       />
 
       <ConfirmationModal
@@ -159,8 +166,9 @@ export default function GlimsOptionsMenu({
         confirmButtonText="Supprimer"
         cancelButtonText="Annuler"
         onConfirm={() => {
-          // TODO: Appel API pour supprimer
-          console.log('Glims supprimé');
+          deleteFolder.mutate([folderId], {
+            onSuccess: () => router.push('/mes-glims'),
+          });
         }}
         icon={<Trash2 size={48} />}
       />
