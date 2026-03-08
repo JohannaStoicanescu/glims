@@ -12,8 +12,6 @@ import {
   useGetMediaByFolderId,
   useGetMediaById,
   useGetUsersMedia,
-  useCreateTags,
-  useDeleteTags,
   useGetAllTags,
   useGetTagsAffiliatedToUser,
   useCreateReaction,
@@ -71,7 +69,11 @@ function QuerySection({
   inputLabel?: string;
 }) {
   const showInput = inputPlaceholder != null && onInputChange != null;
-  const disabled = requireUserId ? !userId : showInput ? !(inputValue?.trim()) : false;
+  const disabled = requireUserId
+    ? !userId
+    : showInput
+      ? !inputValue?.trim()
+      : false;
 
   return (
     <section className="rounded-lg border border-gray-200 bg-gray-50 p-4">
@@ -103,7 +105,9 @@ function QuerySection({
               {query.isFetching ? 'Refreshing…' : refetchLabel}
             </button>
           </div>
-          {query.isLoading && <p className="text-sm text-amber-600">Loading…</p>}
+          {query.isLoading && (
+            <p className="text-sm text-amber-600">Loading…</p>
+          )}
           {query.isError && (
             <pre className="overflow-auto max-h-48 rounded bg-red-50 p-2 text-sm text-red-800">
               {query.error instanceof Error
@@ -171,12 +175,6 @@ export default function TestApiHooksPage() {
   const [deleteMediaResult, setDeleteMediaResult] = useState<HookResult>({
     status: 'idle',
   });
-  const [createTagsResult, setCreateTagsResult] = useState<HookResult>({
-    status: 'idle',
-  });
-  const [deleteTagsResult, setDeleteTagsResult] = useState<HookResult>({
-    status: 'idle',
-  });
   const [createReactionResult, setCreateReactionResult] = useState<HookResult>({
     status: 'idle',
   });
@@ -184,13 +182,15 @@ export default function TestApiHooksPage() {
     status: 'idle',
   });
 
-  const [createFolderInput, setCreateFolderInput] =
-    useState<CreateFolderInput>({
+  const [createFolderInput, setCreateFolderInput] = useState<CreateFolderInput>(
+    {
       title: 'Test folder',
       description: 'Created from test-api-hooks',
-    });
-  const [updateFolderInput, setUpdateFolderInput] =
-    useState<UpdateFolderInput>({ title: 'Updated folder title' });
+    }
+  );
+  const [updateFolderInput, setUpdateFolderInput] = useState<UpdateFolderInput>(
+    { title: 'Updated folder title' }
+  );
   const [folderId, setFolderId] = useState('');
   const [folderIds, setFolderIds] = useState('');
   const [getFolderByIdId, setGetFolderByIdId] = useState('');
@@ -200,8 +200,6 @@ export default function TestApiHooksPage() {
   const [mediaIds, setMediaIds] = useState('');
   const [getMediaByFolderId, setGetMediaByFolderId] = useState('');
   const [getMediaById, setGetMediaById] = useState('');
-  const [tagsInput, setTagsInput] = useState('tag1, tag2, tag3');
-  const [tagsToDelete, setTagsToDelete] = useState('tag1, tag2');
   const [reactionMediaId, setReactionMediaId] = useState('');
   const [reactionTypeId, setReactionTypeId] = useState('');
   const [reactionId, setReactionId] = useState('');
@@ -220,22 +218,26 @@ export default function TestApiHooksPage() {
 
   const foldersQuery = useGetUsersFoldersList(userId);
   const folderByIdQuery = useGetFolderById(getFolderByIdId.trim());
-  const refreshLinksQuery = useGetFoldersLinksRefreshed(refreshLinksFolderId.trim());
+  const refreshLinksQuery = useGetFoldersLinksRefreshed(
+    refreshLinksFolderId.trim()
+  );
   const mediaByFolderQuery = useGetMediaByFolderId(getMediaByFolderId.trim());
   const mediaByIdQuery = useGetMediaById(getMediaById.trim());
   const usersMediaQuery = useGetUsersMedia(userId);
   const allTagsQuery = useGetAllTags();
   const tagsAffiliatedQuery = useGetTagsAffiliatedToUser(userId);
-  const availableReactionsQuery = useGetAvailableReactions(getReactionsFolderId.trim());
-  const reactionsOfMediaQuery = useGetReactionsOfAMedia(getReactionsMediaId.trim());
+  const availableReactionsQuery = useGetAvailableReactions(
+    getReactionsFolderId.trim()
+  );
+  const reactionsOfMediaQuery = useGetReactionsOfAMedia(
+    getReactionsMediaId.trim()
+  );
 
   const createFolder = useCreateFolder();
   const updateFolder = useUpdateUsersFolder();
   const deleteFolders = useDeleteUsersFolders();
   const createMedia = useCreateMedia();
   const deleteMedia = useDeleteMedia();
-  const createTags = useCreateTags();
-  const deleteTags = useDeleteTags();
   const createReaction = useCreateReaction();
   const deleteReaction = useDeleteReaction();
 
@@ -248,10 +250,6 @@ export default function TestApiHooksPage() {
     if (getMediaByFolderId.trim()) void mediaByFolderQuery.refetch();
     if (getMediaById.trim()) void mediaByIdQuery.refetch();
     if (userId) void usersMediaQuery.refetch();
-  };
-  const refetchTagQueries = () => {
-    void allTagsQuery.refetch();
-    if (userId) void tagsAffiliatedQuery.refetch();
   };
   const refetchReactionQueries = () => {
     if (getReactionsFolderId.trim()) void availableReactionsQuery.refetch();
@@ -294,9 +292,7 @@ export default function TestApiHooksPage() {
   };
 
   const runDeleteFolders = async () => {
-    const ids = folderIds
-      .split(',')
-      .map((s) => s.trim());
+    const ids = folderIds.split(',').map((s) => s.trim());
     if (ids.length === 0) {
       setDeleteFoldersResult({
         status: 'error',
@@ -361,56 +357,6 @@ export default function TestApiHooksPage() {
       refetchMediaQueries();
     } catch (e) {
       setDeleteMediaResult({
-        status: 'error',
-        error: e instanceof Error ? e.message : String(e),
-      });
-    }
-  };
-
-  const runCreateTags = async () => {
-    const tags = tagsInput
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean);
-    if (tags.length === 0) {
-      setCreateTagsResult({
-        status: 'error',
-        error: 'At least one tag required',
-      });
-      return;
-    }
-    setCreateTagsResult({ status: 'loading' });
-    try {
-      const data = await createTags.mutateAsync(tags);
-      setCreateTagsResult({ status: 'success', data });
-      refetchTagQueries();
-    } catch (e) {
-      setCreateTagsResult({
-        status: 'error',
-        error: e instanceof Error ? e.message : String(e),
-      });
-    }
-  };
-
-  const runDeleteTags = async () => {
-    const tags = tagsToDelete
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean);
-    if (tags.length === 0) {
-      setDeleteTagsResult({
-        status: 'error',
-        error: 'At least one tag required',
-      });
-      return;
-    }
-    setDeleteTagsResult({ status: 'loading' });
-    try {
-      const data = await deleteTags.mutateAsync(tags);
-      setDeleteTagsResult({ status: 'success', data });
-      refetchTagQueries();
-    } catch (e) {
-      setDeleteTagsResult({
         status: 'error',
         error: e instanceof Error ? e.message : String(e),
       });
@@ -747,46 +693,6 @@ export default function TestApiHooksPage() {
           requireUserId
           userId={userId}
         />
-        <MutationSection
-          title="useCreateTags"
-          result={createTagsResult}>
-          <div className="flex flex-wrap items-center gap-2">
-            <input
-              type="text"
-              placeholder="Tags (comma-separated)"
-              value={tagsInput}
-              onChange={(e) => setTagsInput(e.target.value)}
-              className={`${inputCn} min-w-[200px]`}
-            />
-            <button
-              type="button"
-              onClick={runCreateTags}
-              disabled={createTags.isPending}
-              className={btnCn}>
-              Create tags
-            </button>
-          </div>
-        </MutationSection>
-        <MutationSection
-          title="useDeleteTags"
-          result={deleteTagsResult}>
-          <div className="flex flex-wrap items-center gap-2">
-            <input
-              type="text"
-              placeholder="Tags to delete (comma-separated)"
-              value={tagsToDelete}
-              onChange={(e) => setTagsToDelete(e.target.value)}
-              className={`${inputCn} min-w-[200px]`}
-            />
-            <button
-              type="button"
-              onClick={runDeleteTags}
-              disabled={deleteTags.isPending}
-              className={btnCn}>
-              Delete tags
-            </button>
-          </div>
-        </MutationSection>
       </div>
     </div>
   );
