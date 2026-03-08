@@ -1,13 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/utils';
 
 const getTagsAffiliatedToUser = async (userId: string) => {
-  return await fetch(`/tags/user/${userId}`).then((res) => res.json());
+  const { data } = await apiClient.get(`/tags/user/${userId}`);
+  return data;
 };
 
 const useGetTagsAffiliatedToUser = (userId: string) => {
   return useQuery({
     queryKey: ['tags-affiliated-to-user', userId],
-    queryFn: async () => await getTagsAffiliatedToUser(userId),
+    queryFn: () => getTagsAffiliatedToUser(userId),
+    enabled: !!userId,
   });
 };
 

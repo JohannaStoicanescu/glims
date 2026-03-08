@@ -1,13 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/utils';
 
 const getReactionsOfAMedia = async (mediaId: string) => {
-  return await fetch(`/reactions/media/${mediaId}`).then((res) => res.json());
+  const { data } = await apiClient.get(`/reactions/media/${mediaId}`);
+  return data;
 };
 
 const useGetReactionsOfAMedia = (mediaId: string) => {
   return useQuery({
     queryKey: ['reactions-of-media', mediaId],
-    queryFn: async () => await getReactionsOfAMedia(mediaId),
+    queryFn: () => getReactionsOfAMedia(mediaId),
+    enabled: !!mediaId,
   });
 };
 
