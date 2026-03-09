@@ -41,7 +41,9 @@ export class UsersController {
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User found' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserById(@Param('id') id: string) {
+  async getUserById(
+    @Param('id') id: string
+  ): Promise<{ id: string; name: string; image: string | null }> {
     try {
       const user = await this.usersService.getUserById(id);
       return {

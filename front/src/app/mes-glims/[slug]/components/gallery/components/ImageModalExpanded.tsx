@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Minimize2 } from '@/app/ui/icons';
 import { Picture } from '.';
+import { useGetUserById } from '@/hooks';
 
 interface ImageModalExpandedProps {
   picture: Picture;
@@ -31,6 +32,7 @@ export default function ImageModalExpanded({
   onTouchMove,
   onTouchEnd,
 }: ImageModalExpandedProps) {
+  const { data: author } = useGetUserById(picture.user_id);
   return (
     // FULLSCREEN MODAL CONTAINER
     <div
@@ -64,7 +66,7 @@ export default function ImageModalExpanded({
           <div className="relative inline-block max-w-full max-h-full">
             <Image
               src={picture.url}
-              alt="Photo"
+              alt={`Photo by ${author?.name ?? 'unknown'}`}
               width={1920}
               height={1080}
               className={`max-w-full max-h-[95vh] w-auto h-auto object-contain transition-opacity duration-300 ${

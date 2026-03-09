@@ -174,7 +174,7 @@ export default function ImageModalDesktop({
             <div className="relative inline-block">
               <Image
                 src={picture.url}
-                alt="Photo"
+                alt={`Photo by ${author?.name ?? 'unknown'}`}
                 width={1920}
                 height={1080}
                 className={`max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-lg transition-opacity duration-300 ${
@@ -379,7 +379,7 @@ export default function ImageModalDesktop({
               }`}>
               <Image
                 src={pic.url}
-                alt={`Miniature ${idx + 1}`}
+                alt={`Photo by ${author?.name ?? 'unknown'}`}
                 fill
                 className="object-cover"
               />

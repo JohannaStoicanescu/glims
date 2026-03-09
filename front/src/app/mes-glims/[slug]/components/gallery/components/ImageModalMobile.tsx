@@ -18,7 +18,7 @@ import {
   Share2,
 } from '@/app/ui/icons';
 import { ConfirmationModal } from '@/app/ui';
-import { useDeleteMedia } from '@/hooks';
+import { useDeleteMedia, useGetUserById } from '@/hooks';
 
 interface ImageModalMobileProps {
   picture: Picture;
@@ -53,6 +53,7 @@ export default function ImageModalMobile({
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const deleteMedia = useDeleteMedia();
+  const { data: author } = useGetUserById(picture.user_id);
 
   // Get other images (excluding the current image)
   const otherPictures = pictures.filter((_, index) => index !== currentIndex);
@@ -203,7 +204,7 @@ export default function ImageModalMobile({
         <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden">
           <Image
             src={picture.url}
-            alt="Photo"
+            alt={`Photo by ${author?.name ?? 'unknown'}`}
             fill
             className={`object-cover transition-opacity duration-300 ${
               isLoaded ? 'opacity-100' : 'opacity-0'
@@ -243,10 +244,14 @@ export default function ImageModalMobile({
       {/* AUTHOR INFOS */}
       <div className="flex items-center gap-3 px-4 py-3">
         <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
-          <span className="text-white font-medium text-sm">{'?'}</span>
+          <span className="text-white font-medium text-sm">
+            {author?.name.charAt(0).toUpperCase() ?? '?'}
+          </span>
         </div>
         <div>
-          <p className="text-gray-900 font-medium text-sm">Utilisateur</p>
+          <p className="text-gray-900 font-medium text-sm">
+            {author?.name ?? 'Utilisateur'}
+          </p>
           <p className="text-gray-500 text-xs">{formatDate()}</p>
         </div>
       </div>

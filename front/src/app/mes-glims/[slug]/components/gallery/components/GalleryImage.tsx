@@ -16,7 +16,7 @@ import {
   Heart,
 } from '@/app/ui/icons';
 import { ConfirmationModal } from '@/app/ui';
-import { useDeleteMedia } from '@/hooks';
+import { useDeleteMedia, useGetUserById } from '@/hooks';
 
 export type Picture = {
   id: string;
@@ -49,6 +49,7 @@ export default function GalleryImage({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const deleteMedia = useDeleteMedia();
+  const { data: author } = useGetUserById(picture.user_id);
 
   // Detect if the device is mobile
   useEffect(() => {
@@ -152,12 +153,15 @@ export default function GalleryImage({
       }}>
       <Image
         src={picture.url}
-        alt="Photo"
-        fill
+        alt={`Photo by ${author?.name ?? 'unknown'}`}
+        fill={aspectRatio !== 'auto'}
+        width={aspectRatio === 'auto' ? 1920 : undefined}
+        height={aspectRatio === 'auto' ? 1080 : undefined}
         className={`object-cover transition-all duration-300 cursor-pointer group-hover:scale-105 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        } ${aspectRatio === 'auto' ? 'w-full h-auto' : ''}`}
         onLoad={() => setIsLoaded(true)}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       />
       {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
@@ -215,7 +219,7 @@ export default function GalleryImage({
                   <div className="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg border-4 border-white">
                     <Image
                       src={picture.url}
-                      alt="Photo"
+                      alt={`Photo by ${author?.name ?? 'unknown'}`}
                       fill
                       className="object-cover"
                     />
