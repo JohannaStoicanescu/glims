@@ -1,4 +1,5 @@
-import { SlidersHorizontal, Link } from '@/app/ui/icons';
+import { useState } from 'react';
+import { SlidersHorizontal, Link, Check } from '@/app/ui/icons';
 import { MenuItem } from './menu-items';
 import MenuItemButton from './MenuItemButton';
 import DangerItemButton from './DangerItemButton';
@@ -18,6 +19,18 @@ export default function MobileDrawer({
   onClose,
   onOpenSettings,
 }: MobileDrawerProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+        onClose();
+      }, 1500);
+    });
+  };
+
   return (
     <div className="flex flex-col pb-8">
       <div className="flex justify-center pt-3 pb-2">
@@ -69,13 +82,9 @@ export default function MobileDrawer({
       <div className="p-5 pt-4">
         <button
           className="flex items-center justify-center gap-3 w-full py-4 bg-black border border-black text-white rounded-lg hover:bg-white hover:text-black transition font-medium cursor-pointer"
-          onClick={() => {
-            // TODO: Logique pour copier le lien réel du Glims (éventuellement via l'API pour un lien court)
-            console.log('Copier le lien du Glims');
-            onClose();
-          }}>
-          <Link size={20} />
-          <span>Copier le lien du Glims</span>
+          onClick={handleCopyLink}>
+          {copied ? <Check size={20} /> : <Link size={20} />}
+          <span>{copied ? 'Lien copié !' : 'Copier le lien du Glims'}</span>
         </button>
       </div>
     </div>

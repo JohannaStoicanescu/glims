@@ -3,34 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 
 import { ArrowDownUp, ChevronDown, Search } from '@/app/ui/icons';
+import { Folder } from '@/types';
 
 interface FilterPanelProps {
-  readonly glimsToDisplay: Array<{
-    id: string;
-    author: string;
-    width: number;
-    height: number;
-    url: string;
-    download_url: string;
-  }>;
-  readonly setGlimsToDisplay: (
-    glims: Array<{
-      id: string;
-      author: string;
-      width: number;
-      height: number;
-      url: string;
-      download_url: string;
-    }>
-  ) => void;
-  readonly initialGlimsToDisplay: Array<{
-    id: string;
-    author: string;
-    width: number;
-    height: number;
-    url: string;
-    download_url: string;
-  }>;
+  readonly glimsToDisplay: Folder[];
+  readonly setGlimsToDisplay: (glims: Folder[] | null) => void;
+  readonly initialGlimsToDisplay: Folder[];
 }
 
 export default function FilterPanel({
@@ -68,14 +46,16 @@ export default function FilterPanel({
 
     if (e.target.value.trim() !== '') {
       setGlimsToDisplay(
-        initialGlimsToDisplay.filter((glims) =>
-          // TODO: when connected to real API, change this filter to match glims title or ?description? instead of author
-          // glims.title.includes(e.target.value) || glims.description.includes(e.target.value)
-          glims.author.includes(e.target.value)
+        initialGlimsToDisplay.filter(
+          (glims) =>
+            glims.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            (glims.description ?? '')
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase())
         )
       );
     } else {
-      setGlimsToDisplay(initialGlimsToDisplay);
+      setGlimsToDisplay(null); // null = no filter active, show full list
     }
   };
 

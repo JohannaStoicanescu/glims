@@ -1,8 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 import {
   X,
   ChevronLeft,
@@ -20,6 +20,7 @@ import {
 } from '@/app/ui/icons';
 import { ConfirmationModal } from '@/app/ui';
 import { Picture } from '.';
+import { useDeleteMedia, useGetUserById } from '@/hooks';
 
 interface ImageModalDesktopProps {
   picture: Picture;
@@ -57,6 +58,8 @@ export default function ImageModalDesktop({
   const optionsMenuRef = useRef<HTMLDivElement>(null);
   const thumbnailsContainerRef = useRef<HTMLDivElement>(null);
   const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const deleteMedia = useDeleteMedia();
+  const { data: author } = useGetUserById(picture.user_id);
 
   // Automatic scroll to the selected thumbnail
   useEffect(() => {
@@ -84,12 +87,12 @@ export default function ImageModalDesktop({
   // Handle image download
   const handleDownload = async () => {
     try {
-      const response = await fetch(picture.download_url);
+      const response = await fetch(picture.url);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${picture.author}-${picture.id}.jpg`;
+      link.download = `photo-${picture.id}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -170,15 +173,14 @@ export default function ImageModalDesktop({
           <div className="relative flex-1 w-full flex items-center justify-center min-h-0">
             <div className="relative inline-block">
               <Image
-                src={picture.download_url}
-                alt={`Photo by ${picture.author}`}
-                width={picture.width}
-                height={picture.height}
+                src={picture.url}
+                alt={`Photo by ${author?.name ?? 'unknown'}`}
+                width={1920}
+                height={1080}
                 className={`max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-lg transition-opacity duration-300 ${
                   isLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 onLoad={onImageLoad}
-                priority
               />
               {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -222,11 +224,13 @@ export default function ImageModalDesktop({
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
             <span className="text-white font-semibold">
-              {picture.author.charAt(0).toUpperCase()}
+              {author?.name.charAt(0).toUpperCase() ?? '?'}
             </span>
           </div>
           <div>
-            <p className="text-white font-medium">{picture.author}</p>
+            <p className="text-white font-medium">
+              {author?.name ?? 'Utilisateur'}
+            </p>
             <p className="text-gray-400 text-sm">{formatDate()}</p>
           </div>
         </div>
@@ -297,7 +301,7 @@ export default function ImageModalDesktop({
               className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
               <Camera className="w-5 h-5" />
               <span className="text-base">
-                Toutes les photos de {picture.author}
+                Toutes les photos de cet utilisateur
               </span>
             </button>
 
@@ -344,8 +348,7 @@ export default function ImageModalDesktop({
         confirmButtonText="Supprimer"
         cancelButtonText="Annuler"
         onConfirm={() => {
-          // TODO: Appel API pour supprimer la photo
-          console.log('Photo supprimée');
+          deleteMedia.mutate([picture.id]);
           onClose(); // On ferme la modale d'image après suppression
         }}
         icon={<Trash2 size={48} />}
@@ -375,11 +378,10 @@ export default function ImageModalDesktop({
                   : 'opacity-60 hover:opacity-100'
               }`}>
               <Image
-                src={pic.download_url}
-                alt={`Miniature ${idx + 1}`}
+                src={pic.url}
+                alt={`Photo by ${author?.name ?? 'unknown'}`}
                 fill
                 className="object-cover"
-                sizes="80px"
               />
             </button>
           ))}

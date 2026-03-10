@@ -18,6 +18,7 @@ import {
   Share2,
 } from '@/app/ui/icons';
 import { ConfirmationModal } from '@/app/ui';
+import { useDeleteMedia, useGetUserById } from '@/hooks';
 
 interface ImageModalMobileProps {
   picture: Picture;
@@ -51,6 +52,8 @@ export default function ImageModalMobile({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const deleteMedia = useDeleteMedia();
+  const { data: author } = useGetUserById(picture.user_id);
 
   // Get other images (excluding the current image)
   const otherPictures = pictures.filter((_, index) => index !== currentIndex);
@@ -65,12 +68,12 @@ export default function ImageModalMobile({
   // Function to download the image
   const handleDownload = async () => {
     try {
-      const response = await fetch(picture.download_url);
+      const response = await fetch(picture.url);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `${picture.author}-${picture.id}.jpg`;
+      link.download = `photo-${picture.id}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -141,7 +144,7 @@ export default function ImageModalMobile({
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
                   <Camera className="w-5 h-5" />
                   <span className="text-base">
-                    Toutes les photos de {picture.author}
+                    Toutes les photos de cet utilisateur
                   </span>
                 </button>
 
@@ -185,8 +188,7 @@ export default function ImageModalMobile({
         confirmButtonText="Supprimer"
         cancelButtonText="Annuler"
         onConfirm={() => {
-          // TODO: Appel API pour supprimer la photo
-          console.log('Photo supprimée (mobile)');
+          deleteMedia.mutate([picture.id]);
           onClose(); // On ferme la modale d'image après suppression
         }}
         icon={<Trash2 size={48} />}
@@ -201,14 +203,13 @@ export default function ImageModalMobile({
         onTouchEnd={onTouchEnd}>
         <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden">
           <Image
-            src={picture.download_url}
-            alt={`Photo by ${picture.author}`}
+            src={picture.url}
+            alt={`Photo by ${author?.name ?? 'unknown'}`}
             fill
             className={`object-cover transition-opacity duration-300 ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             onLoad={onImageLoad}
-            priority
           />
           {!isLoaded && (
             <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
@@ -244,11 +245,13 @@ export default function ImageModalMobile({
       <div className="flex items-center gap-3 px-4 py-3">
         <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
           <span className="text-white font-medium text-sm">
-            {picture.author.charAt(0).toUpperCase()}
+            {author?.name.charAt(0).toUpperCase() ?? '?'}
           </span>
         </div>
         <div>
-          <p className="text-gray-900 font-medium text-sm">{picture.author}</p>
+          <p className="text-gray-900 font-medium text-sm">
+            {author?.name ?? 'Utilisateur'}
+          </p>
           <p className="text-gray-500 text-xs">{formatDate()}</p>
         </div>
       </div>
@@ -272,11 +275,10 @@ export default function ImageModalMobile({
                     onClick={() => handleImageClick(originalIndex)}
                     className="relative aspect-[4/3] rounded-xl overflow-hidden group">
                     <Image
-                      src={pic.download_url}
+                      src={pic.url}
                       alt={`Photo ${idx + 1}`}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 768px) 50vw, 33vw"
                     />
                     <div className="absolute top-2 right-2 w-8 h-8 bg-black/40 rounded-lg flex items-center justify-center opacity-80 cursor-pointer hover:bg-white/30">
                       <EllipsisVertical className="w-4 h-4 text-white" />
