@@ -25,3 +25,7 @@ export { default as useGetReactionsOfAMedia } from './reactions/use-get-reaction
 
 export { default as useGetAllTags } from './tags/use-get-all-tags';
 export { default as useGetTagsAffiliatedToUser } from './tags/use-get-tags-affiliated-to-user';
+
+// Users
+export { default as useGetUserById } from './users/use-get-user-by-id';
+export type { UserProfile } from './users/use-get-user-by-id';

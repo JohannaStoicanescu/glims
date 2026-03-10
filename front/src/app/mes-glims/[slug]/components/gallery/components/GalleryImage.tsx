@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import Image from 'next/image';
+import { createPortal } from 'react-dom';
 
 import {
   EllipsisVertical,
@@ -16,14 +16,16 @@ import {
   Heart,
 } from '@/app/ui/icons';
 import { ConfirmationModal } from '@/app/ui';
+import { useDeleteMedia, useGetUserById } from '@/hooks';
 
 export type Picture = {
   id: string;
-  author: string;
-  width: number;
-  height: number;
+  /** data: URL for display, produced by the hook */
   url: string;
-  download_url: string;
+  contentType: string;
+  user_id: string;
+  folder_id: string;
+  created_at: string;
 };
 
 interface GalleryImageProps {
@@ -46,6 +48,8 @@ export default function GalleryImage({
   const [isMobile, setIsMobile] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const deleteMedia = useDeleteMedia();
+  const { data: author } = useGetUserById(picture.user_id);
 
   // Detect if the device is mobile
   useEffect(() => {
@@ -108,6 +112,33 @@ export default function GalleryImage({
     setIsMenuOpen(false);
   };
 
+  const handleDownload = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const extension = picture.contentType.split('/')[1] ?? 'jpg';
+    const a = document.createElement('a');
+    a.href = picture.url;
+    a.download = `photo-${picture.id}.${extension}`;
+    a.click();
+    setIsMenuOpen(false);
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMenuOpen(false);
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Photo partagée depuis Glims',
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+      }
+    } catch {
+      // User cancelled or API unavailable — silent fail
+    }
+  };
+
   return (
     <div
       className={`relative overflow-hidden rounded-lg group cursor-pointer ${getAspectRatioClass()} ${className}`}
@@ -121,11 +152,11 @@ export default function GalleryImage({
         }
       }}>
       <Image
-        src={picture.download_url}
-        alt={`Photo by ${picture.author}`}
+        src={picture.url}
+        alt={`Photo by ${author?.name ?? 'unknown'}`}
         fill={aspectRatio !== 'auto'}
-        width={aspectRatio === 'auto' ? picture.width : undefined}
-        height={aspectRatio === 'auto' ? picture.height : undefined}
+        width={aspectRatio === 'auto' ? 1920 : undefined}
+        height={aspectRatio === 'auto' ? 1080 : undefined}
         className={`object-cover transition-all duration-300 cursor-pointer group-hover:scale-105 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         } ${aspectRatio === 'auto' ? 'w-full h-auto' : ''}`}
@@ -187,8 +218,8 @@ export default function GalleryImage({
                 <div className="absolute left-1/2 -translate-x-1/2 -top-36">
                   <div className="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg border-4 border-white">
                     <Image
-                      src={picture.download_url}
-                      alt={`Photo by ${picture.author}`}
+                      src={picture.url}
+                      alt={`Photo by ${author?.name ?? 'unknown'}`}
                       fill
                       className="object-cover"
                     />
@@ -223,22 +254,14 @@ export default function GalleryImage({
                 )}
 
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // TODO: Télécharger
-                    setIsMenuOpen(false);
-                  }}
+                  onClick={handleDownload}
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
                   <Download className="w-5 h-5" />
                   <span className="text-base">Télécharger</span>
                 </button>
 
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // TODO: Partager
-                    setIsMenuOpen(false);
-                  }}
+                  onClick={handleShare}
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
                   <Share2 className="w-5 h-5" />
                   <span className="text-base">Partager</span>
@@ -264,7 +287,7 @@ export default function GalleryImage({
                   className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
                   <Camera className="w-5 h-5" />
                   <span className="text-base">
-                    Toutes les photos de {picture.author}
+                    Toutes les photos de cet utilisateur
                   </span>
                 </button>
 
@@ -302,19 +325,13 @@ export default function GalleryImage({
         confirmButtonText="Supprimer"
         cancelButtonText="Annuler"
         onConfirm={() => {
-          // TODO: Appel API pour supprimer la photo
-          console.log('Photo supprimée (grille)');
+          deleteMedia.mutate([picture.id]);
         }}
         icon={<Trash2 size={48} />}
         position={isMobile ? 'bottom' : 'center'}
       />
 
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <p className="text-white text-sm font-medium truncate">
-          {picture.author}
-        </p>
-      </div>
     </div>
   );
 }

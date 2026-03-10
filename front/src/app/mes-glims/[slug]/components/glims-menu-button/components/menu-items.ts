@@ -11,8 +11,12 @@ import {
 
 export interface Picture {
   id: string;
-  author: string;
-  download_url: string;
+  /** data: URL for display, produced by the hook */
+  url: string;
+  contentType: string;
+  user_id: string;
+  folder_id: string;
+  created_at: string;
 }
 
 export interface MenuItem {

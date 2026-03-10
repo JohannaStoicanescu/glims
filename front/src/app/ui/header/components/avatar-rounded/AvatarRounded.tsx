@@ -72,8 +72,7 @@ export default function AvatarRounded() {
       width="w-80"
       trigger={avatarTrigger}
       usePortal={true}
-      className="fixed top-16 right-4" // Use fixed positioning relative to viewport
-    >
+      className="fixed top-16 right-4">
       <div className="max-h-[80vh] overflow-y-auto">
         <MenuContent
           user={user}

@@ -17,11 +17,13 @@ import GeneralSettings from './components/GeneralSettings';
 import PrivacySettings from './components/PrivacySettings';
 import StorageSettings from './components/StorageSettings';
 import MembersSettings from '../../../glims-settings-modal/components/MembersSettings';
+import { useUpdateUsersFolder } from '@/hooks';
 
 interface GlimsSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   glimName?: string;
+  folderId: string;
 }
 
 export type SettingsTab =
@@ -61,10 +63,12 @@ export default function GlimsSettingsModal({
   isOpen,
   onClose,
   glimName = 'Le nom du Glims',
+  folderId,
 }: GlimsSettingsModalProps) {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<SettingsTab>('general');
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const updateFolder = useUpdateUsersFolder();
 
   const methods = useForm<GlimsSettingsForm>({
     defaultValues: {
@@ -129,11 +133,18 @@ export default function GlimsSettingsModal({
   ];
 
   const onSubmit = (data: GlimsSettingsForm) => {
-    // TODO: Intégrer la connexion au backend pour sauvegarder les paramètres du Glims
-    // Appel API (ex: useUpdateUsersFolder) avec les données du formulaire
-    console.log('Save settings:', data);
-    reset(data); // Important to reset dirty state after save
-    onClose();
+    updateFolder.mutate(
+      {
+        folderId,
+        data: { title: data.name, description: data.description },
+      },
+      {
+        onSuccess: () => {
+          reset(data);
+          onClose();
+        },
+      }
+    );
   };
 
   return (

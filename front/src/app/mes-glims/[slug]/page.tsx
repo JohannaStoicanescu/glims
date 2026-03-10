@@ -1,5 +1,10 @@
 import GlimsDetailsPageContent from './components/GlimsDetailsPageContent';
 
-export default function Page() {
-  return <GlimsDetailsPageContent />;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  return <GlimsDetailsPageContent folderId={slug} />;
 }

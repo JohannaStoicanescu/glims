@@ -7,6 +7,7 @@ import ModalHeader from './components/ModalHeader';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import { DoorOpen } from '../icons';
+import { useCreateFolder } from '@/hooks';
 
 interface CreateGlimsModalProps {
   isOpen: boolean;
@@ -35,6 +36,8 @@ export default function CreateGlimsModal({
   const [step, setStep] = useState(1);
   const [showInviteDetails, setShowInviteDetails] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+
+  const createFolder = useCreateFolder();
 
   const methods = useForm<CreateGlimForm>({
     defaultValues: {
@@ -76,9 +79,10 @@ export default function CreateGlimsModal({
   };
 
   const onSubmit = (data: CreateGlimForm) => {
-    // TODO: Connecter à l'API pour créer le Glims (ex: useCreateFolder)
-    console.log('Form data:', data);
-    handleClose();
+    createFolder.mutate(
+      { title: data.title, description: data.description },
+      { onSuccess: handleClose }
+    );
   };
 
   return (
