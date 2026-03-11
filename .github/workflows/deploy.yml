@@ -3,6 +3,7 @@ name: CD
 on:
   push:
     branches: [main, dev]
+  workflow_dispatch:
 
 concurrency:
   # Only one deployment per branch at a time. A new push cancels the
