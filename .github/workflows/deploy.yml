@@ -1,0 +1,244 @@
+name: CD
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+concurrency:
+  # Only one deployment per branch at a time. A new push cancels the
+  # in-progress run for the same branch.
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  # Lower-cased owner/repo, required by ghcr.io image names
+  IMAGE_PREFIX: ghcr.io/${{ github.repository }}
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────────────
+  # Detect which services actually changed so we only rebuild what we need
+  # ──────────────────────────────────────────────────────────────────────────
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-latest
+    outputs:
+      front: ${{ steps.filter.outputs.front }}
+      back: ${{ steps.filter.outputs.back }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            front:
+              - 'front/**'
+              - 'docker-compose.prod.yml'
+              - 'docker-compose.staging.yml'
+            back:
+              - 'back/**'
+              - 'docker-compose.prod.yml'
+              - 'docker-compose.staging.yml'
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Build & push the BACKEND image
+  # ──────────────────────────────────────────────────────────────────────────
+  build_back:
+    name: Build & Push Backend
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.back == 'true'
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      # Pass the exact digest so the deploy job pins to this exact image
+      digest: ${{ steps.push.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Determine image tag
+        id: tag
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=staging" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Push the production (slim) image
+      - name: Build & push backend
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./back
+          file: ./back/Dockerfile.prod
+          target: production
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/back:${{ steps.tag.outputs.tag }}
+            ${{ env.IMAGE_PREFIX }}/back:${{ github.sha }}
+          # Layer cache stored in the registry itself — no extra cache service needed
+          cache-from: type=registry,ref=${{ env.IMAGE_PREFIX }}/back:buildcache-${{ steps.tag.outputs.tag }}
+          cache-to:   type=registry,ref=${{ env.IMAGE_PREFIX }}/back:buildcache-${{ steps.tag.outputs.tag }},mode=max
+
+      # Push the migrate image (base stage — includes pnpm + Prisma CLI)
+      # Administrators run migrations manually via `docker compose ... --profile manual up migrate`
+      - name: Build & push backend migrate image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./back
+          file: ./back/Dockerfile.prod
+          target: base
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/back-migrate:${{ steps.tag.outputs.tag }}
+            ${{ env.IMAGE_PREFIX }}/back-migrate:${{ github.sha }}
+          cache-from: type=registry,ref=${{ env.IMAGE_PREFIX }}/back:buildcache-${{ steps.tag.outputs.tag }}
+          cache-to:   type=registry,ref=${{ env.IMAGE_PREFIX }}/back:buildcache-${{ steps.tag.outputs.tag }},mode=max
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Build & push the FRONTEND image
+  # The API URL is baked at build time, so staging and prod get separate
+  # builds driven by different secrets.
+  # ──────────────────────────────────────────────────────────────────────────
+  build_front:
+    name: Build & Push Frontend
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.front == 'true'
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.push.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Determine build args & tag
+        id: vars
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "tag=latest"                                        >> "$GITHUB_OUTPUT"
+            echo "api_url=${{ secrets.PROD_NEXT_PUBLIC_API_URL }}"  >> "$GITHUB_OUTPUT"
+            echo "port=${{ secrets.PROD_FRONTEND_PORT }}"           >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=staging"                                          >> "$GITHUB_OUTPUT"
+            echo "api_url=${{ secrets.STAGING_NEXT_PUBLIC_API_URL }}"  >> "$GITHUB_OUTPUT"
+            echo "port=${{ secrets.STAGING_FRONTEND_PORT }}"           >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build & push frontend
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./front
+          file: ./front/Dockerfile.prod
+          push: true
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ steps.vars.outputs.api_url }}
+            PORT=${{ steps.vars.outputs.port }}
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/front:${{ steps.vars.outputs.tag }}
+            ${{ env.IMAGE_PREFIX }}/front:${{ github.sha }}
+          cache-from: type=registry,ref=${{ env.IMAGE_PREFIX }}/front:buildcache-${{ steps.vars.outputs.tag }}
+          cache-to:   type=registry,ref=${{ env.IMAGE_PREFIX }}/front:buildcache-${{ steps.vars.outputs.tag }},mode=max
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Deploy to STAGING (push to dev)
+  # Pulls the new images and restarts the staging compose stack on the VPS.
+  # ──────────────────────────────────────────────────────────────────────────
+  deploy_staging:
+    name: Deploy → Staging
+    runs-on: ubuntu-latest
+    environment: staging
+    needs: [changes, build_back, build_front]
+    # Run when at least one build job ran (the other may have been skipped)
+    if: |
+      always() &&
+      github.ref_name == 'dev' &&
+      (needs.build_back.result == 'success' || needs.build_back.result == 'skipped') &&
+      (needs.build_front.result == 'success' || needs.build_front.result == 'skipped') &&
+      (needs.build_back.result == 'success' || needs.build_front.result == 'success')
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host:     ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key:      ${{ secrets.STAGING_SSH_KEY }}
+          port:     ${{ secrets.STAGING_SSH_PORT || 22 }}
+          script: |
+            set -e
+            cd ${{ secrets.STAGING_APP_DIR }}
+
+            # Authenticate the VPS against GHCR so it can pull private images.
+            # GHCR_PULL_TOKEN is a fine-grained PAT with read:packages scope.
+            echo "${{ secrets.GHCR_PULL_TOKEN }}" | \
+              docker login ghcr.io -u ${{ secrets.GHCR_PULL_USER }} --password-stdin
+
+            # Pull only the services that have a new image; skip the build
+            docker compose -f docker-compose.staging.yml pull --quiet
+
+            # Restart with zero-downtime rolling update (compose v2)
+            docker compose -f docker-compose.staging.yml up -d --remove-orphans
+
+            # Clean up dangling images to save disk space
+            docker image prune -f
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Deploy to PRODUCTION (push to main)
+  # ──────────────────────────────────────────────────────────────────────────
+  deploy_production:
+    name: Deploy → Production
+    runs-on: ubuntu-latest
+    environment: production
+    needs: [changes, build_back, build_front]
+    if: |
+      always() &&
+      github.ref_name == 'main' &&
+      (needs.build_back.result == 'success' || needs.build_back.result == 'skipped') &&
+      (needs.build_front.result == 'success' || needs.build_front.result == 'skipped') &&
+      (needs.build_back.result == 'success' || needs.build_front.result == 'success')
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host:     ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key:      ${{ secrets.PROD_SSH_KEY }}
+          port:     ${{ secrets.PROD_SSH_PORT || 22 }}
+          script: |
+            set -e
+            cd ${{ secrets.PROD_APP_DIR }}
+
+            echo "${{ secrets.GHCR_PULL_TOKEN }}" | \
+              docker login ghcr.io -u ${{ secrets.GHCR_PULL_USER }} --password-stdin
+
+            docker compose -f docker-compose.prod.yml pull --quiet
+
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            docker image prune -f
