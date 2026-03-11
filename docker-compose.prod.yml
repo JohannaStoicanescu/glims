@@ -1,11 +1,7 @@
 services:
   front:
-    build:
-      context: ./front
-      dockerfile: Dockerfile.prod
-      args:
-        PORT: ${FRONTEND_PORT}
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    # Image is built and pushed by GitHub Actions; never built on the VPS.
+    image: ghcr.io/${GITHUB_REPOSITORY}/front:latest
     environment:
       - PORT=${FRONTEND_PORT}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
@@ -14,9 +10,8 @@ services:
     restart: unless-stopped
 
   back:
-    build:
-      context: ./back
-      dockerfile: Dockerfile.prod
+    # Image is built and pushed by GitHub Actions; never built on the VPS.
+    image: ghcr.io/${GITHUB_REPOSITORY}/back:latest
     environment:
       - FRONTEND_HOST=${FRONTEND_HOST}
       - DATABASE_URL=${DATABASE_URL}
@@ -28,17 +23,15 @@ services:
     restart: unless-stopped
 
   migrate:
-    build:
-      context: ./back
-      dockerfile: Dockerfile.prod
-      target: base # important: this stage includes Prisma CLI
+    # Reuses the base (builder) image which includes pnpm + Prisma CLI.
+    # Run manually by an administrator: docker compose --profile manual up migrate
+    image: ghcr.io/${GITHUB_REPOSITORY}/back-migrate:latest
     environment:
       - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - db
     command: >
       sh -c "pnpm prisma migrate deploy"
-    # Prevents the container from running at `docker compose up`
     profiles: ["manual"]
 
   adminer:
@@ -51,8 +44,13 @@ services:
   db:
     image: postgres
     restart: unless-stopped
-    # set shared memory limit when using docker compose
     shm_size: 128mb
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - prod_db_data:/var/lib/postgresql/data
+
+volumes:
+  prod_db_data:

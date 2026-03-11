@@ -9,9 +9,13 @@ docker-prod:
 migrate-dev:
 	docker compose run --rm back pnpm prisma migrate dev
 
-# The migration uses another container that is detroyed as soon as the migration is over
+# The migration uses another container that is destroyed as soon as the migration is over
 migrate-prod:
-	docker compose -f docker-compose.prod.yml run --rm migrate
+	docker compose -f docker-compose.prod.yml --profile manual run --rm migrate
+
+# The migration uses another container that is destroyed as soon as the migration is over
+migrate-staging:
+	docker compose -f docker-compose.staging.yml --profile manual run --rm migrate
 
 seed:
 	docker compose run --rm back pnpm ts-node prisma/seed.ts
