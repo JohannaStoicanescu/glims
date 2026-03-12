@@ -202,7 +202,8 @@ jobs:
             cd ${{ secrets.STAGING_APP_DIR }}
 
             # Ensure compose files and config are up to date
-            git pull origin fix/cd
+            git fetch fix/cd
+            git reset --hard origin/fix/cd
 
             # Authenticate the VPS against GHCR so it can pull private images.
             # GHCR_PULL_TOKEN is a fine-grained PAT with read:packages scope.
