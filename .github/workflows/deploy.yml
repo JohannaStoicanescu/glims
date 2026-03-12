@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, fix/cd]
   workflow_dispatch:
 
 concurrency:
@@ -185,7 +185,7 @@ jobs:
     # Run when at least one build job ran (the other may have been skipped)
     if: |
       always() &&
-      github.ref_name == 'dev' &&
+      (github.ref_name == 'dev' || github.ref_name == 'fix/cd') &&
       (needs.build_back.result == 'success' || needs.build_back.result == 'skipped') &&
       (needs.build_front.result == 'success' || needs.build_front.result == 'skipped') &&
       (needs.build_back.result == 'success' || needs.build_front.result == 'success')
