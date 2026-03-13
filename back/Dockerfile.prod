@@ -10,7 +10,7 @@ RUN npm install -g --ignore-scripts pnpm@10.17.1 @nestjs/cli
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Generate Prisma client
