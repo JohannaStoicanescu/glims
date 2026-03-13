@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
 
   db:
-    image: postgres
+    image: postgres:16
     restart: unless-stopped
     shm_size: 128mb
     environment:
@@ -42,6 +42,11 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - staging_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   adminer:
     image: adminer
@@ -56,7 +61,8 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     command: >
       sh -c "pnpm prisma migrate deploy"
     profiles: ["manual"]

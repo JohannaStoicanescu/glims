@@ -201,6 +201,9 @@ jobs:
             set -e
             cd ${{ secrets.STAGING_APP_DIR }}
 
+            # Ensure compose files and config are up to date
+            git pull origin dev
+
             # Authenticate the VPS against GHCR so it can pull private images.
             # GHCR_PULL_TOKEN is a fine-grained PAT with read:packages scope.
             echo "${{ secrets.GHCR_PULL_TOKEN }}" | \
@@ -240,6 +243,9 @@ jobs:
           script: |
             set -e
             cd ${{ secrets.PROD_APP_DIR }}
+
+            # Ensure compose files and config are up to date
+            git pull origin main
 
             echo "${{ secrets.GHCR_PULL_TOKEN }}" | \
               docker login ghcr.io -u ${{ secrets.GHCR_PULL_USER }} --password-stdin

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "Running post-merge hook..."
+
+# chown -R mycompany:www /srv/www/vhosts/mycompany
+
+# exec git-update-server-info
