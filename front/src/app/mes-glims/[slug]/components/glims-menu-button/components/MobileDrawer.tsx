@@ -36,7 +36,7 @@ export default function MobileDrawer({
         <button
           className="flex items-center justify-center gap-3 w-full py-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer"
           onClick={onOpenSettings}>
-          <SlidersHorizontal size={18} />
+          <SlidersHorizontal size={18} aria-hidden="true" />
           <span className="font-medium">Paramètres</span>
         </button>
       </div>
@@ -74,7 +74,7 @@ export default function MobileDrawer({
             console.log('Copier le lien du Glims');
             onClose();
           }}>
-          <Link size={20} />
+          <Link size={20} aria-hidden="true" />
           <span>Copier le lien du Glims</span>
         </button>
       </div>

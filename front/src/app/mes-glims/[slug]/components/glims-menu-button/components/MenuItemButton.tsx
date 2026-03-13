@@ -40,6 +40,7 @@ export default function MenuItemButton({
       <item.icon
         size={isDesktop ? 20 : 22}
         className="text-gray-600"
+        aria-hidden="true"
       />
       <span className={isDesktop ? '' : 'text-base'}>{item.label}</span>
     </button>

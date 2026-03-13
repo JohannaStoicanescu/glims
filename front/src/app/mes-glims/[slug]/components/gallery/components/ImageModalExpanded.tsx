@@ -36,6 +36,9 @@ export default function ImageModalExpanded({
     // FULLSCREEN MODAL CONTAINER
     <div
       className="fixed inset-0 z-50 bg-black flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Affichage plein écran de la photo"
       onClick={(e) => e.stopPropagation()}>
       <div className="w-full h-full flex items-center justify-between px-4">
         {/* LEFT ARROW BUTTON */}
@@ -52,7 +55,7 @@ export default function ImageModalExpanded({
                 : 'opacity-100'
             }`}
             aria-label="Image précédente">
-            <ChevronLeft className="w-6 h-6 text-white" />
+            <ChevronLeft className="w-6 h-6 text-white" aria-hidden="true" />
           </button>
         </div>
 
@@ -65,13 +68,13 @@ export default function ImageModalExpanded({
           <div className="relative inline-block max-w-full max-h-full">
             <Image
               src={picture.download_url}
-              alt={`Photo by ${picture.author}`}
+              alt={`Photo de ${picture.author}`}
               width={picture.width}
               height={picture.height}
               className={`max-w-full max-h-[95vh] w-auto h-auto object-contain transition-opacity duration-300 ${
                 isLoaded ? 'opacity-100' : 'opacity-0'
               }`}
-              onLoad={onImageLoad}
+              onImageLoad={onImageLoad}
               priority
             />
             {/* LOADING SPINNER */}
@@ -89,7 +92,7 @@ export default function ImageModalExpanded({
               }}
               className="absolute bottom-3 right-3 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors z-20 cursor-pointer"
               aria-label="Quitter le plein écran">
-              <Minimize2 className="w-5 h-5 text-white" />
+              <Minimize2 className="w-5 h-5 text-white" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -108,7 +111,7 @@ export default function ImageModalExpanded({
                 : 'opacity-100'
             }`}
             aria-label="Image suivante">
-            <ChevronRight className="w-6 h-6 text-white" />
+            <ChevronRight className="w-6 h-6 text-white" aria-hidden="true" />
           </button>
         </div>
       </div>

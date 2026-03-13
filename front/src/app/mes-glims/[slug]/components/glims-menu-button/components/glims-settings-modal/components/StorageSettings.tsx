@@ -16,7 +16,13 @@ export default function StorageSettings() {
             Go
           </p>
 
-          <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+          <div 
+            className="w-full h-3 bg-gray-100 rounded-full overflow-hidden"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={totalStorage}
+            aria-valuenow={usedStorage}
+            aria-label={`Stockage utilisé : ${usedStorage} Go sur ${totalStorage} Go`}>
             <div
               className="h-full bg-blue-600 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${percentage}%` }}

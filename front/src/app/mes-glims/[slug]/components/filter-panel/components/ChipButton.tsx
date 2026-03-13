@@ -10,7 +10,8 @@ function ChipButton({ label, isSelected, onClick }: ChipButtonProps) {
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 rounded-full text-sm border transition-colors ${
+      aria-pressed={isSelected}
+      className={`px-4 py-2 rounded-full text-sm border transition-colors cursor-pointer ${
         isSelected
           ? 'bg-gray-900 text-white border-gray-900'
           : 'bg-white text-gray-700 border-gray-300'

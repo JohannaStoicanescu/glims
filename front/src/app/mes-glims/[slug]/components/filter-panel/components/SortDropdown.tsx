@@ -63,6 +63,7 @@ export default function SortDropdown({
           <button
             key={option.value}
             onClick={() => handleSelect(option.value)}
+            aria-pressed={sortBy === option.value}
             className={`w-full text-left px-4 py-3 text-sm transition-colors cursor-pointer ${
               sortBy === option.value
                 ? 'bg-gray-100 font-semibold text-gray-900'

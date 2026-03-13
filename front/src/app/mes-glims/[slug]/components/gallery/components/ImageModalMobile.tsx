@@ -202,7 +202,7 @@ export default function ImageModalMobile({
         <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden">
           <Image
             src={picture.download_url}
-            alt={`Photo by ${picture.author}`}
+            alt={`Photo de ${picture.author}`}
             fill
             className={`object-cover transition-opacity duration-300 ${
               isLoaded ? 'opacity-100' : 'opacity-0'

@@ -7,6 +7,7 @@ export default function PremiumButton() {
         <Crown
           fill="currentColor"
           className="w-5 h-5"
+          aria-hidden="true"
         />
         <span>Mise à niveau premium</span>
       </button>

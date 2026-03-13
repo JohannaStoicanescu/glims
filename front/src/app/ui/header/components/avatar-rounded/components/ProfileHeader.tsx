@@ -16,7 +16,7 @@ export default function ProfileHeader({
       <div className="relative w-12 h-12 rounded-full overflow-hidden">
         <Image
           src={avatar}
-          alt={name}
+          alt={`Photo de profil de ${name}`}
           fill
           className="object-cover"
         />

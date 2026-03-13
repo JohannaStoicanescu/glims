@@ -162,7 +162,9 @@ export default function GlimsSettingsModal({
               className={`
                         flex 
                         ${isMobile ? 'flex-row w-full justify-between p-2 px-4' : 'flex-col gap-1'}
-                      `}>
+                      `}
+              role="tablist"
+              aria-label="Sections des paramètres">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -170,6 +172,11 @@ export default function GlimsSettingsModal({
                 return (
                   <button
                     key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls={`${tab.id}-panel`}
+                    id={`${tab.id}-tab`}
                     onClick={() => setActiveTab(tab.id)}
                     className={`
                                 flex items-center rounded-xl transition-all cursor-pointer
@@ -207,7 +214,11 @@ export default function GlimsSettingsModal({
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 pt-2">
+            <div
+              className="flex-1 overflow-y-auto p-6 pt-2"
+              role="tabpanel"
+              id={`${activeTab}-panel`}
+              aria-labelledby={`${activeTab}-tab`}>
               <FormProvider {...methods}>
                 <form
                   onSubmit={methods.handleSubmit(onSubmit)}

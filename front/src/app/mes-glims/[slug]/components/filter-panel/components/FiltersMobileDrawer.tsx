@@ -51,18 +51,23 @@ export default function FiltersMobileDrawer({
   // We use createPortal to render the menu outside the normal React tree (directly into document.body),
   //so it can visually overlay the rest of the app and avoid CSS stacking/context issues.
   return createPortal(
-    <div className="fixed inset-0 bg-white z-[9999] flex flex-col">
+    <div 
+      className="fixed inset-0 bg-white z-[9999] flex flex-col"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="filters-mobile-title">
       {/* HEADER */}
       <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
         <button
           onClick={onClose}
-          className="flex items-center gap-2 text-gray-700">
-          <ChevronLeft className="w-5 h-5" />
-          <span className="text-lg font-semibold">Filtres</span>
+          className="flex items-center gap-2 text-gray-700 cursor-pointer"
+          aria-label="Fermer les filtres">
+          <ChevronLeft className="w-5 h-5" aria-hidden="true" />
+          <span id="filters-mobile-title" className="text-lg font-semibold">Filtres</span>
         </button>
         <button
           onClick={onReset}
-          className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700">
+          className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 cursor-pointer">
           Réinitialiser
         </button>
       </div>

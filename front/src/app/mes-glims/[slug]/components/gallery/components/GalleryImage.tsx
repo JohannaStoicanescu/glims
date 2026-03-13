@@ -122,7 +122,7 @@ export default function GalleryImage({
       }}>
       <Image
         src={picture.download_url}
-        alt={`Photo by ${picture.author}`}
+        alt={`Photo de ${picture.author}`}
         fill={aspectRatio !== 'auto'}
         width={aspectRatio === 'auto' ? picture.width : undefined}
         height={aspectRatio === 'auto' ? picture.height : undefined}
@@ -188,7 +188,7 @@ export default function GalleryImage({
                   <div className="relative w-48 h-48 rounded-xl overflow-hidden shadow-lg border-4 border-white">
                     <Image
                       src={picture.download_url}
-                      alt={`Photo by ${picture.author}`}
+                      alt={`Photo de ${picture.author}`}
                       fill
                       className="object-cover"
                     />

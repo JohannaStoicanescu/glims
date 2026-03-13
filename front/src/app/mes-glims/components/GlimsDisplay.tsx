@@ -50,37 +50,40 @@ export default function GlimsDisplay({ glims }: GlimsDisplayProps) {
       <div className="h-full overflow-y-auto pb-10">
         <div className="grid grid-rows-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
           {glims.map((glim, index) => {
+            const glimTitle = "Glims Title Test"; // TODO: use real title
             return (
-              <Link
-                // TODO: use glims label instead of author
-                href={`/mes-glims/${glim.author}`}
-                key={glim.id + index}
-                className="rounded-3xl cursor-pointer group">
-                <div className="w-full h-56 overflow-hidden rounded-lg">
-                  <Image
-                    alt="Glims image"
-                    className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
-                    src={glim.download_url}
-                    width={640}
-                    height={480}
-                  />
-                </div>
-                <div className="flex flex-col py-2 rounded-b-2xl">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-bold text-xl transition-colors duration-300 ease-in-out group-hover:text-orange-600">
-                      Glims Title Test
-                    </h3>
-                    <UsersAvatarAndCountDisplay
-                      users={glimsUsers}
-                      numberOfUsersToShow={2}
+              <article key={glim.id + index}>
+                <Link
+                  // TODO: use glims label instead of author
+                  href={`/mes-glims/${glim.author}`}
+                  className="rounded-3xl cursor-pointer group block"
+                  aria-label={`Voir le Glims : ${glimTitle}`}>
+                  <div className="w-full h-56 overflow-hidden rounded-lg">
+                    <Image
+                      alt={`Couverture du Glims ${glimTitle}`}
+                      className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                      src={glim.download_url}
+                      width={640}
+                      height={480}
                     />
                   </div>
-                  <div className="flex">
-                    <p className="text-gray-800 pr-3">8 photos</p>
-                    <p className="text-gray-400">il y a 2 mois</p>
+                  <div className="flex flex-col py-2 rounded-b-2xl">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-bold text-xl transition-colors duration-300 ease-in-out group-hover:text-orange-600">
+                        {glimTitle}
+                      </h3>
+                      <UsersAvatarAndCountDisplay
+                        users={glimsUsers}
+                        numberOfUsersToShow={2}
+                      />
+                    </div>
+                    <div className="flex">
+                      <p className="text-gray-800 pr-3">8 photos</p>
+                      <p className="text-gray-400">il y a 2 mois</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </article>
             );
           })}
         </div>

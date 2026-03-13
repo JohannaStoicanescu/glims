@@ -48,10 +48,10 @@ export default function AccountSection({
             href={href}
             onClick={onLinkClick}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
-            <Icon className="w-5 h-5" />
+            <Icon className="w-5 h-5" aria-hidden="true" />
             <span>{label}</span>
             {badge && (
-              <span className="ml-auto text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+              <span className="ml-auto text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded" aria-label={`Forfait : ${badge}`}>
                 {badge}
               </span>
             )}

@@ -171,7 +171,7 @@ export default function ImageModalDesktop({
             <div className="relative inline-block">
               <Image
                 src={picture.download_url}
-                alt={`Photo by ${picture.author}`}
+                alt={`Photo de ${picture.author}`}
                 width={picture.width}
                 height={picture.height}
                 className={`max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-lg transition-opacity duration-300 ${

@@ -67,14 +67,16 @@ export default function MembersSettings() {
   return (
     <div className="flex flex-col gap-6 pb-4">
       {/* TOGGLE MENU */}
-      <div className="flex border-b border-gray-100">
+      <div className="flex border-b border-gray-100" role="tablist" aria-label="Catégories de membres">
         <button
           type="button"
+          role="tab"
+          aria-selected={activeSubTab === 'members'}
           onClick={() => {
             setActiveSubTab('members');
             setSelectedIds([]);
           }}
-          className={`flex-1 flex items-center justify-center gap-2 py-4 font-bold transition-all border-b-2 ${
+          className={`flex-1 flex items-center justify-center gap-2 py-4 font-bold transition-all border-b-2 cursor-pointer ${
             activeSubTab === 'members'
               ? 'border-gray-900 text-gray-900'
               : 'border-transparent text-gray-400 hover:text-gray-600'
@@ -84,11 +86,13 @@ export default function MembersSettings() {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={activeSubTab === 'invitations'}
           onClick={() => {
             setActiveSubTab('invitations');
             setSelectedIds([]);
           }}
-          className={`flex-1 flex items-center justify-center gap-2 py-4 font-bold transition-all border-b-2 ${
+          className={`flex-1 flex items-center justify-center gap-2 py-4 font-bold transition-all border-b-2 cursor-pointer ${
             activeSubTab === 'invitations'
               ? 'border-gray-900 text-gray-900'
               : 'border-transparent text-gray-400 hover:text-gray-600'

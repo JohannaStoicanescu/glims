@@ -44,12 +44,13 @@ export default function FirstTimeUserDisplay() {
                 type="number"
                 name="code"
                 placeholder="Code à 6 chiffres"
+                ariaLabel="Code à 6 chiffres pour rejoindre un glim"
               />
               <ButtonForm
                 text="Rejoindre"
                 style="dark"
                 iconPosition="right"
-                icon={<ChevronRight className="h-5 w-5" />}
+                icon={<ChevronRight className="h-5 w-5" aria-hidden="true" />}
               />
             </div>
           </div>

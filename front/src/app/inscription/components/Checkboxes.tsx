@@ -2,9 +2,10 @@ export default function Checkboxes() {
   return (
     <>
       <label
-        className="flex items-center space-x-2"
-        aria-label="Conditions d'utilisations">
+        htmlFor="terms-checkbox"
+        className="flex items-center space-x-2 cursor-pointer">
         <input
+          id="terms-checkbox"
           type="checkbox"
           className="h-4 w-4 cursor-pointer"
           required
@@ -17,9 +18,10 @@ export default function Checkboxes() {
         </p>
       </label>
       <label
-        className="flex items-center space-x-2"
-        aria-label="Enregistrer mon mot de passe">
+        htmlFor="remember-password-checkbox"
+        className="flex items-center space-x-2 cursor-pointer">
         <input
+          id="remember-password-checkbox"
           type="checkbox"
           className="h-4 w-4 cursor-pointer"
         />

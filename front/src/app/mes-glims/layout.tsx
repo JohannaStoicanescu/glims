@@ -14,11 +14,11 @@ export default function RootLayout({
   const { data: session, isPending } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!isPending && !session) {
-      router.push('/connexion');
-    }
-  }, [session, isPending, router]);
+  // useEffect(() => {
+  //   if (!isPending && !session) {
+  //     router.push('/connexion');
+  //   }
+  // }, [session, isPending, router]);
 
   if (isPending) {
     return (
@@ -28,9 +28,9 @@ export default function RootLayout({
     );
   }
 
-  if (!session) {
-    return null;
-  }
+  // if (!session) {
+  //   return null;
+  // }
 
   return (
     <div className="flex h-screen overflow-hidden">

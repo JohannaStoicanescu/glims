@@ -26,15 +26,18 @@ export default function InputForm({
   required = false,
 }: InputFormProps) {
   const [inputValue, setInputValue] = useState(value || '');
+  const effectiveLabel = label || ariaLabel;
 
   return (
     <div>
       <label
-        className={`text-black font-medium block ${label ? 'mb-2' : ''}`}
-        id={name}
-        htmlFor={name}
-        aria-label={label ? label : ariaLabel}>
-        {showLabel && <span>{label}</span>}
+        className={`text-black font-medium block ${label || ariaLabel ? 'mb-2' : ''}`}
+        htmlFor={name}>
+        {showLabel ? (
+          <span>{label}</span>
+        ) : (
+          effectiveLabel && <span className="sr-only">{effectiveLabel}</span>
+        )}
       </label>
       <input
         type={type}
@@ -47,6 +50,7 @@ export default function InputForm({
         id={name}
         placeholder={placeholder}
         required={required}
+        aria-label={!showLabel && !effectiveLabel ? placeholder : undefined}
         className="w-full border border-gray-200 p-3 rounded-lg bg-gray-50 
         hover:border-orange-600 focus:outline-none focus:ring focus:ring-orange-600 transition"
       />

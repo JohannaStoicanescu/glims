@@ -53,32 +53,36 @@ export default function ProfilePhotoSection({
 
       <div className="pt-5 flex flex-col items-center gap-6 w-full md:flex-row md:justify-start">
         {/* PHOTO PREVIEW */}
-        <div
+        <button
+          type="button"
           onClick={onPickPhoto}
-          className="h-36 w-36 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200 cursor-pointer md:h-20 md:w-20 transition hover:opacity-80 flex items-center justify-center">
+          aria-label="Choisir une photo de profil"
+          className="h-36 w-36 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200 cursor-pointer md:h-20 md:w-20 transition hover:opacity-80 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-orange-400">
           {photoPreviewUrl ? (
             // Show the selected photo preview
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={photoPreviewUrl}
-              alt="Aperçu"
+              alt="Aperçu de votre photo de profil"
               className="h-full w-full object-cover"
             />
           ) : (
             // Placeholder if no photo is selected
             <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
-              <span className="text-4xl">—</span>
+              <span className="text-4xl" aria-hidden="true">—</span>
             </div>
           )}
-        </div>
+        </button>
 
         {/* Hidden file input for photo selection */}
         <input
           ref={fileInputRef}
           type="file"
+          id="profile-photo-input"
           accept="image/*"
           className="hidden"
           onChange={handleFileChange}
+          aria-hidden="true"
         />
 
         <div className="flex flex-row items-center justify-center gap-4 w-full md:w-auto">

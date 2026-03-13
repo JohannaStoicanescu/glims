@@ -1,3 +1,3 @@
 export default function MenuDivider() {
-  return <div className="mx-4 my-2 border-t border-gray-200" />;
+  return <div className="mx-4 my-2 border-t border-gray-200" role="separator" aria-hidden="true" />;
 }

@@ -25,16 +25,19 @@ export default function GlimsMenuButton({
   return (
     <div className="relative">
       <button
-        className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer transition"
+        aria-label="Plus d'options pour ce Glims"
+        aria-haspopup="true"
+        aria-expanded={isMenuOpen}
+        className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer transition focus:outline-none focus:ring-2 focus:ring-orange-200"
         onClick={() => setIsMenuOpen(!isMenuOpen)}>
-        <EllipsisVertical />
+        <EllipsisVertical aria-hidden="true" />
       </button>
 
       <GlimsOptionsMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         pictures={pictures}
-        glimsName={glimsName}
+        glimName={glimsName}
       />
     </div>
   );

@@ -25,7 +25,13 @@ export default function SubscriptionCard() {
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+        <div 
+          className="w-full h-2 bg-slate-200 rounded-full overflow-hidden"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={maxStorage}
+          aria-valuenow={currentStorage}
+          aria-label={`Stockage utilisé : ${currentStorage} Go sur ${maxStorage} Go`}>
           <div
             className="h-full bg-blue-600 rounded-full transition-all duration-500"
             style={{ width: `${percentage}%` }}

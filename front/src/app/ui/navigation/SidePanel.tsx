@@ -92,7 +92,8 @@ export default function SidePanel() {
                 className={`text-gray-600 font-medium ${isMenuReduced ? 'w-full flex justify-center rotate-180 transition-all duration-300' : 'transition-all duration-300'}
                             p-2 rounded-lg border border-transparent
                           hover:text-orange-600 hover:bg-red-50 hover:border-red-100 cursor-pointer transition`}
-                onClick={toggleMenu}>
+                onClick={toggleMenu}
+                aria-label={isMenuReduced ? "Agrandir le menu" : "Réduire le menu"}>
                 <PanelLeftClose
                   size={25}
                   className="cursor-pointer transition-colors"

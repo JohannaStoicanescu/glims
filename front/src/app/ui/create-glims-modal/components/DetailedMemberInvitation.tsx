@@ -77,7 +77,8 @@ export default function DetailedMemberInvitation() {
             <button
               type="button"
               onClick={() => setSelectedEmails([])}
-              className="text-gray-400 hover:text-black">
+              className="text-gray-400 hover:text-black cursor-pointer"
+              aria-label="Désélectionner tout">
               <X size={16} />
             </button>
           )}
@@ -87,7 +88,8 @@ export default function DetailedMemberInvitation() {
           <button
             type="button"
             onClick={deleteSelected}
-            className="w-10 h-10 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg flex items-center justify-center transition">
+            className="w-10 h-10 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg flex items-center justify-center transition cursor-pointer"
+            aria-label="Supprimer les membres sélectionnés">
             <Trash2 size={20} />
           </button>
         )}

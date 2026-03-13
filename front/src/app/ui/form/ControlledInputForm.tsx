@@ -27,19 +27,22 @@ export default function ControlledInputForm({
   } = useFormContext();
 
   const error = errors[name] as FieldError;
+  const errorId = `${name}-error`;
 
   return (
     <div>
       <label
         className="text-black font-medium pb-2 block"
-        htmlFor={name}
-        aria-label={label}>
-        {showLabel && <span>{label}</span>}
+        htmlFor={name}>
+        {showLabel ? <span>{label}</span> : <span className="sr-only">{label}</span>}
       </label>
       <input
         type={type}
         id={name}
         placeholder={placeholder}
+        aria-invalid={error ? 'true' : 'false'}
+        aria-describedby={error ? errorId : undefined}
+        required={required}
         className={`w-full border p-3 rounded-lg bg-gray-50 hover:border-orange-600 focus:outline-none focus:ring focus:ring-orange-600 transition ${
           error ? 'border-red-400 focus:ring-red-400' : 'border-gray-200'
         }`}
@@ -50,6 +53,7 @@ export default function ControlledInputForm({
       />
       {error && (
         <p
+          id={errorId}
           className="mt-1 text-sm text-red-600"
           role="alert">
           {error.message}

@@ -25,7 +25,7 @@ export default function DesktopDropdown({
           className="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition"
           onClick={onOpenSettings}>
           <span className="font-medium">Paramètres</span>
-          <Users size={18} />
+          <Users size={18} aria-hidden="true" />
         </button>
       </div>
 

@@ -14,14 +14,14 @@ export default function UsersAvatarAndCountDisplay({
 }: UsersAvatarAndCountDisplayProps) {
   const extraUsersCount = users.length - numberOfUsersToShow;
   return (
-    <div className="flex items-center">
+    <div className="flex items-center" aria-label={`${users.length} membres dans ce Glims`}>
       {users.slice(0, numberOfUsersToShow).map((user, index) => (
         <div
           key={user.id + index}
           className={`rounded-full ${index > 0 ? '-ml-3 border-5 border-white' : ''}`}>
           <Image
             src={user.profilePic}
-            alt="Photo de profil utilisateur"
+            alt="Membre"
             width={40}
             height={40}
             className="rounded-full"
@@ -29,7 +29,9 @@ export default function UsersAvatarAndCountDisplay({
         </div>
       ))}
       {users.length > numberOfUsersToShow && (
-        <div className="relative p-5 bg-gray-200 rounded-full -ml-3 border-5 border-white">
+        <div 
+          className="relative p-5 bg-gray-200 rounded-full -ml-3 border-5 border-white"
+          aria-hidden="true">
           <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm">{`+${extraUsersCount}`}</p>
         </div>
       )}

@@ -10,7 +10,7 @@ export default function LogoutButton({ onLogout }: LogoutButtonProps) {
       <button
         onClick={onLogout}
         className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors text-gray-700 w-full">
-        <DoorOpen className="w-5 h-5" />
+        <DoorOpen className="w-5 h-5" aria-hidden="true" />
         <span>Me déconnecter</span>
       </button>
     </div>
