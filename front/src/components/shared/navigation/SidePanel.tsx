@@ -3,8 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-import { PanelLeftClose } from '../icons';
-import { CreateGlimsModal } from '..';
+import { PanelLeftClose, CreateGlimsModal } from '@/components';
 import NavLinks from './components/NavLinks';
 import { NAV_LINKS } from './utils/get-nav-links';
 

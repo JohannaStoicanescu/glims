@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { ButtonForm, StepIndicators } from '../..';
-import { CreateGlimForm } from '../CreateGlimsModal';
 import {
+  ButtonForm,
+  StepIndicators,
   Mail,
   Plus,
   Trash2,
@@ -12,8 +11,10 @@ import {
   Search,
   QrCode,
   Crown,
-} from '../../icons';
+} from '@/components';
+import { CreateGlimForm } from '../CreateGlimsModal';
 import DetailedMemberInvitation from './DetailedMemberInvitation';
+import { useState } from 'react';
 
 interface Step2Props {
   showInviteDetails: boolean;

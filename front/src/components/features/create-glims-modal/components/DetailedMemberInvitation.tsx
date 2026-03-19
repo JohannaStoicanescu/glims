@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Dropdown } from '../..';
+import { Dropdown, Trash2, Check, ChevronDown, X } from '@/components';
 import { CreateGlimForm, GlimRole } from '../CreateGlimsModal';
-import { Trash2, Check, ChevronDown, X } from '../../icons';
 
 const ROLES: GlimRole[] = ['Lecteur', 'Éditeur', 'Administrateur'];
 

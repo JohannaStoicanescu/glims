@@ -2,8 +2,8 @@
 
 import { useFormContext } from 'react-hook-form';
 import Image from 'next/image';
-import { ControlledInputForm, ButtonForm } from '@/app/ui';
-import { Plus, Trash2, Crown, Pencil } from '@/app/ui/icons';
+import { ControlledInputForm, ButtonForm } from '@/components';
+import { Plus, Trash2, Crown, Pencil } from '@/components/ui/icons';
 import { GlimsSettingsForm } from '../GlimsSettingsModal';
 
 export default function GeneralSettings() {

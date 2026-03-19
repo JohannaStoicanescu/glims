@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronLeft, X } from '../../icons';
+import { ChevronLeft, X } from '@/components';
 
 interface ModalHeaderProps {
   readonly title?: string;

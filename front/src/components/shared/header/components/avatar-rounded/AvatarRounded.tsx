@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { MenuContent } from './components';
-import { Dropdown, Modal } from '@/app/ui';
+import { Dropdown, Modal } from '@/components';
 import { useIsMobile } from '@/hooks/use-media-query';
 import { useSession } from '@/hooks';
 

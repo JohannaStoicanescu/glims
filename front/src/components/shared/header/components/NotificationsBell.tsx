@@ -1,4 +1,4 @@
-import { Bell } from '../../icons';
+import { Bell } from '@/components/ui';
 
 export default function NotificationsBell() {
   // TODO: Replace with real unread notifications count

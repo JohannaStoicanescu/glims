@@ -5,8 +5,7 @@ import { useState } from 'react';
 
 import NavLinks from './components/NavLinks';
 import { NAV_LINKS } from './utils/get-nav-links';
-import { Menu } from '../icons';
-import { CreateGlimsModal, Modal } from '..';
+import { CreateGlimsModal, Modal, Menu } from '@/components';
 
 export default function BurgerMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

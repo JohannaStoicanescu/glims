@@ -16,8 +16,8 @@ import {
   Trash2,
   AlertCircle,
   Share2,
-} from '@/app/ui/icons';
-import { ConfirmationModal } from '@/app/ui';
+} from '@/components/ui/icons';
+import { ConfirmationModal } from '@/components';
 import { useDeleteMedia, useGetUserById } from '@/hooks';
 
 interface ImageModalMobileProps {

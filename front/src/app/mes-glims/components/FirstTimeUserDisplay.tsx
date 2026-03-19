@@ -1,4 +1,4 @@
-import { ButtonForm, InputForm } from '@/app/ui';
+import { ButtonForm, InputForm } from '@/components';
 import { ChevronRight } from 'lucide-react';
 
 export default function FirstTimeUserDisplay() {

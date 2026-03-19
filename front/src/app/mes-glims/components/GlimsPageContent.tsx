@@ -6,7 +6,7 @@ import FilterPanel from './FilterPanel';
 import FirstTimeUserDisplay from './FirstTimeUserDisplay';
 import GlimsDisplay from './GlimsDisplay';
 import NoGlimsDisplay from './NoGlimsDisplay';
-import { TutorialModal } from '@/app/ui';
+import { TutorialModal } from '@/components';
 import { useAuthClient, useGetUsersFoldersList } from '@/hooks';
 import { Folder } from '@/types';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Modal } from '..';
+import { Modal } from '@/components';
 import { useIsMobile } from '@/hooks/use-media-query';
 import VisualSection from './components/VisualSection';
 import ContentSection from './components/ContentSection';

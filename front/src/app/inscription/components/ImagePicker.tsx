@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { Pencil, Plus, Trash2 } from '../../ui/icons';
+import { Pencil, Plus, Trash2 } from '@/components/ui/icons';
 import { NewUser } from '@/types';
 
 export default function ImagePicker() {

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Minimize2 } from '@/app/ui/icons';
+import { ChevronLeft, ChevronRight, Minimize2 } from '@/components/ui/icons';
 import { Picture } from '.';
 import { useGetUserById } from '@/hooks';
 

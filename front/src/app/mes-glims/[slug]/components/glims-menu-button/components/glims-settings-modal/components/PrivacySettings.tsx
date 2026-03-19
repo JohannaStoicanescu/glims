@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormContext } from 'react-hook-form';
-import { Trash2 } from '@/app/ui/icons';
+import { Trash2 } from '@/components/ui/icons';
 import { GlimsSettingsForm } from '../GlimsSettingsModal';
 
 export default function PrivacySettings() {

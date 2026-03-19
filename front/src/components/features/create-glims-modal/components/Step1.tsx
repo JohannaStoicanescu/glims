@@ -1,9 +1,8 @@
 'use client';
 
 import { useFormContext } from 'react-hook-form';
-import { ButtonForm, ControlledInputForm, StepIndicators } from '../..';
+import { ButtonForm, ControlledInputForm, StepIndicators, ChevronRight } from '@/components';
 import { CreateGlimForm } from '../CreateGlimsModal';
-import { ChevronRight } from '../../icons';
 
 interface Step1Props {
   onNext: () => void;

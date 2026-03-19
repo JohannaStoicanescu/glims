@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { X } from '@/app/ui/icons';
+import { X } from '@/components/ui/icons';
 
 interface VisualSectionProps {
   isMobile: boolean;

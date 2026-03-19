@@ -1,5 +1,5 @@
+import { House, SquarePlus, User } from '@/components/ui';
 import React from 'react';
-import { House, SquarePlus, User } from '../../icons';
 
 export interface NavLink {
   title: string;

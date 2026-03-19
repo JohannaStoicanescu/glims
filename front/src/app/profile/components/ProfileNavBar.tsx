@@ -1,6 +1,6 @@
 'use client';
 
-import { Camera, CreditCard, Download, User, Lock } from '@/app/ui/icons';
+import { Camera, CreditCard, Download, User, Lock } from '@/components/ui/icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

@@ -8,7 +8,7 @@ import {
   Upload,
   Users,
   File,
-} from '@/app/ui/icons';
+} from '@/components/ui/icons';
 import {
   SortOption,
   FileType,

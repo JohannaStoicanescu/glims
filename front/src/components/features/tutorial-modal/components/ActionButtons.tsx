@@ -1,7 +1,7 @@
 'use client';
 
-import { ButtonForm } from '@/app/ui';
-import { ChevronRight } from '@/app/ui/icons';
+import { ButtonForm } from '@/components';
+import { ChevronRight } from '@/components/ui/icons';
 
 interface ActionButtonsProps {
   onNext: () => void;

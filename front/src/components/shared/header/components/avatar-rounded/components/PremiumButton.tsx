@@ -1,4 +1,4 @@
-import { Crown } from '@/app/ui/icons';
+import { Crown } from '@/components/ui/icons';
 
 export default function PremiumButton() {
   return (

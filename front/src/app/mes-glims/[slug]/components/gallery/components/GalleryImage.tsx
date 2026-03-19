@@ -14,8 +14,8 @@ import {
   Trash2,
   AlertCircle,
   Heart,
-} from '@/app/ui/icons';
-import { ConfirmationModal } from '@/app/ui';
+} from '@/components/ui/icons';
+import { ConfirmationModal } from '@/components';
 import { useDeleteMedia, useGetUserById } from '@/hooks';
 
 export type Picture = {

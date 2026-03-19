@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { ConfirmationModal, Modal } from '..';
+import { ConfirmationModal, Modal } from '@/components';
 import ModalHeader from './components/ModalHeader';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
-import { DoorOpen } from '../icons';
+import { DoorOpen } from '@/components';
 import { useCreateFolder } from '@/hooks';
 
 interface CreateGlimsModalProps {

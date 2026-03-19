@@ -1,4 +1,4 @@
-import { DoorOpen } from '@/app/ui/icons';
+import { DoorOpen } from '@/components/ui/icons';
 
 interface LogoutButtonProps {
   onLogout: () => void;
