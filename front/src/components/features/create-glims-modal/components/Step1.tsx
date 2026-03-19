@@ -1,7 +1,12 @@
 'use client';
 
 import { useFormContext } from 'react-hook-form';
-import { ButtonForm, ControlledInputForm, StepIndicators, ChevronRight } from '@/components';
+import {
+  ButtonForm,
+  ControlledInputForm,
+  StepIndicators,
+  ChevronRight,
+} from '@/components';
 import { CreateGlimForm } from '../CreateGlimsModal';
 
 interface Step1Props {

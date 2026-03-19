@@ -1,57 +1,56 @@
 'use client';
 
-import { Camera, CreditCard, Download, User, Lock } from '@/components/ui/icons';
+import { Camera, User } from '@/components/ui/icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function ProfileNavBar() {
   const pathname = usePathname();
-  const currentSegment = pathname.split('/').pop();
 
-  const navigationItems = [
+  const navItems = [
     {
       label: 'Mon compte',
       href: '/profile/mon-compte',
-      value: 'mon-compte',
-      icon: <User className="w-4 h-4 lg:w-5 lg:h-5" />,
-    },
-    {
-      label: 'Mon abonnement',
-      href: '/profile/mon-abonnement',
-      value: 'mon-abonnement',
-      icon: <CreditCard className="w-4 h-4 lg:w-5 lg:h-5" />,
-    },
-    {
-      label: 'Téléchargement et favoris',
-      href: '/profile/telechargement-et-favoris',
-      value: 'telechargement-et-favoris',
-      icon: <Download className="w-4 h-4 lg:w-5 lg:h-5" />,
+      icon: <User size={20} />,
     },
     {
       label: 'Mes photos',
       href: '/profile/mes-photos',
-      value: 'mes-photos',
-      icon: <Camera className="w-4 h-4 lg:w-5 lg:h-5" />,
+      icon: <Camera size={20} />,
     },
-    {
-      label: 'Sécurité',
-      href: '/profile/securite',
-      value: 'securite',
-      icon: <Lock className="w-4 h-4 lg:w-5 lg:h-5" />,
-    },
+    // {
+    //   label: 'Mes Glims',
+    //   href: '/profile/mes-glims',
+    //   icon: <Users size={20} />,
+    // },
+    // {
+    //   label: 'Mon abonnement',
+    //   href: '/profile/mon-abonnement',
+    //   icon: <CreditCard size={20} />,
+    // },
+    // {
+    //   label: 'Sécurité',
+    //   href: '/profile/securite',
+    //   icon: <Lock size={20} />,
+    // },
+    // {
+    //   label: 'Téléchargements et favoris',
+    //   href: '/profile/telechargement-et-favoris',
+    //   icon: <Download size={20} />,
+    // },
   ];
 
   return (
-    <div className="flex">
-      {navigationItems.map((item, index) => (
+    <div className="flex w-full md:flex-col gap-1 md:gap-2 border-b md:border-b-0 border-slate-100 pb-4 md:pb-0 px-2 sm:px-4 md:px-0 overflow-x-auto scrollbar-hide">
+      {navItems.map((item) => (
         <Link
-          key={item.href + index}
+          key={item.href}
           href={item.href}
-          className={`max-md:w-full px-4 py-2 flex justify-center items-center cursor-pointer border-b-2 rounded-t-lg text-center ${
-            currentSegment === item.value
-              ? 'border-orange-600 hover:border-b-orange-600 text-orange-600'
-              : 'border-b-white hover:border-b-gray-500 hover:text-gray-600'
-          } transition duration-200`}>
+          className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 whitespace-nowrap ${
+            pathname === item.href
+              ? 'bg-orange-50 text-orange-600 font-bold shadow-sm'
+              : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+          } active:scale-95 duration-200`}>
           <span className="md:pr-2 lg:pr-4">{item.icon}</span>
           <span className="text-xs lg:text-[0.8rem] max-md:hidden">
             {item.label}

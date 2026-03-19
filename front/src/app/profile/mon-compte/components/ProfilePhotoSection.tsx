@@ -4,12 +4,18 @@ import React, { useRef, useMemo, useEffect } from 'react';
 
 interface ProfilePhotoSectionProps {
   photoFile: File | null;
+  userImage?: string | null;
   onPhotoChange: (file: File | null) => void;
+  onSave: () => void;
+  isUpdating?: boolean;
 }
 
 export default function ProfilePhotoSection({
   photoFile,
+  userImage,
   onPhotoChange,
+  onSave,
+  isUpdating = false,
 }: ProfilePhotoSectionProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -45,6 +51,15 @@ export default function ProfilePhotoSection({
     }
   };
 
+  const displayImage = photoPreviewUrl || userImage;
+
+  // Determine the status text to display
+  const statusText = useMemo(() => {
+    if (photoFile) return photoFile.name;
+    if (userImage) return 'Photo de profil active';
+    return "Aucune photo pour l'instant";
+  }, [photoFile, userImage]);
+
   return (
     <div className="flex flex-col items-center md:items-start">
       <div className="w-full text-sm font-semibold text-slate-900 text-left">
@@ -55,12 +70,12 @@ export default function ProfilePhotoSection({
         {/* PHOTO PREVIEW */}
         <div
           onClick={onPickPhoto}
-          className="h-36 w-36 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200 cursor-pointer md:h-20 md:w-20 transition hover:opacity-80 flex items-center justify-center">
-          {photoPreviewUrl ? (
-            // Show the selected photo preview
+          className="h-36 w-36 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200 cursor-pointer md:h-20 md:w-20 transition hover:opacity-80 flex items-center justify-center relative">
+          {displayImage ? (
+            // Show the selected photo preview or current user image
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={photoPreviewUrl}
+              src={displayImage}
               alt="Aperçu"
               className="h-full w-full object-cover"
             />
@@ -82,6 +97,16 @@ export default function ProfilePhotoSection({
         />
 
         <div className="flex flex-row items-center justify-center gap-4 w-full md:w-auto">
+          {photoFile && (
+            <button
+              type="button"
+              onClick={onSave}
+              disabled={isUpdating}
+              className="text-xs md:text-sm cursor-pointer rounded-xl border border-transparent bg-slate-900 px-8 py-3 font-bold text-white transition hover:bg-slate-800 shadow-sm disabled:opacity-50">
+              {isUpdating ? 'Enregistrement...' : 'Enregistrer'}
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onDeletePhoto}
@@ -90,7 +115,7 @@ export default function ProfilePhotoSection({
           </button>
 
           <div className="text-xs md:text-sm font-bold text-slate-500">
-            {photoFile ? photoFile.name : "Aucune photo pour l'instant"}
+            {statusText}
           </div>
         </div>
       </div>

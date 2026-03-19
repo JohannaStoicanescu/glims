@@ -10,11 +10,12 @@ import {
 } from '.';
 
 interface ImageModalProps {
-  picture: Picture;
+  picture: Picture | undefined;
   pictures: Picture[];
   currentIndex: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
+  availableReactions?: { id: string; name: string; svg: string }[];
 }
 
 export default function ImageModal({
@@ -23,6 +24,7 @@ export default function ImageModal({
   currentIndex,
   onClose,
   onNavigate,
+  availableReactions = [],
 }: ImageModalProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -106,13 +108,23 @@ export default function ImageModal({
 
   // Format date in French locale
   const formatDate = useCallback(() => {
-    const date = new Date();
+    if (!picture) return '';
+    const date = new Date(picture.created_at);
     return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
-  }, []);
+  }, [picture]);
+
+  // If picture becomes undefined (e.g. deleted), close the modal
+  useEffect(() => {
+    if (!picture && pictures.length > 0) {
+      onClose();
+    }
+  }, [picture, pictures.length, onClose]);
+
+  if (!picture) return null;
 
   // Fullscreen mode is only for desktop
   if (isExpanded) {
@@ -140,17 +152,14 @@ export default function ImageModal({
       <div className="md:hidden">
         <ImageModalMobile
           picture={picture}
-          pictures={pictures}
-          currentIndex={currentIndex}
           isLoaded={isLoaded}
           onClose={onClose}
-          onNavigate={onNavigate}
           onImageLoad={handleImageLoad}
-          onResetLoad={handleResetLoad}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
           formatDate={formatDate}
+          availableReactions={availableReactions}
         />
       </div>
 
@@ -169,6 +178,7 @@ export default function ImageModal({
           onNext={handleNext}
           onToggleExpanded={toggleExpanded}
           formatDate={formatDate}
+          availableReactions={availableReactions}
         />
       </div>
     </>

@@ -20,4 +20,11 @@ export class MediaWithFileResponseDto {
     example: 'image/jpeg',
   })
   contentType: string;
+
+  @ApiProperty({
+    description: 'Title of the folder (event) this media belongs to',
+    example: 'Summer Vacation',
+    required: false,
+  })
+  folder_title?: string;
 }

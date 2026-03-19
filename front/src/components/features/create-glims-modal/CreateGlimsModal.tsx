@@ -45,7 +45,7 @@ export default function CreateGlimsModal({
       description: '',
       members: [],
       reactionsEnabled: false,
-      reactions: ['❤️', '🔥', '👏', '😂', '😮'], // Default reactions
+      reactions: ['like', 'love', 'laugh', 'wow'], // Default reaction names from DB
     },
   });
 
@@ -80,7 +80,11 @@ export default function CreateGlimsModal({
 
   const onSubmit = (data: CreateGlimForm) => {
     createFolder.mutate(
-      { title: data.title, description: data.description },
+      {
+        title: data.title,
+        description: data.description,
+        reaction_types: data.reactionsEnabled ? data.reactions : [],
+      },
       { onSuccess: handleClose }
     );
   };

@@ -26,6 +26,14 @@ export type Picture = {
   user_id: string;
   folder_id: string;
   created_at: string;
+  reactions?: {
+    id: string;
+    reaction_type: {
+      id: string;
+      name: string;
+      svg: string;
+    };
+  }[];
 };
 
 interface GalleryImageProps {
@@ -165,6 +173,33 @@ export default function GalleryImage({
       />
       {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+      )}
+
+      {/* REACTIONS SUMMARY - BOTTOM LEFT */}
+      {picture.reactions && picture.reactions.length > 0 && (
+        <div className="absolute bottom-2 left-2 z-10 flex -space-x-1 overflow-hidden pointer-events-none">
+          {Array.from(new Set(picture.reactions.map((r) => r.reaction_type.id)))
+            .slice(0, 3)
+            .map((typeId) => {
+              const reaction = picture.reactions!.find(
+                (r) => r.reaction_type.id === typeId
+              );
+              return (
+                <div
+                  key={typeId}
+                  className="w-6 h-6 rounded-full bg-white/90 p-1 shadow-sm border border-black/5"
+                  dangerouslySetInnerHTML={{
+                    __html: reaction!.reaction_type.svg,
+                  }}
+                />
+              );
+            })}
+          {picture.reactions.length > 3 && (
+            <div className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center text-[10px] font-bold text-slate-700 shadow-sm border border-black/5">
+              +{picture.reactions.length - 3}
+            </div>
+          )}
+        </div>
       )}
 
       {/* OPTIONS BUTTON - TOP RIGHT */}

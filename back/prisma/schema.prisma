@@ -43,6 +43,9 @@ model User {
 
   // BetterAuth fields
   name          String
+  firstName     String?
+  lastName      String?
+  newsletter    Boolean   @default(false)
   emailVerified Boolean
   image         String?
   createdAt     DateTime  @default(now())

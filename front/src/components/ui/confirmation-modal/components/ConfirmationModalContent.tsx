@@ -24,6 +24,7 @@ export function ConfirmationModalContent({
 }: ConfirmationModalContentProps) {
   return (
     <div
+      onClick={(e) => e.stopPropagation()}
       className={`rounded-xl p-6 pt-4 md:p-10 md:pt-8 flex flex-col items-center gap-4 
             ${radial ? 'bg-radial from-red-100 via-white to-white bg-[length:200%_200%] bg-top' : 'bg-white'}`}>
       <div className="w-full flex justify-end">

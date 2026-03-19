@@ -1,7 +1,13 @@
 import { ButtonForm, InputForm } from '@/components';
 import { ChevronRight } from 'lucide-react';
 
-export default function FirstTimeUserDisplay() {
+interface FirstTimeUserDisplayProps {
+  onCreateClick?: () => void;
+}
+
+export default function FirstTimeUserDisplay({
+  onCreateClick,
+}: FirstTimeUserDisplayProps) {
   return (
     <>
       {/* DESKTOP DISPLAY */}
@@ -28,6 +34,7 @@ export default function FirstTimeUserDisplay() {
                 Créer mon premier glim
               </h3>
               <button
+                onClick={onCreateClick}
                 className="w-full flex items-center justify-center gap-2 font-bold py-3 rounded-xl cursor-pointer transition-all
             text-white bg-black border border-black hover:bg-white hover:text-black">
                 Commencer
@@ -74,6 +81,7 @@ export default function FirstTimeUserDisplay() {
         {/* CREATE FIRST GLIM OR JOIN GLIM */}
         <div className="space-y-2 flex flex-col pb-16">
           <button
+            onClick={onCreateClick}
             className="w-full flex items-center justify-center gap-2 font-bold py-3 rounded-xl cursor-pointer transition-all
             text-white bg-black border border-black focus:bg-white focus:text-black">
             Créer mon premier glim
