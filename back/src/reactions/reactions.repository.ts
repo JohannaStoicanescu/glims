@@ -182,4 +182,26 @@ export class ReactionsRepository {
       where: { id: reaction_id },
     });
   }
+
+  /**
+   * Gets all available reaction types
+   */
+  async getAllReactionTypes(): Promise<ReactionType[]> {
+    return this.prisma.reactionType.findMany({
+      orderBy: { name: 'asc' },
+    });
+  }
+
+  /**
+   * Gets reaction types by names or IDs
+   */
+  async getReactionTypesByNamesOrIds(
+    identifiers: string[]
+  ): Promise<ReactionType[]> {
+    return this.prisma.reactionType.findMany({
+      where: {
+        OR: [{ id: { in: identifiers } }, { name: { in: identifiers } }],
+      },
+    });
+  }
 }

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 
-import { ArrowDownUp, ChevronDown, Search } from '@/app/ui/icons';
+import { ArrowDownUp, ChevronDown, Search } from '@/components/ui/icons';
 import { Folder } from '@/types';
 
 interface FilterPanelProps {

@@ -5,9 +5,10 @@ import { FoldersController } from './folders.controller';
 import { FoldersRepository } from './folders.repository';
 import { StorageServiceProvider } from 'src/storage/storage.provider';
 import { TagsModule } from '../tags/tags.module';
+import { ReactionsModule } from '../reactions/reactions.module';
 
 @Module({
-  imports: [forwardRef(() => TagsModule)],
+  imports: [forwardRef(() => TagsModule), ReactionsModule],
   controllers: [FoldersController],
   providers: [
     FoldersService,

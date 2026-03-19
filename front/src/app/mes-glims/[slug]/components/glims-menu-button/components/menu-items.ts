@@ -7,7 +7,7 @@ import {
   AlertCircle,
   Trash2,
   DoorOpen,
-} from '@/app/ui/icons';
+} from '@/components/ui/icons';
 
 export interface Picture {
   id: string;

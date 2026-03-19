@@ -51,6 +51,7 @@ export default function GlimsDetailsPageContent({
         <ImageGallery
           pictures={picturesToDisplay}
           displayMode={displayMode}
+          availableReactions={folder?.available_reactions}
         />
       </div>
 

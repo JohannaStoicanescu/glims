@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { DISPLAY_MODE_LABELS } from '@/constants';
 import { DisplayMode } from '@/types';
-import { Dropdown } from '@/app/ui';
+import { Dropdown } from '@/components';
 
 interface DisplayModeDropdownProps {
   selectedMode: DisplayMode;

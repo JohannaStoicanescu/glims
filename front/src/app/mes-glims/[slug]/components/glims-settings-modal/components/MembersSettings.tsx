@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import Image from 'next/image';
-import { Dropdown } from '@/app/ui';
+import { Dropdown } from '@/components';
 import {
   Trash2,
   Check,
@@ -12,7 +12,7 @@ import {
   User,
   Send,
   UserPlus,
-} from '@/app/ui/icons';
+} from '@/components/ui/icons';
 import {
   GlimRole,
   GlimsSettingsForm,

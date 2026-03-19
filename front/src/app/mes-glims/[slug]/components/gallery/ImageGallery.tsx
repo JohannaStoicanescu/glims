@@ -8,11 +8,13 @@ import { Picture, MasonryGallery, GridGallery, ImageModal } from './components';
 interface ImageGalleryProps {
   pictures: Picture[];
   displayMode: DisplayMode;
+  availableReactions?: { id: string; name: string; svg: string }[];
 }
 
 export default function ImageGallery({
   pictures,
   displayMode,
+  availableReactions = [],
 }: ImageGalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
@@ -65,6 +67,7 @@ export default function ImageGallery({
           picture={pictures[selectedImageIndex]}
           pictures={pictures}
           currentIndex={selectedImageIndex}
+          availableReactions={availableReactions}
           onClose={handleCloseModal}
           onNavigate={handleNavigate}
         />

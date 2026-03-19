@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { EllipsisVertical } from '@/app/ui/icons';
+import { EllipsisVertical } from '@/components/ui/icons';
 import GlimsOptionsMenu from './components/GlimsOptionsMenu';
 import { Picture } from './components/menu-items';
 

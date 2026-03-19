@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSession } from '@/hooks';
-import { Header, SidePanel } from '../ui';
+import { Header, SidePanel } from '@/components';
 import ProfileNavBar from './components/ProfileNavBar';
 import '../globals.css';
 

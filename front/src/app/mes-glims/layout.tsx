@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSession } from '@/hooks';
-import { Header, SidePanel } from '../ui';
+import { Header, SidePanel } from '@/components';
 import '../globals.css';
 
 export default function RootLayout({

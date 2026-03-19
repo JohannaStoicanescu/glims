@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Crown } from '@/app/ui/icons';
+import { Crown } from '@/components/ui/icons';
 
 export default function SubscriptionCard() {
   const currentStorage = 3.5;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
 
 import EditableRow from './EditableRow';
@@ -8,6 +8,7 @@ import PremiumButton from './PremiumButton';
 import ProfilePhotoSection from './ProfilePhotoSection';
 import NotificationsSection from './NotificationsSection';
 import EmailDisplay from './EmailDisplay';
+import { useSession, useUpdateUser } from '@/hooks';
 
 type FormValues = {
   nom: string;
@@ -25,31 +26,63 @@ interface EditableField {
   validation: RegisterOptions<FormValues, FieldName>;
 }
 
+interface UserFromSession {
+  firstName?: string;
+  lastName?: string;
+  newsletter?: boolean;
+  name?: string;
+  email?: string;
+  image?: string | null;
+}
+
 export default function MonComptePage() {
+  const { data: session } = useSession();
+  const updateUser = useUpdateUser();
+
   const {
     register,
     getValues,
     setValue,
     watch,
     trigger,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     mode: 'onBlur',
     defaultValues: {
-      nom: 'Guillou',
-      prenom: 'Barthélémy',
-      email: 'barthelemy@gmail.com',
+      nom: '',
+      prenom: '',
+      email: '',
       newsletter: false,
     },
   });
+
+  // Populate form when session data is loaded
+  useEffect(() => {
+    if (session?.user) {
+      // Split name if firstName/lastName are not available yet in the session object
+      // (BetterAuth session might only have 'name')
+      const user = session.user as UserFromSession;
+      const firstName = user.firstName || user.name?.split(' ')[0] || '';
+      const lastName =
+        user.lastName || user.name?.split(' ').slice(1).join(' ') || '';
+
+      reset({
+        nom: lastName,
+        prenom: firstName,
+        email: session.user.email || '',
+        newsletter: user.newsletter || false,
+      });
+    }
+  }, [session, reset]);
 
   const [updatingFields, setUpdatingFields] = useState<Record<string, boolean>>(
     {}
   );
   const [photoFile, setPhotoFile] = useState<File | null>(null);
 
-  const newsletter = watch('newsletter');
   const currentEmail = watch('email');
+  const newsletter = watch('newsletter');
 
   const editableFields: EditableField[] = [
     {
@@ -92,13 +125,20 @@ export default function MonComptePage() {
 
     try {
       const value = getValues(field);
-      // TODO: Appeler l'API réelle pour mettre à jour le profil de l'utilisateur
-      console.log(`[UPDATE] Simulating update for ${field}:`, value);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const payload: Partial<UserFromSession> = {};
+      if (field === 'nom') payload.lastName = value;
+      if (field === 'prenom') payload.firstName = value;
+      if (field === 'email') payload.email = value;
 
-      console.log(`[UPDATE] ${field} updated successfully (simulated)`);
+      // Update full name as well
+      if (field === 'nom' || field === 'prenom') {
+        const firstName = field === 'prenom' ? value : getValues('prenom');
+        const lastName = field === 'nom' ? value : getValues('nom');
+        payload.name = `${firstName} ${lastName}`.trim();
+      }
+
+      await updateUser.mutateAsync(payload);
     } catch (err) {
       console.error(`[UPDATE] Error updating ${field}:`, err);
     } finally {
@@ -112,12 +152,26 @@ export default function MonComptePage() {
 
     setUpdatingFields((prev) => ({ ...prev, [field]: true }));
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await updateUser.mutateAsync({ newsletter: nextValue });
       setValue('newsletter', nextValue);
-      console.log('[NEWSLETTER] toggle (simulated):', nextValue);
+    } catch (err) {
+      console.error('[NEWSLETTER] Error toggling:', err);
     } finally {
       setUpdatingFields((prev) => ({ ...prev, [field]: false }));
+    }
+  }
+
+  async function handleSavePhoto() {
+    if (!photoFile) return;
+
+    setUpdatingFields((prev) => ({ ...prev, photo: true }));
+    try {
+      await updateUser.updateProfileImage.mutateAsync(photoFile);
+      setPhotoFile(null); // Clear selection after successful upload
+    } catch (err) {
+      console.error('[PHOTO] Error saving:', err);
+    } finally {
+      setUpdatingFields((prev) => ({ ...prev, photo: false }));
     }
   }
 
@@ -134,7 +188,10 @@ export default function MonComptePage() {
       <div className="pt-10 bg-white">
         <ProfilePhotoSection
           photoFile={photoFile}
+          userImage={session?.user?.image}
           onPhotoChange={setPhotoFile}
+          onSave={handleSavePhoto}
+          isUpdating={updatingFields['photo']}
         />
 
         <div className="pt-10 space-y-8">

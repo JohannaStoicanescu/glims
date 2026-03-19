@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { ChevronRight, Eye, EyeOff } from '../../ui/icons';
-import { ButtonForm, ControlledInputForm, StepIndicators } from '../../ui';
+import { ChevronRight, Eye, EyeOff } from '@/components/ui/icons';
+import { ButtonForm, ControlledInputForm, StepIndicators } from '@/components';
 import Checkboxes from './Checkboxes';
-import { AuthLayout } from '@/app/ui';
+import { AuthLayout } from '@/components';
 import { NewUser } from '@/types';
 
 export default function CompleteProfileSection({

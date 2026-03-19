@@ -1,7 +1,7 @@
 'use client';
 
-import { ChevronDown } from '@/app/ui/icons';
-import { Dropdown } from '@/app/ui';
+import { ChevronDown } from '@/components/ui/icons';
+import { Dropdown } from '@/components';
 import {
   SortOption,
   sortOptions,

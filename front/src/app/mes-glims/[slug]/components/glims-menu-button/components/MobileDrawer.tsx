@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SlidersHorizontal, Link, Check } from '@/app/ui/icons';
+import { SlidersHorizontal, Link, Check } from '@/components/ui/icons';
 import { MenuItem } from './menu-items';
 import MenuItemButton from './MenuItemButton';
 import DangerItemButton from './DangerItemButton';

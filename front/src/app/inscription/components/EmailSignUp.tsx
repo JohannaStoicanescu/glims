@@ -3,7 +3,7 @@
 import { useFormContext } from 'react-hook-form';
 import { HiOutlineMail } from 'react-icons/hi';
 
-import { ButtonForm, ControlledInputForm } from '@/app/ui';
+import { ButtonForm, ControlledInputForm } from '@/components';
 import { NewUser } from '@/types';
 
 export default function EmailSignUp({ onNext }: { onNext: () => void }) {

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { DisplayMode } from '@/types';
 import DisplayModeDropdown from '../DisplayModeDropdown';
-import { SlidersHorizontal } from '@/app/ui/icons';
+import { SlidersHorizontal } from '@/components/ui/icons';
 import {
   SortDropdown,
   FiltersDesktop,

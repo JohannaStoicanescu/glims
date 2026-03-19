@@ -21,6 +21,13 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname:
+          'glims-test.bedf5289009cc252fed894f01d140c90.r2.cloudflarestorage.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   async redirects() {

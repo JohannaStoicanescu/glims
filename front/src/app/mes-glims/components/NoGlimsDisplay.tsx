@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronRight, Plus } from '@/app/ui/icons';
-import { CreateGlimsModal } from '@/app/ui';
+import { ChevronRight, Plus } from '@/components/ui/icons';
+import { CreateGlimsModal } from '@/components';
 
 export default function NoGlimsDisplay() {
   const [isCreateGlimsModalOpen, setIsCreateGlimsModalOpen] = useState(false);
