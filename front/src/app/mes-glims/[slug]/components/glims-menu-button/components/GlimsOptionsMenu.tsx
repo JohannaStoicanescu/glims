@@ -7,9 +7,9 @@ import JSZip from 'jszip';
 import { Picture, getMenuItems, getDangerItems } from './menu-items';
 import DesktopDropdown from './DesktopDropdown';
 import MobileDrawer from './MobileDrawer';
-import { Modal, ConfirmationModal } from '@/app/ui';
+import { Modal, ConfirmationModal } from '@/components';
 import { useIsMobile } from '@/hooks/use-media-query';
-import { Trash2, DoorOpen } from '@/app/ui/icons';
+import { Trash2, DoorOpen } from '@/components/ui/icons';
 import GlimsSettingsModal from './glims-settings-modal/GlimsSettingsModal';
 import { useDeleteUsersFolders } from '@/hooks';
 

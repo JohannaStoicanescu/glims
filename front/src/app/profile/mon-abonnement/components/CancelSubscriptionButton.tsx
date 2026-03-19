@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ConfirmationModal } from '@/app/ui';
-import { AlertCircle } from '@/app/ui/icons';
+import { ConfirmationModal } from '@/components';
+import { AlertCircle } from '@/components/ui/icons';
 
 export default function CancelSubscriptionButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);

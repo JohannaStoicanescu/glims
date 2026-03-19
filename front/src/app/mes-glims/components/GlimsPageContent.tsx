@@ -6,13 +6,14 @@ import FilterPanel from './FilterPanel';
 import FirstTimeUserDisplay from './FirstTimeUserDisplay';
 import GlimsDisplay from './GlimsDisplay';
 import NoGlimsDisplay from './NoGlimsDisplay';
-import { TutorialModal } from '@/app/ui';
+import { CreateGlimsModal, TutorialModal } from '@/components';
 import { useAuthClient, useGetUsersFoldersList } from '@/hooks';
 import { Folder } from '@/types';
 
 export default function GlimsPageContent() {
   const authClient = useAuthClient();
   const [userId, setUserId] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     authClient.getSession().then(({ data }) => {
@@ -44,6 +45,11 @@ export default function GlimsPageContent() {
         onClose={handleTutorialClose}
       />
 
+      <CreateGlimsModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
+
       <div className="flex flex-col flex-1 min-h-0">
         <div className="flex-shrink-0">
           {!isFirstTimeUser && typedGlims.length > 0 && (
@@ -61,7 +67,9 @@ export default function GlimsPageContent() {
         </div>
 
         {isFirstTimeUser ? (
-          <FirstTimeUserDisplay />
+          <FirstTimeUserDisplay
+            onCreateClick={() => setIsCreateModalOpen(true)}
+          />
         ) : (
           <>
             {typedGlims.length === 0 ? (

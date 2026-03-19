@@ -4,6 +4,9 @@ import { FoldersRepository } from './folders.repository';
 import { TagsService } from '../tags/tags.service';
 import { randomUUID } from 'crypto';
 import { GetUserFoldersQueryDto } from './dto/get-user-folders-query.dto';
+import { S3StorageService } from 'src/storage/s3-storage.service';
+import { ReactionsService } from '../reactions/reactions.service';
+import { EnrichedFolder, FolderWithEnrichment } from 'src/lib/types';
 
 export enum FoldersError {
   FOLDER_NOT_FOUND = 'Folder not found',
@@ -20,19 +23,57 @@ export class FoldersException extends Error {
 export class FoldersService {
   constructor(
     private readonly repository: FoldersRepository,
-    private readonly tagsService: TagsService
+    private readonly tagsService: TagsService,
+    private readonly storageService: S3StorageService,
+    private readonly reactionsService: ReactionsService
   ) {}
 
-  async getFolderById(folder_id: string, user_id: string): Promise<Folder> {
+  private async enrichFolder(
+    folder: FolderWithEnrichment | null
+  ): Promise<EnrichedFolder | null> {
+    if (!folder) return null;
+
+    const media_count = folder._count?.media ?? 0;
+    let thumbnail_url: string | undefined;
+
+    if (folder.media && folder.media.length > 0) {
+      try {
+        thumbnail_url = await this.storageService.getPresignedUrl(
+          folder.media[0].storage_id
+        );
+      } catch (error) {
+        console.error('Error generating presigned URL for thumbnail:', error);
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _count: _, media: __, ...rest } = folder;
+    return {
+      ...(rest as Folder),
+      media_count,
+      thumbnail_url,
+      createdAt: folder.created_at,
+      updatedAt: folder.updated_at,
+    };
+  }
+
+  async getFolderById(
+    folder_id: string,
+    user_id: string
+  ): Promise<EnrichedFolder | null> {
     const folder = await this.checkFolderOwnership(folder_id, user_id);
-    return folder;
+    return this.enrichFolder(folder as unknown as FolderWithEnrichment);
   }
 
   async getUserFolders(
     owner_id: string,
     query?: GetUserFoldersQueryDto
-  ): Promise<Folder[]> {
-    return this.repository.getUserFolders(owner_id, query);
+  ): Promise<EnrichedFolder[]> {
+    const folders = await this.repository.getUserFolders(owner_id, query);
+    const enriched = await Promise.all(
+      folders.map((f) => this.enrichFolder(f))
+    );
+    return enriched.filter((f): f is EnrichedFolder => f !== null);
   }
 
   async createFolder(
@@ -41,105 +82,116 @@ export class FoldersService {
       description?: string;
       password?: string;
       tags?: string[];
+      reaction_types?: string[];
     },
-    user_id: string
-  ): Promise<Folder> {
+    owner_id: string
+  ): Promise<EnrichedFolder | null> {
+    // Generate unique URLs for the folder
     const upload_url = randomUUID();
     const download_url = randomUUID();
 
-    const createData: Prisma.FolderCreateInput = {
+    const folderData: Prisma.FolderCreateInput = {
       title: data.title,
       description: data.description,
       password: data.password,
       upload_url,
       download_url,
-      owner: { connect: { id: user_id } },
+      owner: { connect: { id: owner_id } },
     };
 
-    // Handle tags if provided
+    // Add tags if provided
     if (data.tags && data.tags.length > 0) {
-      createData.tags = await this.tagsService.prepareTagsConnect(data.tags);
+      folderData.tags = {
+        connectOrCreate: data.tags.map((tag) => ({
+          where: { name: tag },
+          create: { name: tag },
+        })),
+      };
     }
 
-    return this.repository.createFolder(createData);
+    // Add reaction types if provided
+    if (data.reaction_types && data.reaction_types.length > 0) {
+      const reactionTypes =
+        await this.reactionsService.getReactionTypesByIdentifiers(
+          data.reaction_types
+        );
+      folderData.available_reactions = {
+        connect: reactionTypes.map((rt) => ({ id: rt.id })),
+      };
+    }
+
+    const folder = await this.repository.createFolder(folderData);
+    return this.enrichFolder(folder as unknown as FolderWithEnrichment);
   }
 
   async updateFolder(
     folder_id: string,
-    user_id: string,
-    data: Partial<{
-      title: string;
+    data: {
+      title?: string;
       description?: string;
       password?: string;
-      upload_url: string;
-      download_url: string;
       tags?: string[];
-    }>
-  ): Promise<Folder> {
-    await this.checkFolderOwnership(folder_id, user_id);
+      reaction_types?: string[];
+    },
+    owner_id: string
+  ): Promise<EnrichedFolder | null> {
+    await this.checkFolderOwnership(folder_id, owner_id);
 
-    const updateData: Prisma.FolderUpdateInput = {};
+    const folderData: Prisma.FolderUpdateInput = {
+      title: data.title,
+      description: data.description,
+      password: data.password,
+    };
 
-    // Copy non-tag fields
-    if (data.title !== undefined) updateData.title = data.title;
-    if (data.description !== undefined)
-      updateData.description = data.description;
-    if (data.password !== undefined) updateData.password = data.password;
-    if (data.upload_url !== undefined) updateData.upload_url = data.upload_url;
-    if (data.download_url !== undefined)
-      updateData.download_url = data.download_url;
-
-    // Handle tags if provided
-    if (data.tags !== undefined) {
-      if (data.tags.length === 0) {
-        // Remove all tags
-        updateData.tags = { set: [] };
-      } else {
-        // Replace tags with new ones - ensure tags exist first
-        await this.tagsService.prepareTagsConnect(data.tags);
-        // Then set them (replace all existing tags)
-        updateData.tags = {
-          set: data.tags.map((name) => ({ name })),
-        };
-      }
+    // Update tags if provided
+    if (data.tags) {
+      folderData.tags = {
+        set: [], // Clear existing tags
+        connectOrCreate: data.tags.map((tag) => ({
+          where: { name: tag },
+          create: { name: tag },
+        })),
+      };
     }
 
-    return this.repository.updateFolder({
-      where: { id: folder_id },
-      data: updateData,
-    });
-  }
+    // Update reaction types if provided
+    if (data.reaction_types) {
+      const reactionTypes =
+        await this.reactionsService.getReactionTypesByIdentifiers(
+          data.reaction_types
+        );
+      folderData.available_reactions = {
+        set: reactionTypes.map((rt) => ({ id: rt.id })),
+      };
+    }
 
-  async refreshFolderLinks(
-    user_id: string,
-    folder_id: string
-  ): Promise<Folder> {
-    await this.checkFolderOwnership(folder_id, user_id);
-
-    const upload_url = randomUUID();
-    const download_url = randomUUID();
-
-    return this.updateFolder(folder_id, user_id, { upload_url, download_url });
+    const folder = await this.repository.updateFolder(folder_id, folderData);
+    return this.enrichFolder(folder as unknown as FolderWithEnrichment);
   }
 
   async deleteManyFolders(
     folder_ids: string[],
-    user_id: string
+    owner_id: string
   ): Promise<Folder[]> {
-    // Check ownership for all folders first
-    const folders: Folder[] = [];
     for (const folder_id of folder_ids) {
-      const folder = await this.checkFolderOwnership(folder_id, user_id);
-      folders.push(folder);
+      await this.checkFolderOwnership(folder_id, owner_id);
     }
+    return this.repository.deleteManyFolders(folder_ids, owner_id);
+  }
 
-    // Delete all folders that passed ownership check
-    await this.repository.deleteManyFolders({
-      id: { in: folder_ids },
-      owner_id: user_id,
-    });
+  async refreshFolderLinks(
+    owner_id: string,
+    folder_id: string
+  ): Promise<EnrichedFolder | null> {
+    await this.checkFolderOwnership(folder_id, owner_id);
 
-    return folders;
+    const folderData: Prisma.FolderUpdateInput = {
+      upload_url: randomUUID(),
+      download_url: randomUUID(),
+    };
+
+    const folder = await this.repository.updateFolder(folder_id, folderData);
+    return this.enrichFolder(folder as unknown as FolderWithEnrichment);
   }
 
   private async checkFolderOwnership(
@@ -150,6 +202,6 @@ export class FoldersService {
     if (!folder) throw new FoldersException(FoldersError.FOLDER_NOT_FOUND);
     if (folder.owner_id !== owner_id)
       throw new FoldersException(FoldersError.FORBIDDEN);
-    return folder;
+    return folder as unknown as Folder;
   }
 }

@@ -19,20 +19,19 @@ import {
   ApiParam,
   ApiBearerAuth,
   ApiBody,
-  ApiQuery,
 } from '@nestjs/swagger';
+import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 import {
   FoldersError,
   FoldersException,
   FoldersService,
 } from './folders.service';
-import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
-import { Folder } from '@prisma/client';
 import { CreateFolderDto } from './dto/create-folder.dto';
 import { UpdateFolderDto } from './dto/update-folder.dto';
-import { DeleteFoldersDto } from './dto/delete-folders.dto';
 import { FolderResponseDto } from './dto/folder-response.dto';
 import { GetUserFoldersQueryDto } from './dto/get-user-folders-query.dto';
+import { DeleteFoldersDto } from './dto/delete-folders.dto';
+import { Folder } from '@prisma/client';
 
 function handleServiceErrors(error: Error): void {
   if (error instanceof FoldersException) {
@@ -42,14 +41,14 @@ function handleServiceErrors(error: Error): void {
       throw new ForbiddenException('You do not have access to this folder');
     }
   } else {
-    console.error('Unexpected error:', error);
+    console.error('Unexpected error in folders controller:', error);
     throw new InternalServerErrorException(
       error.message || 'An unexpected error occurred'
     );
   }
 }
 
-@ApiTags('folders')
+@ApiTags('folder')
 @ApiBearerAuth('JWT-auth')
 @Controller('folders')
 export class FoldersController {
@@ -65,17 +64,14 @@ export class FoldersController {
     type: FolderResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Folder not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - not the owner' })
+  @ApiResponse({ status: 403, description: 'Forbidden - no access' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getFolderById(
     @Session() session: UserSession,
-    @Param('id') folder_id: string
-  ): Promise<Folder> {
+    @Param('id') id: string
+  ): Promise<FolderResponseDto> {
     try {
-      return await this.foldersService.getFolderById(
-        folder_id,
-        session.user.id
-      );
+      return await this.foldersService.getFolderById(id, session.user.id);
     } catch (error) {
       handleServiceErrors(error);
     }
@@ -83,53 +79,20 @@ export class FoldersController {
 
   @Get()
   @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Get all folders for the authenticated user' })
-  @ApiQuery({
-    name: 'sortBy',
-    required: false,
-    enum: ['created_at', 'title'],
-    description: 'Sort by field',
-  })
-  @ApiQuery({
-    name: 'sortOrder',
-    required: false,
-    enum: ['asc', 'desc'],
-    description: 'Sort order',
-  })
-  @ApiQuery({
-    name: 'owner_id',
-    required: false,
-    type: String,
-    description: 'Filter by owner ID',
-  })
-  @ApiQuery({
-    name: 'startDate',
-    required: false,
-    type: String,
-    description: 'Filter by start date (ISO 8601)',
-  })
-  @ApiQuery({
-    name: 'endDate',
-    required: false,
-    type: String,
-    description: 'Filter by end date (ISO 8601)',
-  })
-  @ApiQuery({
-    name: 'tags',
-    required: false,
-    type: [String],
-    description: 'Filter by tags (comma-separated)',
+  @ApiOperation({
+    summary: 'Get all folders for the current user',
+    description: 'Returns folders owned by or shared with the user.',
   })
   @ApiResponse({
     status: 200,
-    description: 'List of user folders',
+    description: 'List of folders',
     type: [FolderResponseDto],
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getUserFolders(
     @Session() session: UserSession,
     @Query() query: GetUserFoldersQueryDto
-  ): Promise<Folder[]> {
+  ): Promise<FolderResponseDto[]> {
     try {
       return await this.foldersService.getUserFolders(session.user.id, query);
     } catch (error) {
@@ -150,11 +113,10 @@ export class FoldersController {
   async createFolder(
     @Session() session: UserSession,
     @Body() body: CreateFolderDto
-  ): Promise<Folder> {
+  ): Promise<FolderResponseDto> {
     try {
       return await this.foldersService.createFolder(body, session.user.id);
     } catch (error) {
-      console.error('Error creating folder:', error);
       handleServiceErrors(error);
     }
   }
@@ -170,42 +132,15 @@ export class FoldersController {
     type: FolderResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Folder not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - not the owner' })
+  @ApiResponse({ status: 403, description: 'Forbidden - not owner' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async updateFolder(
     @Session() session: UserSession,
-    @Param('id') user_id: string,
+    @Param('id') id: string,
     @Body() body: UpdateFolderDto
-  ): Promise<Folder> {
+  ): Promise<FolderResponseDto> {
     try {
-      return await this.foldersService.updateFolder(
-        user_id,
-        session.user.id,
-        body
-      );
-    } catch (error) {
-      handleServiceErrors(error);
-    }
-  }
-
-  @Get(':id/refresh-links')
-  @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Refresh upload and download links for a folder' })
-  @ApiParam({ name: 'id', description: 'Folder ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Links refreshed',
-    type: FolderResponseDto,
-  })
-  @ApiResponse({ status: 404, description: 'Folder not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - not the owner' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async refreshFolderLinks(
-    @Session() session: UserSession,
-    @Param('id') id: string
-  ): Promise<Folder> {
-    try {
-      return await this.foldersService.refreshFolderLinks(session.user.id, id);
+      return await this.foldersService.updateFolder(id, body, session.user.id);
     } catch (error) {
       handleServiceErrors(error);
     }
@@ -235,6 +170,29 @@ export class FoldersController {
         body.folder_ids,
         session.user.id
       );
+    } catch (error) {
+      handleServiceErrors(error);
+    }
+  }
+
+  @Post(':id/refresh-links')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Refresh upload and download links for a folder' })
+  @ApiParam({ name: 'id', description: 'Folder ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Links refreshed',
+    type: FolderResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Folder not found' })
+  @ApiResponse({ status: 403, description: 'Forbidden - not owner' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async refreshFolderLinks(
+    @Session() session: UserSession,
+    @Param('id') id: string
+  ): Promise<FolderResponseDto> {
+    try {
+      return await this.foldersService.refreshFolderLinks(session.user.id, id);
     } catch (error) {
       handleServiceErrors(error);
     }

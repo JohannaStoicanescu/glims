@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Media, Prisma } from '@prisma/client';
+import { Media, Prisma, Folder } from '@prisma/client';
 import { MediaRepository } from './media.repository';
-import { PaginatedResult } from 'src/lib/types';
+import { MediaWithFile, PaginatedResult } from 'src/lib/types';
 import { randomUUID } from 'crypto';
 import { S3StorageService } from 'src/storage/s3-storage.service';
+import { FoldersRepository } from 'src/folders/folders.repository';
 
 export enum MediaError {
   MEDIA_NOT_FOUND = 'Media not found',
@@ -21,51 +22,20 @@ export class MediaException extends Error {
 export class MediaService {
   constructor(
     private readonly repository: MediaRepository,
+    private readonly foldersRepository: FoldersRepository,
     private readonly storage: S3StorageService
   ) {}
 
   async getMediaById(media_id: string, user_id: string): Promise<Media> {
-    const media = await this.checkMediaOwnership(media_id, user_id);
-    return media;
-  }
-
-  async getMediaFile(
-    media_id: string,
-    user_id: string
-  ): Promise<{ file: Buffer; contentType: string }> {
-    const media = await this.checkMediaOwnership(media_id, user_id);
-
-    // Check if file exists before trying to download
-    const exists = await this.storage.fileExists(media.storage_id);
-    if (!exists) {
+    const media = await this.repository.getMediaById(media_id);
+    if (!media) {
       throw new MediaException(MediaError.MEDIA_NOT_FOUND);
     }
 
-    const file = await this.storage.downloadFile(media.storage_id);
-    return {
-      file,
-      contentType: media.type,
-    };
-  }
+    // Check if user has access to the folder containing this media
+    await this.checkFolderOwnership(media.folder_id, user_id);
 
-  async listUserMedia(
-    target_user_id: string,
-    requesting_user_id: string,
-    page: number = 1,
-    limit: number = 10
-  ): Promise<PaginatedResult<Media>> {
-    // Users can only view their own media
-    if (target_user_id !== requesting_user_id) {
-      throw new MediaException(MediaError.FORBIDDEN);
-    }
-
-    const skip = (page - 1) * limit;
-    const [data, total] = await Promise.all([
-      this.repository.getUserMedia(target_user_id, skip, limit),
-      this.repository.countUserMedia(target_user_id),
-    ]);
-
-    return { data, total, page, limit };
+    return media;
   }
 
   async getUserMedia(
@@ -73,9 +43,7 @@ export class MediaService {
     requesting_user_id: string,
     page: number = 1,
     limit: number = 10
-  ): Promise<
-    PaginatedResult<{ media: Media; file: Buffer; contentType: string }>
-  > {
+  ): Promise<PaginatedResult<MediaWithFile>> {
     // Users can only view their own media
     if (target_user_id !== requesting_user_id) {
       throw new MediaException(MediaError.FORBIDDEN);
@@ -88,57 +56,40 @@ export class MediaService {
     ]);
 
     // Fetch all files from storage, handling missing files gracefully
-    const mediaWithFiles = await Promise.allSettled(
-      mediaList.map(async (media) => {
+    const mediaWithFilesResults = await Promise.allSettled(
+      mediaList.map(async (mediaItem) => {
         // Check if file exists before trying to download
-        const exists = await this.storage.fileExists(media.storage_id);
+        const exists = await this.storage.fileExists(mediaItem.storage_id);
         if (!exists) {
           console.warn(
-            `File not found in storage for media ${media.id} with storage_id: ${media.storage_id}`
+            `File not found in storage for media ${mediaItem.id} with storage_id: ${mediaItem.storage_id}`
           );
-          throw new Error(`File not found for media ${media.id}`);
+          throw new Error(`File not found for media ${mediaItem.id}`);
         }
-        const file = await this.storage.downloadFile(media.storage_id);
+        const file = await this.storage.downloadFile(mediaItem.storage_id);
         return {
-          media,
+          media: mediaItem,
           file,
-          contentType: media.type,
-        };
+          contentType: mediaItem.type,
+          folder_title: mediaItem.folder?.title,
+        } as MediaWithFile;
       })
     );
 
     // Filter out failed downloads and only return successful ones
-    const successful = mediaWithFiles
+    const data = mediaWithFilesResults
       .filter(
-        (
-          result
-        ): result is PromiseFulfilledResult<{
-          media: Media;
-          file: Buffer;
-          contentType: string;
-        }> => result.status === 'fulfilled'
+        (result): result is PromiseFulfilledResult<MediaWithFile> =>
+          result.status === 'fulfilled'
       )
       .map((result) => result.value);
 
-    return { data: successful, total, page, limit };
-  }
-
-  async listFolderMedia(
-    folder_id: string,
-    user_id: string,
-    page: number = 1,
-    limit: number = 10
-  ): Promise<PaginatedResult<Media>> {
-    // Check if user owns the folder
-    await this.checkFolderOwnership(folder_id, user_id);
-
-    const skip = (page - 1) * limit;
-    const [data, total] = await Promise.all([
-      this.repository.getFolderMedia(folder_id, skip, limit),
-      this.repository.countFolderMedia(folder_id),
-    ]);
-
-    return { data, total, page, limit };
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 
   async getFolderMedia(
@@ -146,9 +97,7 @@ export class MediaService {
     user_id: string,
     page: number = 1,
     limit: number = 10
-  ): Promise<
-    PaginatedResult<{ media: Media; file: Buffer; contentType: string }>
-  > {
+  ): Promise<PaginatedResult<MediaWithFile>> {
     // Check if user owns the folder
     await this.checkFolderOwnership(folder_id, user_id);
 
@@ -159,68 +108,39 @@ export class MediaService {
     ]);
 
     // Fetch all files from storage, handling missing files gracefully
-    const mediaWithFiles = await Promise.allSettled(
-      mediaList.map(async (media) => {
+    const mediaWithFilesResults = await Promise.allSettled(
+      mediaList.map(async (mediaItem) => {
         // Check if file exists before trying to download
-        const exists = await this.storage.fileExists(media.storage_id);
+        const exists = await this.storage.fileExists(mediaItem.storage_id);
         if (!exists) {
           console.warn(
-            `File not found in storage for media ${media.id} with storage_id: ${media.storage_id}`
+            `File not found in storage for media ${mediaItem.id} with storage_id: ${mediaItem.storage_id}`
           );
-          throw new Error(`File not found for media ${media.id}`);
+          throw new Error(`File not found for media ${mediaItem.id}`);
         }
-        const file = await this.storage.downloadFile(media.storage_id);
+        const file = await this.storage.downloadFile(mediaItem.storage_id);
         return {
-          media,
+          media: mediaItem,
           file,
-          contentType: media.type,
-        };
+          contentType: mediaItem.type,
+        } as MediaWithFile;
       })
     );
 
     // Filter out failed downloads and only return successful ones
-    const successful = mediaWithFiles
+    const data = mediaWithFilesResults
       .filter(
-        (
-          result
-        ): result is PromiseFulfilledResult<{
-          media: Media;
-          file: Buffer;
-          contentType: string;
-        }> => result.status === 'fulfilled'
+        (result): result is PromiseFulfilledResult<MediaWithFile> =>
+          result.status === 'fulfilled'
       )
       .map((result) => result.value);
 
-    return { data: successful, total, page, limit };
-  }
-
-  async listFolderUserMedia(
-    folder_id: string,
-    target_user_id: string,
-    requesting_user_id: string,
-    page: number = 1,
-    limit: number = 10
-  ): Promise<PaginatedResult<Media>> {
-    // Check if user owns the folder
-    await this.checkFolderOwnership(folder_id, requesting_user_id);
-
-    // Users can only view their own media
-    if (target_user_id !== requesting_user_id) {
-      throw new MediaException(MediaError.FORBIDDEN);
-    }
-
-    const skip = (page - 1) * limit;
-    const [data, total] = await Promise.all([
-      this.repository.getUserFolderMedia(
-        target_user_id,
-        folder_id,
-        skip,
-        limit
-      ),
-      this.repository.countUserFolderMedia(target_user_id, folder_id),
-    ]);
-
-    return { data, total, page, limit };
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 
   async getFolderUserMedia(
@@ -229,16 +149,9 @@ export class MediaService {
     requesting_user_id: string,
     page: number = 1,
     limit: number = 10
-  ): Promise<
-    PaginatedResult<{ media: Media; file: Buffer; contentType: string }>
-  > {
-    // Check if user owns the folder
+  ): Promise<PaginatedResult<MediaWithFile>> {
+    // Check if user has access to this folder
     await this.checkFolderOwnership(folder_id, requesting_user_id);
-
-    // Users can only view their own media
-    if (target_user_id !== requesting_user_id) {
-      throw new MediaException(MediaError.FORBIDDEN);
-    }
 
     const skip = (page - 1) * limit;
     const [mediaList, total] = await Promise.all([
@@ -252,39 +165,31 @@ export class MediaService {
     ]);
 
     // Fetch all files from storage, handling missing files gracefully
-    const mediaWithFiles = await Promise.allSettled(
-      mediaList.map(async (media) => {
-        // Check if file exists before trying to download
-        const exists = await this.storage.fileExists(media.storage_id);
-        if (!exists) {
-          console.warn(
-            `File not found in storage for media ${media.id} with storage_id: ${media.storage_id}`
-          );
-          throw new Error(`File not found for media ${media.id}`);
-        }
-        const file = await this.storage.downloadFile(media.storage_id);
+    const mediaWithFilesResults = await Promise.allSettled(
+      mediaList.map(async (mediaItem) => {
+        const file = await this.storage.downloadFile(mediaItem.storage_id);
         return {
-          media,
+          media: mediaItem,
           file,
-          contentType: media.type,
-        };
+          contentType: mediaItem.type,
+        } as MediaWithFile;
       })
     );
 
     // Filter out failed downloads and only return successful ones
-    const successful = mediaWithFiles
+    const data = mediaWithFilesResults
       .filter(
-        (
-          result
-        ): result is PromiseFulfilledResult<{
-          media: Media;
-          file: Buffer;
-          contentType: string;
-        }> => result.status === 'fulfilled'
+        (result): result is PromiseFulfilledResult<MediaWithFile> =>
+          result.status === 'fulfilled'
       )
       .map((result) => result.value);
 
-    return { data: successful, total, page, limit };
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 
   async createMedia(
@@ -296,80 +201,72 @@ export class MediaService {
     },
     user_id: string
   ): Promise<Media> {
-    // Check if user owns the folder
+    // Check if user has access to this folder
     await this.checkFolderOwnership(data.folder_id, user_id);
 
-    // Generate a unique key for the file
-    const key = randomUUID();
-
-    // Upload the actual file to storage
+    // Upload to storage
+    const key = `folders/${data.folder_id}/${randomUUID()}`;
     const storage_id = await this.storage.uploadFile(key, data.file, data.type);
 
-    // Create the media record with the storage_id from the uploaded file
+    // Save to database
     return this.repository.createMedia({
-      storage_id,
       type: data.type,
-      metadata: data.metadata,
+      storage_id,
+      metadata: data.metadata as Prisma.InputJsonValue,
       folder: { connect: { id: data.folder_id } },
       user: { connect: { id: user_id } },
-    } as Prisma.MediaCreateInput);
+    });
   }
 
   async deleteMultipleMedia(
     media_ids: string[],
     user_id: string
   ): Promise<Media[]> {
-    const mediaList: Media[] = [];
+    const deletedMedia: Media[] = [];
+
     for (const media_id of media_ids) {
-      const media = await this.checkMediaOwnership(media_id, user_id);
-      mediaList.push(media);
+      const media = await this.repository.getMediaById(media_id);
+      if (!media) continue;
+
+      // Check if user has access to delete (owner of media or owner of folder)
+      const folder = await this.foldersRepository.getFolderById(
+        media.folder_id
+      );
+      const isMediaOwner = media.user_id === user_id;
+      const isFolderOwner = folder?.owner_id === user_id;
+
+      if (!isMediaOwner && !isFolderOwner) {
+        throw new MediaException(MediaError.FORBIDDEN);
+      }
+
+      // Delete from storage
+      await this.storage.deleteFile(media.storage_id);
+
+      // Delete from database
+      await this.repository.deleteManyMedia({ id: media_id });
+      deletedMedia.push(media);
     }
 
-    // Delete files from storage
-    await Promise.all(
-      mediaList.map((media) =>
-        this.storage.deleteFile(media.storage_id).catch((error) => {
-          console.error(
-            `Failed to delete file from storage for media ${media.id} with storage_id: ${media.storage_id}`,
-            error
-          );
-        })
-      )
-    );
-
-    // Delete media records from database
-    await this.repository.deleteManyMedia({
-      id: { in: media_ids },
-      user_id,
-    });
-    return mediaList;
-  }
-
-  private async checkMediaOwnership(
-    media_id: string,
-    user_id: string
-  ): Promise<Media> {
-    const media = await this.repository.getMediaById(media_id);
-    if (!media) throw new MediaException(MediaError.MEDIA_NOT_FOUND);
-    if (media.user_id !== user_id)
-      throw new MediaException(MediaError.FORBIDDEN);
-    return media;
+    return deletedMedia;
   }
 
   private async checkFolderOwnership(
     folder_id: string,
     user_id: string
-  ): Promise<void> {
-    const folder = await this.repository.getFolderById(folder_id);
+  ): Promise<Folder> {
+    const folder = await this.foldersRepository.getFolderById(folder_id);
     if (!folder) {
-      console.error(`Folder not found: ${folder_id}`);
       throw new MediaException(MediaError.FOLDER_NOT_FOUND);
     }
-    if (folder.owner_id !== user_id) {
-      console.error(
-        `User ${user_id} does not own folder ${folder_id} (owner: ${folder.owner_id})`
-      );
+
+    // Access check: User must be either owner or member
+    const isOwner = folder.owner_id === user_id;
+    const isMember = folder.members.some((member) => member.id === user_id);
+
+    if (!isOwner && !isMember) {
       throw new MediaException(MediaError.FORBIDDEN);
     }
+
+    return folder as unknown as Folder;
   }
 }

@@ -1,10 +1,10 @@
 'use client';
 
 // import { useFormContext } from 'react-hook-form';
-import { ChevronRight } from '../../ui/icons';
-import { ButtonForm, StepIndicators } from '@/app/ui';
+import { ChevronRight } from '@/components/ui/icons';
+import { ButtonForm, StepIndicators } from '@/components';
 import ImagePicker from './ImagePicker';
-import { AuthLayout } from '@/app/ui';
+import { AuthLayout } from '@/components';
 // import { NewUser } from '@/types';
 
 export default function ImageSection({

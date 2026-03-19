@@ -61,6 +61,20 @@ function handleServiceErrors(error: Error): void {
 export class ReactionsController {
   constructor(private readonly reactionsService: ReactionsService) {}
 
+  @Get('types')
+  @ApiOperation({
+    summary: 'Get all available reaction types',
+    description: 'Returns the list of all possible reaction types.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all reaction types',
+    type: [ReactionTypeResponseDto],
+  })
+  async getAllReactionTypes(): Promise<ReactionType[]> {
+    return await this.reactionsService.getAllReactionTypes();
+  }
+
   @Get(':folder_id')
   @UseGuards(AuthGuard)
   @ApiOperation({

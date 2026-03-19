@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Modal, ConfirmationModal } from '@/app/ui';
+import { Modal, ConfirmationModal } from '@/components';
 import {
   X,
   SlidersHorizontal,
@@ -11,7 +11,7 @@ import {
   Bell,
   HardDrive,
   DoorOpen,
-} from '@/app/ui/icons';
+} from '@/components/ui/icons';
 import { useIsMobile } from '@/hooks/use-media-query';
 import GeneralSettings from './components/GeneralSettings';
 import PrivacySettings from './components/PrivacySettings';

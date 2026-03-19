@@ -45,9 +45,27 @@ export class FolderResponseDto {
   })
   createdAt: Date;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Updated at timestamp',
     example: '2024-01-01T00:00:00.000Z',
   })
   updatedAt: Date;
+
+  @ApiPropertyOptional({
+    description: 'Number of media items in the folder',
+    example: 5,
+  })
+  media_count?: number;
+
+  @ApiPropertyOptional({
+    description: 'Presigned URL for the folder thumbnail',
+    example: 'https://storage.com/thumbnail.jpg',
+  })
+  thumbnail_url?: string;
+
+  @ApiPropertyOptional({
+    description: 'List of members in the folder',
+    type: [Object],
+  })
+  members?: { id: string; name: string; image: string | null }[];
 }

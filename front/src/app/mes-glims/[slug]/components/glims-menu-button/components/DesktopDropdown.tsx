@@ -1,4 +1,4 @@
-import { Users } from '@/app/ui/icons';
+import { Users } from '@/components/ui/icons';
 import { MenuItem } from './menu-items';
 import MenuItemButton from './MenuItemButton';
 import DangerItemButton from './DangerItemButton';

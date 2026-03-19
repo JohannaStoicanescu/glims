@@ -1,6 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/utils';
 
+export interface Reaction {
+  id: string;
+  media_id: string;
+  reaction_type_id: string;
+  user_id: string;
+  reaction_type: {
+    id: string;
+    name: string;
+    svg: string;
+  };
+}
+
 export interface MediaItem {
   id: string;
   type: string;
@@ -10,9 +22,9 @@ export interface MediaItem {
   metadata?: unknown;
   created_at: string;
   updated_at: string;
-  /** data: URL ready for use in <img src> */
   url: string;
   contentType: string;
+  reactions?: Reaction[];
 }
 
 interface RawMediaWithFile {
@@ -25,8 +37,8 @@ interface RawMediaWithFile {
     metadata?: unknown;
     created_at: string;
     updated_at: string;
+    reactions: Reaction[];
   };
-  /** Buffer serialised as base64 by JSON.stringify */
   file: { type: 'Buffer'; data: number[] } | string;
   contentType: string;
 }
@@ -43,10 +55,8 @@ function bufferToDataUrl(
   contentType: string
 ): string {
   if (typeof file === 'string') {
-    // Already a base64 string
     return `data:${contentType};base64,${file}`;
   }
-  // Node Buffer serialised as { type: 'Buffer', data: number[] }
   const bytes = new Uint8Array(file.data);
   let binary = '';
   bytes.forEach((b) => (binary += String.fromCharCode(b)));

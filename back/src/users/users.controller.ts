@@ -1,10 +1,15 @@
 import {
+  Body,
   Controller,
   Get,
   InternalServerErrorException,
   NotFoundException,
   Param,
+  Patch,
+  Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -12,9 +17,13 @@ import {
   ApiResponse,
   ApiParam,
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
 } from '@nestjs/swagger';
-import { AuthGuard } from '@thallesp/nestjs-better-auth';
+import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { UserError, UserException, UsersService } from './users.service';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 function handleServiceErrors(error: Error): void {
   if (error instanceof UserException) {
@@ -41,15 +50,111 @@ export class UsersController {
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User found' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserById(
-    @Param('id') id: string
-  ): Promise<{ id: string; name: string; image: string | null }> {
+  async getUserById(@Param('id') id: string): Promise<{
+    id: string;
+    name: string;
+    image: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    newsletter: boolean;
+  }> {
     try {
       const user = await this.usersService.getUserById(id);
       return {
         id: user.id,
         name: user.name,
         image: user.image,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        newsletter: user.newsletter,
+      };
+    } catch (error) {
+      handleServiceErrors(error as Error);
+    }
+  }
+
+  @Patch('profile')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Update current user profile' })
+  @ApiBody({ type: UpdateUserDto })
+  @ApiResponse({ status: 200, description: 'Profile updated' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async updateUserProfile(
+    @Session() session: UserSession,
+    @Body() body: UpdateUserDto
+  ): Promise<{
+    id: string;
+    name: string;
+    image: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    newsletter: boolean;
+  }> {
+    try {
+      const user = await this.usersService.updateUserProfile(
+        session.user.id,
+        body
+      );
+      return {
+        id: user.id,
+        name: user.name,
+        image: user.image,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        newsletter: user.newsletter,
+      };
+    } catch (error) {
+      handleServiceErrors(error as Error);
+    }
+  }
+
+  @Post('profile/image')
+  @UseInterceptors(FileInterceptor('file'))
+  @UseGuards(AuthGuard)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Update current user profile image' })
+  @ApiResponse({ status: 200, description: 'Profile image updated' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async updateProfileImage(
+    @Session() session: UserSession,
+    @UploadedFile() file: Express.Multer.File
+  ): Promise<{
+    id: string;
+    name: string;
+    image: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    newsletter: boolean;
+  }> {
+    try {
+      if (!file) {
+        throw new InternalServerErrorException('File is required');
+      }
+
+      const user = await this.usersService.updateProfileImage(
+        session.user.id,
+        file.buffer,
+        file.mimetype
+      );
+
+      return {
+        id: user.id,
+        name: user.name,
+        image: user.image,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        newsletter: user.newsletter,
       };
     } catch (error) {
       handleServiceErrors(error as Error);

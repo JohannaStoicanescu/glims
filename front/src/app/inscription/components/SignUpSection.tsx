@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Divider from './Divider';
 import EmailSignUp from './EmailSignUp';
 import GoogleSignUp from './GoogleSignUp';
-import { AuthLayout } from '@/app/ui';
+import { AuthLayout } from '@/components';
 
 export default function SignUpSection({ onNext }: { onNext: () => void }) {
   return (

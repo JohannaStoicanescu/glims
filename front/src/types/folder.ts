@@ -3,6 +3,7 @@ export interface CreateFolderInput {
   description?: string;
   password?: string;
   tags?: string[];
+  reaction_types?: string[];
 }
 
 export interface UpdateFolderInput {
@@ -10,6 +11,7 @@ export interface UpdateFolderInput {
   description?: string;
   password?: string;
   tags?: string[];
+  reaction_types?: string[];
 }
 
 /** Shape returned by the API for a folder/Glims */
@@ -27,4 +29,6 @@ export interface Folder {
   /** Not in the backend DTO — optional local enrichment fields */
   thumbnail_url?: string;
   media_count?: number;
+  members?: { id: string; name: string; image: string | null }[];
+  available_reactions?: { id: string; name: string; svg: string }[];
 }

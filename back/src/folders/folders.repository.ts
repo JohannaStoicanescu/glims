@@ -6,19 +6,41 @@ import {
   SortBy,
   SortOrder,
 } from './dto/get-user-folders-query.dto';
+import { FolderWithEnrichment } from 'src/lib/types';
 
 @Injectable()
 export class FoldersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getFolderById(folder_id: string): Promise<Folder | null> {
-    return this.prisma.folder.findUnique({ where: { id: folder_id } });
+  async getFolderById(folder_id: string): Promise<FolderWithEnrichment | null> {
+    const folder = await this.prisma.folder.findUnique({
+      where: { id: folder_id },
+      include: {
+        members: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        available_reactions: true,
+        _count: {
+          select: { media: true },
+        },
+        media: {
+          take: 1,
+          orderBy: { created_at: 'desc' },
+          select: { storage_id: true },
+        },
+      },
+    });
+    return folder as FolderWithEnrichment | null;
   }
 
   async getUserFolders(
     user_id: string,
     query?: GetUserFoldersQueryDto
-  ): Promise<Folder[]> {
+  ): Promise<FolderWithEnrichment[]> {
     const where: Prisma.FolderWhereInput = {
       OR: [{ owner_id: user_id }, { members: { some: { id: user_id } } }],
     };
@@ -82,27 +104,57 @@ export class FoldersRepository {
       [sortBy]: sortOrder,
     };
 
-    return this.prisma.folder.findMany({
+    const folders = await this.prisma.folder.findMany({
       where,
       orderBy,
+      include: {
+        members: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        available_reactions: true,
+        _count: {
+          select: { media: true },
+        },
+        media: {
+          take: 1,
+          orderBy: { created_at: 'desc' },
+          select: { storage_id: true },
+        },
+      },
     });
+    return folders as FolderWithEnrichment[];
   }
 
   async createFolder(data: Prisma.FolderCreateInput): Promise<Folder> {
     return this.prisma.folder.create({ data });
   }
 
-  async updateFolder(params: {
-    where: Prisma.FolderWhereUniqueInput;
-    data: Prisma.FolderUpdateInput;
-  }): Promise<Folder> {
-    return this.prisma.folder.update(params);
+  async updateFolder(
+    folder_id: string,
+    data: Prisma.FolderUpdateInput
+  ): Promise<Folder> {
+    return this.prisma.folder.update({
+      where: { id: folder_id },
+      data,
+    });
   }
 
   async deleteManyFolders(
-    where: Prisma.FolderWhereInput
-  ): Promise<{ count: number }> {
-    return this.prisma.folder.deleteMany({ where });
+    folder_ids: string[],
+    owner_id: string
+  ): Promise<Folder[]> {
+    const deletedFolders: Folder[] = [];
+    for (const id of folder_ids) {
+      const folder = await this.prisma.folder.delete({
+        where: { id, owner_id },
+      });
+      deletedFolders.push(folder);
+    }
+    return deletedFolders;
   }
 
   /**

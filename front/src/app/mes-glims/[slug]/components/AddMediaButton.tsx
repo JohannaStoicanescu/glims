@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 
-import { Plus } from '@/app/ui/icons';
+import { Plus } from '@/components/ui/icons';
 import { useCreateMedia } from '@/hooks';
 
 interface AddMediaButtonProps {

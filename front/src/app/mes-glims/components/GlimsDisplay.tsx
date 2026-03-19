@@ -9,21 +9,16 @@ interface GlimsDisplayProps {
 }
 
 export default function GlimsDisplay({ glims }: GlimsDisplayProps) {
-  // TODO: get glims users from API
-  const glimsUsers = [
-    { id: '1', profilePic: 'https://picsum.photos/200/200' },
-    { id: '2', profilePic: 'https://picsum.photos/200/200' },
-    { id: '3', profilePic: 'https://picsum.photos/200/200' },
-    { id: '4', profilePic: 'https://picsum.photos/200/200' },
-    { id: '5', name: 'John Doe', profilePic: 'https://picsum.photos/200/200' },
-    { id: '6', profilePic: 'https://picsum.photos/200/200' },
-  ];
-
   return (
     <div className="flex-1 overflow-hidden">
       <div className="h-full overflow-y-auto pb-10">
         <div className="grid grid-rows-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
           {glims.map((glim, index) => {
+            const glimsUsers = (glim.members ?? []).map((m) => ({
+              id: m.id,
+              profilePic: m.image || 'https://picsum.photos/200/200', // Default placeholder
+            }));
+
             return (
               <Link
                 href={`/mes-glims/${glim.id}`}

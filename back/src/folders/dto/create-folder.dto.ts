@@ -25,4 +25,11 @@ export class CreateFolderDto {
     type: [String],
   })
   tags?: string[];
+
+  @ApiPropertyOptional({
+    description: 'List of reaction type names or IDs to enable for this folder',
+    example: ['like', 'love'],
+    type: [String],
+  })
+  reaction_types?: string[];
 }

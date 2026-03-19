@@ -1,5 +1,5 @@
 import FilterDropdown from './FilterDropdown';
-import { Calendar, Upload, Users, File } from '@/app/ui/icons';
+import { Calendar, Upload, Users, File } from '@/components/ui/icons';
 
 export default function FiltersDesktop() {
   return (

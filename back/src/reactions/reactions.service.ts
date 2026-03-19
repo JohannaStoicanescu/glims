@@ -124,6 +124,22 @@ export class ReactionsService {
   }
 
   /**
+   * Gets all available reaction types
+   */
+  async getAllReactionTypes(): Promise<ReactionType[]> {
+    return this.repository.getAllReactionTypes();
+  }
+
+  /**
+   * Gets reaction types by names or IDs
+   */
+  async getReactionTypesByIdentifiers(
+    identifiers: string[]
+  ): Promise<ReactionType[]> {
+    return this.repository.getReactionTypesByNamesOrIds(identifiers);
+  }
+
+  /**
    * Checks if a user has access to a folder (owner or member)
    */
   private async checkFolderAccess(

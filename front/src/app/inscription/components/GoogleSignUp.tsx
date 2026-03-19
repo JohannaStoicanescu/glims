@@ -2,8 +2,8 @@
 
 import { FaGoogle } from 'react-icons/fa';
 
-import ButtonForm from '@/app/ui/form/ButtonForm';
 import { useAuthClient } from '@/hooks';
+import { ButtonForm } from '@/components/ui';
 
 export default function GoogleSignUp() {
   const authClient = useAuthClient();

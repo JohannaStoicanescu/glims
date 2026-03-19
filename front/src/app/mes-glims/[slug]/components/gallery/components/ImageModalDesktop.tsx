@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import {
@@ -17,8 +17,9 @@ import {
   Pencil,
   Trash2,
   AlertCircle,
-} from '@/app/ui/icons';
-import { ConfirmationModal } from '@/app/ui';
+  Plus,
+} from '@/components/ui/icons';
+import { ConfirmationModal, ReactionPicker } from '@/components';
 import { Picture } from '.';
 import { useDeleteMedia, useGetUserById } from '@/hooks';
 
@@ -35,6 +36,7 @@ interface ImageModalDesktopProps {
   onNext: () => void;
   onToggleExpanded: () => void;
   formatDate: () => string;
+  availableReactions?: { id: string; name: string; svg: string }[];
 }
 
 export default function ImageModalDesktop({
@@ -50,9 +52,11 @@ export default function ImageModalDesktop({
   onNext,
   onToggleExpanded,
   formatDate,
+  availableReactions = [],
 }: ImageModalDesktopProps) {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isReactionPickerOpen, setIsReactionPickerOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const optionsButtonRef = useRef<HTMLButtonElement>(null);
   const optionsMenuRef = useRef<HTMLDivElement>(null);
@@ -60,6 +64,24 @@ export default function ImageModalDesktop({
   const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const deleteMedia = useDeleteMedia();
   const { data: author } = useGetUserById(picture.user_id);
+
+  // Group reactions by type for display
+  const reactionStats = useMemo(() => {
+    if (!picture.reactions) return [];
+    const stats: Record<string, { svg: string; count: number; name: string }> =
+      {};
+    picture.reactions.forEach((r) => {
+      if (!stats[r.reaction_type.id]) {
+        stats[r.reaction_type.id] = {
+          svg: r.reaction_type.svg,
+          count: 0,
+          name: r.reaction_type.name,
+        };
+      }
+      stats[r.reaction_type.id].count++;
+    });
+    return Object.values(stats);
+  }, [picture.reactions]);
 
   // Automatic scroll to the selected thumbnail
   useEffect(() => {
@@ -107,8 +129,8 @@ export default function ImageModalDesktop({
     if (isOptionsMenuOpen && optionsButtonRef.current) {
       const rect = optionsButtonRef.current.getBoundingClientRect();
       setMenuPosition({
-        top: rect.top - 8, // Au-dessus du bouton
-        left: rect.right - 280, // Aligné à droite
+        top: rect.top - 8,
+        left: rect.right - 280,
       });
     }
   }, [isOptionsMenuOpen]);
@@ -235,6 +257,30 @@ export default function ImageModalDesktop({
           </div>
         </div>
 
+        {/* REACTIONS DISPLAY */}
+        <div className="flex items-center gap-2">
+          {reactionStats.map((stat) => (
+            <div
+              key={stat.name}
+              className="flex items-center gap-1.5 bg-white/10 border border-white/10 rounded-full px-3 py-1.5 text-white"
+              title={stat.name}>
+              <div
+                className="w-5 h-5"
+                dangerouslySetInnerHTML={{ __html: stat.svg }}
+              />
+              <span className="text-sm font-bold">{stat.count}</span>
+            </div>
+          ))}
+          {availableReactions.length > 0 && (
+            <button
+              onClick={() => setIsReactionPickerOpen(true)}
+              className="w-10 h-10 bg-white/10 hover:bg-orange-500 hover:scale-110 cursor-pointer rounded-full flex items-center justify-center transition-all border border-white/10 group ml-2"
+              aria-label="Réagir">
+              <Plus className="w-5 h-5 text-white group-hover:text-white" />
+            </button>
+          )}
+        </div>
+
         {/* ACTIONS */}
         <div className="flex items-center gap-3">
           <button
@@ -284,7 +330,6 @@ export default function ImageModalDesktop({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                // TODO: Personnes sur la photo
                 setIsOptionsMenuOpen(false);
               }}
               className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
@@ -295,7 +340,6 @@ export default function ImageModalDesktop({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                // TODO: Toutes les photos de l'auteur
                 setIsOptionsMenuOpen(false);
               }}
               className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
@@ -308,7 +352,6 @@ export default function ImageModalDesktop({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                // TODO: Editer
                 setIsOptionsMenuOpen(false);
               }}
               className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-gray-50 transition-colors text-gray-700">
@@ -329,7 +372,6 @@ export default function ImageModalDesktop({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                // TODO: Signaler
                 setIsOptionsMenuOpen(false);
               }}
               className="w-full flex items-center gap-4 px-3 py-3 cursor-pointer rounded-lg hover:bg-red-50 transition-colors text-red-500">
@@ -348,10 +390,20 @@ export default function ImageModalDesktop({
         confirmButtonText="Supprimer"
         cancelButtonText="Annuler"
         onConfirm={() => {
-          deleteMedia.mutate([picture.id]);
-          onClose(); // On ferme la modale d'image après suppression
+          deleteMedia.mutate([picture.id], {
+            onSuccess: () => {
+              onClose();
+            },
+          });
         }}
         icon={<Trash2 size={48} />}
+      />
+
+      <ReactionPicker
+        isOpen={isReactionPickerOpen}
+        onClose={() => setIsReactionPickerOpen(false)}
+        mediaId={picture.id}
+        availableReactions={availableReactions}
       />
 
       {/* THUMBNAILS AT THE BOTTOM */}
@@ -379,7 +431,7 @@ export default function ImageModalDesktop({
               }`}>
               <Image
                 src={pic.url}
-                alt={`Photo by ${author?.name ?? 'unknown'}`}
+                alt={`Photo by author`}
                 fill
                 className="object-cover"
               />
