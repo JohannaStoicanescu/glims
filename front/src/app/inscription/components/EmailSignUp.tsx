@@ -21,7 +21,7 @@ export default function EmailSignUp({ onNext }: { onNext: () => void }) {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <div className="hidden md:block">
+      <div className="block">
         <ControlledInputForm
           type="email"
           name="email"

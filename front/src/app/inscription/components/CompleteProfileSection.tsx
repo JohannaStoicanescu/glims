@@ -42,16 +42,6 @@ export default function CompleteProfileSection({
       </h1>
 
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col md:hidden">
-          <ControlledInputForm
-            label="Email"
-            type="email"
-            name="email"
-            placeholder="Votre email"
-            required={true}
-          />
-        </div>
-
         <ControlledInputForm
           label="Prénom"
           type="text"

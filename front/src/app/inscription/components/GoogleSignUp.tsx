@@ -15,6 +15,7 @@ export default function GoogleSignUp() {
         text={
           <span className="hidden md:block">S&apos;inscrire avec Google</span>
         }
+        disabled
         style="light"
         onClick={async () => {
           const data = await authClient.signIn.social({
