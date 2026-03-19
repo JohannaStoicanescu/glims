@@ -1,0 +1,7 @@
+glims-app.fr {
+        reverse_proxy front:3001
+}
+
+api.glims-app.fr {
+        reverse_proxy back:3000
+}
