@@ -8,6 +8,8 @@ services:
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     restart: unless-stopped
+    networks:
+      - protected
 
   back:
     # Image is built and pushed by GitHub Actions; never built on the VPS.
@@ -21,6 +23,9 @@ services:
     ports:
       - 3000:3000
     restart: unless-stopped
+    networks:
+      - protected
+      - exposed
 
   migrate:
     # Reuses the base (builder) image which includes pnpm + Prisma CLI.
@@ -34,6 +39,9 @@ services:
     command: >
       sh -c "pnpm prisma migrate deploy"
     profiles: ["manual"]
+    networks:
+      - protected
+      - exposed
 
   adminer:
     image: adminer
@@ -41,6 +49,9 @@ services:
       - 8080:8080
     # Prevents the container from running at `docker compose up`
     profiles: ["manual"]
+    networks:
+      - protected
+      - exposed
 
   db:
     image: postgres:16
@@ -57,6 +68,37 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - protected
+
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "caddy_config:/config"
+      - "caddy_data:/data"
+    environment:
+      EMAIL: "paul@bozos.fr"
+      LOG_FILE: "/data/access.log"
+    networks:
+      - protected
+      - exposed
 
 volumes:
   prod_db_data:
+  caddy_config:
+  caddy_data:
+
+networks:
+  protected:
+    driver: bridge
+    internal: true
+    name: "protected"
+  exposed:
+    name: "exposed"
+
