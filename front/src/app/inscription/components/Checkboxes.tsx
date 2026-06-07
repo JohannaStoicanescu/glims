@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Checkboxes() {
   return (
     <>
@@ -10,10 +12,12 @@ export default function Checkboxes() {
           required
         />
         <p className="text-gray-400 text-sm">
-          J’accepte les{' '}
-          <span className="text-blue-600 underline">
-            conditions d’utilisations
-          </span>
+          J&apos;accepte les{' '}
+          <Link href="/conditions">
+            <span className="text-blue-600 underline hover:text-blue-700 cursor-pointer">
+              conditions d&apos;utilisations
+            </span>
+          </Link>
         </p>
       </label>
       <label
