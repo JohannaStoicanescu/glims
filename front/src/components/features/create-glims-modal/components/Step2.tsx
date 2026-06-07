@@ -260,7 +260,7 @@ export default function Step2({
       {/* FOOTER ACTIONS */}
       <div className="mt-auto space-y-4 pt-4">
         <StepIndicators
-          currentStep={1}
+          currentStep={2}
           numberOfSteps={2}
         />
 

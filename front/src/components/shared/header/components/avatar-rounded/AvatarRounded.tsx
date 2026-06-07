@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { User } from 'lucide-react';
 import { MenuContent } from './components';
 import { Dropdown, Modal } from '@/components';
 import { useIsMobile } from '@/hooks/use-media-query';
@@ -27,6 +28,8 @@ export default function AvatarRounded() {
     plan: 'GRATUIT',
   };
 
+  const hasImage =
+    user.avatar && !user.avatar.includes('martin-luther-king.jpg');
   const closeMenu = () => setIsMenuOpen(false);
 
   const avatarTrigger = (
@@ -34,13 +37,23 @@ export default function AvatarRounded() {
       onClick={() => setIsMenuOpen(!isMenuOpen)}
       aria-label="Menu utilisateur"
       aria-expanded={isMenuOpen}
-      className="relative w-10 h-10 rounded-full overflow-hidden cursor-pointer transition hover:ring-2 hover:ring-red-400 focus:outline-none focus:ring-2 focus:ring-red-400">
-      <Image
-        src={user.avatar}
-        alt="Avatar utilisateur"
-        fill
-        className="object-cover"
-      />
+      className={`rounded-full border border-transparent cursor-pointer transition ${
+        hasImage
+          ? 'w-10 h-10 p-0 overflow-hidden'
+          : 'p-2 hover:text-orange-600 hover:bg-red-50 hover:border-red-100 focus:text-orange-600 focus:bg-red-50 focus:border-red-100'
+      }`}>
+      {hasImage ? (
+        <div className="relative w-full h-full">
+          <Image
+            src={user.avatar}
+            alt="Avatar utilisateur"
+            fill
+            className="object-cover"
+          />
+        </div>
+      ) : (
+        <User size={20} />
+      )}
     </button>
   );
 

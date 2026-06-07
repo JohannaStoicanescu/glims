@@ -41,14 +41,14 @@ export default function ProfileNavBar() {
   ];
 
   return (
-    <div className="flex w-full md:flex-col gap-1 md:gap-2 border-b md:border-b-0 border-slate-100 pb-4 md:pb-0 px-2 sm:px-4 md:px-0 overflow-x-auto scrollbar-hide">
+    <div className="flex w-full gap-1 md:gap-2 border-b md:border-b-0 border-slate-100 pb-4 md:pb-0 px-2 sm:px-4 md:px-0 overflow-x-auto scrollbar-hide">
       {navItems.map((item) => (
         <Link
           key={item.href}
           href={item.href}
           className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 whitespace-nowrap ${
             pathname === item.href
-              ? 'bg-orange-50 text-orange-600 font-bold shadow-sm'
+              ? 'bg-orange-50 text-orange-600 font-bold'
               : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
           } active:scale-95 duration-200`}>
           <span className="md:pr-2 lg:pr-4">{item.icon}</span>

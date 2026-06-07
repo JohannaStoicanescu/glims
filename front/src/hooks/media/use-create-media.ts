@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { CreateMediaInput } from '@/types';
 import { apiClient } from '@/utils';
 
@@ -32,8 +32,19 @@ const createMedia = async (data: CreateMediaInput) => {
 };
 
 const useCreateMedia = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (data: CreateMediaInput) => await createMedia(data),
+    onSuccess: (data: unknown, variables: CreateMediaInput) => {
+      // Invalidate media queries to trigger a refetch
+      queryClient.invalidateQueries({
+        queryKey: ['media-by-folder', variables.folderId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['users-media'],
+      });
+    },
   });
 };
 
