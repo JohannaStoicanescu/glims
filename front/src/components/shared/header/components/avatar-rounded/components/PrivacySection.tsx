@@ -10,8 +10,8 @@ interface PrivacySectionProps {
 }
 
 const privacyLinks: PrivacyLink[] = [
-  { href: '/privacy', label: 'Politique de confidentialité' },
-  { href: '/terms', label: "Conditions d'utilisation" },
+  { href: '/politique', label: 'Politique de confidentialité' },
+  { href: '/conditions', label: "Conditions d'utilisation" },
 ];
 
 export default function PrivacySection({ onLinkClick }: PrivacySectionProps) {
